@@ -1,0 +1,56 @@
+{
+  "name": "nestjs-auth",
+  "version": "0.0.1",
+  "description": "Authentication and Authorization example for Nest.js TypeScript Framework",
+  "main": "dist/index.js",
+  "repository": "git@github.com:neoteric-eu/nestjs-auth.git",
+  "scripts": {
+    "start": "nodemon",
+    "build": "tsc",
+    "prod": "node dist/index.js",
+    "lint:fix": "tslint --project ./ --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Przemysław Czekaj <pczekaj@neoteric.eu>",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 8.9.0"
+  },
+  "dependencies": {
+    "@nestjs/common": "^5.0.1",
+    "@nestjs/core": "^5.0.1",
+    "@nestjs/microservices": "^5.0.1",
+    "@nestjs/passport": "^1.0.10",
+    "@nestjs/testing": "^5.0.1",
+    "@nestjs/websockets": "^5.0.1",
+    "class-validator": "latest",
+    "cors": "^2.8.4",
+    "dotenv-safe": "^5.0.1",
+    "helmet": "^3.12.1",
+    "jsonwebtoken": "^8.2.2",
+    "luxon": "^1.2.1",
+    "nest-access-control": "^1.0.0",
+    "passport": "^0.4.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-jwt": "^4.0.0",
+    "pg": "^7.4.3",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.2.0",
+    "rxjs-compat": "^6.2.0",
+    "socket.io": "^2.1.1",
+    "typeorm": "^0.2.6",
+    "uuid": "^3.2.1",
+    "winston": "^2.4.2"
+  },
+  "devDependencies": {
+    "@nestjs/swagger": "^2.0.2",
+    "@types/node": "^8.10.18",
+    "@types/socket.io": "^1.4.33",
+    "@types/winston": "^2.3.9",
+    "nodemon": "^1.17.5",
+    "ts-node": "^6.1.0",
+    "tslint": "^5.10.0",
+    "tsconfig-paths": "^3.3.2",
+    "typescript": "^2.8.3"
+  }
+}
