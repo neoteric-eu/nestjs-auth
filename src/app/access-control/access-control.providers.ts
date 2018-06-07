@@ -16,9 +16,7 @@ export const accessControlProviders = [
 		provide: ROLES_BUILDER_TOKEN,
 		useFactory: async (ace: Repository<AccessControlEntity>) => {
 			const grants = await ace.find();
-			const rolesBuilder = new RolesBuilder(grants);
-			rolesBuilder.lock();
-			return rolesBuilder;
+			return new RolesBuilder(grants);
 		},
 		inject: [ACCESS_CONTROL_TOKEN]
 	}
