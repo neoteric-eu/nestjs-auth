@@ -12,7 +12,7 @@ export class RestController<T extends BaseEntity> {
 
 	@Get('/:id')
 	public async findOne(@Param('id', new ParseIntPipe()) id: number) {
-		return this.service.findOne(id);
+		return this.service.findOneById(id);
 	}
 
 	@Post('/')
