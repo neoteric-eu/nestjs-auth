@@ -6,6 +6,7 @@ import {INestApplication, INestMicroservice} from '@nestjs/common';
 import {config} from '../config';
 import {AppModule} from './app.module';
 import {AppLogger} from './app.logger';
+import {useContainer} from 'class-validator';
 
 export class AppDispatcher {
 	private app: INestApplication;
@@ -27,6 +28,7 @@ export class AppDispatcher {
 		this.app = await NestFactory.create(AppModule, {
 			logger: new AppLogger('Nest')
 		});
+		useContainer(this.app, {fallbackOnErrors: true});
 		this.app.use(cors());
 		if (config.isProduction) {
 			this.app.use(helmet());
