@@ -1,11 +1,11 @@
-import {LoggerService} from '@nestjs/common';
+import { LoggerService } from '@nestjs/common';
 import * as winston from 'winston';
-import {DateTime} from 'luxon';
-import {config} from '../config';
-import {LoggerInstance} from 'winston';
-import {Logger, QueryRunner} from 'typeorm';
+import { DateTime } from 'luxon';
+import { config } from '../config';
+import { LoggerInstance } from 'winston';
+import { Logger, QueryRunner } from 'typeorm';
 
-export class AppLogger implements LoggerService  {
+export class AppLogger implements LoggerService {
 	private logger: LoggerInstance;
 
 	constructor(label?: string) {
@@ -52,15 +52,15 @@ export class AppQueryLogger extends AppLogger implements Logger {
 	}
 
 	logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner): any {
-		super.log(query);
+		super.debug(`[QUERY] ${query} ${parameters ? ' - ' + parameters : ''}`);
 	}
 
 	logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner): any {
-		super.log(query);
+		super.error(error, query);
 	}
 
 	logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner): any {
-		super.log(query);
+		super.log(`[SLOW_QUERY] [${time}] ${query}`);
 	}
 
 	logSchemaBuild(message: string, queryRunner?: QueryRunner): any {

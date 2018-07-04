@@ -1,6 +1,4 @@
-require('dotenv-safe').load();
-import {AppLogger} from './app/app.logger';
-import {AppDispatcher} from './app/app.dispatcher';
+import {AppLogger, AppDispatcher} from './app';
 
 const logger = new AppLogger('Index');
 

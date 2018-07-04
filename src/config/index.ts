@@ -1,7 +1,7 @@
-import {ConnectionOptions} from 'typeorm';
-import {Transport} from '@nestjs/microservices';
-import {AppQueryLogger} from '../app/app.logger';
-const appData = require('../../package.json');
+import { ConnectionOptions } from 'typeorm';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
+import * as appData from '../../package.json';
 
 interface Config {
 	version: string;
@@ -39,9 +39,9 @@ interface Config {
 }
 
 export const config: Config = {
-	version: appData.version,
-	name: appData.name,
-	description: appData.description,
+	version: (<any>appData).version,
+	name: (<any>appData).name,
+	description: (<any>appData).description,
 	uuid: process.env.APP_UUID,
 	isProduction: process.env.NODE_ENV === 'production',
 	salt: process.env.APP_SALT,
@@ -65,7 +65,7 @@ export const config: Config = {
 		database: process.env.APP_DATABASE_NAME,
 		synchronize: true,
 		entities: [
-			__dirname + '/../**/entity/*.entity{.ts,.js}',
+			__dirname + '/../**/entity/*.entity{.ts,.js}'
 		],
 		logging: process.env.APP_DATABASE_LOGGING as any,
 		logger: AppQueryLogger as any
