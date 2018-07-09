@@ -7,11 +7,14 @@ import {config} from '../config';
 import {AppModule} from './app.module';
 import {AppLogger} from './app.logger';
 import {useContainer} from 'class-validator';
+import { MetricsInterceptor } from './metrics/metrics.interceptor';
+import { AnyExceptionFilter } from './_helpers';
 
 export class AppDispatcher {
 	private app: INestApplication;
 	private microservice: INestMicroservice;
 	private logger = new AppLogger(AppDispatcher.name);
+	private metrics = new MetricsInterceptor();
 
 	async dispatch(): Promise<void> {
 		await this.createServer();
@@ -21,6 +24,7 @@ export class AppDispatcher {
 	}
 
 	async shutdown(): Promise<void> {
+		clearInterval(this.metrics.interval);
 		await this.app.close();
 	}
 
@@ -30,6 +34,8 @@ export class AppDispatcher {
 		});
 		useContainer(this.app, {fallbackOnErrors: true});
 		this.app.use(cors());
+		this.app.useGlobalInterceptors(this.metrics);
+		this.app.useGlobalFilters(new AnyExceptionFilter());
 		if (config.isProduction) {
 			this.app.use(helmet());
 		}

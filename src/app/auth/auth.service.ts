@@ -19,7 +19,7 @@ export class AuthService {
 		});
 		return {
 			expiresIn,
-			accessToken,
+			accessToken
 		};
 	}
 

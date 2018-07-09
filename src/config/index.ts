@@ -1,7 +1,12 @@
+import {readFileSync} from 'fs';
 import { ConnectionOptions } from 'typeorm';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
-import * as appData from '../../package.json';
+
+const appPackage = readFileSync(`${__dirname}/../../package.json`, {
+	encoding: 'utf8'
+});
+const appData = JSON.parse(appPackage);
 
 interface Config {
 	version: string;
@@ -39,9 +44,9 @@ interface Config {
 }
 
 export const config: Config = {
-	version: (<any>appData).version,
-	name: (<any>appData).name,
-	description: (<any>appData).description,
+	version: appData.version,
+	name: appData.name,
+	description: appData.description,
 	uuid: process.env.APP_UUID,
 	isProduction: process.env.NODE_ENV === 'production',
 	salt: process.env.APP_SALT,

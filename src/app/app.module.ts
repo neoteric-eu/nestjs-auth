@@ -5,13 +5,17 @@ import { DatabaseModule } from './database/database.module';
 import { AppGateway } from './app.gateway';
 import { UserModule } from './user/user.module';
 import { AccessControlModule } from './access-control/access-control.module';
+import { MessageModule } from './message/message.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
 	imports: [
+		MetricsModule,
 		AccessControlModule,
 		DatabaseModule,
 		AuthModule,
-		UserModule
+		UserModule,
+		MessageModule
 	],
 	providers: [AppGateway]
 })

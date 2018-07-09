@@ -13,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 			secretOrKey: config.session.secret,
 			issuer: config.uuid,
 			audience: config.session.domain,
-			passReqToCallback: true,
+			passReqToCallback: true
 		});
 	}
 
