@@ -22,10 +22,7 @@ interface Config {
 	};
 	port: number;
 	host: string;
-	microservice: {
-		transport: number;
-		port: number;
-	};
+	microservice: MicroserviceOptions;
 	database: ConnectionOptions;
 	logger: {
 		level: string;
@@ -58,8 +55,10 @@ export const config: Config = {
 	port: parseInt(process.env.APP_PORT, 10),
 	host: process.env.APP_HOST,
 	microservice: {
-		transport: Transport.TCP,
-		port: 5667
+		transport: Transport.NATS,
+		options: {
+			url: process.env.APP_MESSAGE_SYSTEM_URL
+		}
 	},
 	database: {
 		type: process.env.APP_DATABASE_TYPE as any,
@@ -68,19 +67,18 @@ export const config: Config = {
 		username: process.env.APP_DATABASE_USER,
 		password: process.env.APP_DATABASE_PASSWORD,
 		database: process.env.APP_DATABASE_NAME,
-		synchronize: true,
+		synchronize: process.env.NODE_ENV !== 'production',
 		entities: [
 			__dirname + '/../**/entity/*.entity{.ts,.js}'
 		],
-		logging: process.env.APP_DATABASE_LOGGING as any,
-		logger: AppQueryLogger as any
+		logging: process.env.APP_DATABASE_LOGGING as LoggerOptions
 	},
 	logger: {
 		level: process.env.APP_LOGGER_LEVEL
 	},
 	cache: {
-		host: '127.0.0.1',
-		port: 11211
+		host: process.env.APP_CACHE_HOST,
+		port: parseInt(process.env.APP_CACHE_PORT, 10)
 	},
 	validator: {
 		validationError: {
