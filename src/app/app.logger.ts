@@ -1,18 +1,17 @@
 import { LoggerService } from '@nestjs/common';
-import * as winston from 'winston';
 import { DateTime } from 'luxon';
-import { config } from '../config';
-import { LoggerInstance } from 'winston';
+import { LoggerInstance, transports, Logger as WsLogger } from 'winston';
 import { Logger, QueryRunner } from 'typeorm';
+import { config } from '../config';
 
 export class AppLogger implements LoggerService {
 	private logger: LoggerInstance;
 
 	constructor(label?: string) {
-		this.logger = new winston.Logger({
+		this.logger = new WsLogger({
 			level: config.logger.level,
 			transports: [
-				new winston.transports.Console({
+				new transports.Console({
 					label,
 					timestamp: () => DateTime.local().toString(),
 					formatter: options => `${options.timestamp()} [${options.level.toUpperCase()}] ${options.label} - ${options.message}`
