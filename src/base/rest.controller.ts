@@ -1,13 +1,13 @@
 import {BaseEntity, DeleteResult, DeepPartial} from 'typeorm';
-import {Body, Delete, Get, Param, ParseIntPipe, Patch, Post, Put} from '@nestjs/common';
+import { Body, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Req } from '@nestjs/common';
 import {CrudService} from './crud.service';
 
 export class RestController<T extends BaseEntity> {
 	protected service: CrudService<T>;
 
 	@Get('/')
-	public async findAll(): Promise<T[]> {
-		return this.service.findAll();
+	public async findAll(@Req() req): Promise<T[]> {
+		return this.service.findAll({user: req.user});
 	}
 
 	@Get('/:id')

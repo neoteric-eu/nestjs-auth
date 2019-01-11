@@ -8,7 +8,7 @@ import {FindConditions} from 'typeorm/find-options/FindConditions';
 export class CrudService<T extends BaseEntity> {
 	protected repository: Repository<T>;
 
-	public async findAll(): Promise<T[]> {
+	public async findAll({user: any}): Promise<T[]> {
 		return await this.repository.find();
 	}
 

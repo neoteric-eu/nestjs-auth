@@ -1,7 +1,8 @@
-import {Inject, Module, OnModuleDestroy} from '@nestjs/common';
+import { Global, Inject, Module, OnModuleDestroy } from '@nestjs/common';
 import { databaseProviders } from './database.providers';
 import {DB_CON_TOKEN} from './database.constants';
 
+@Global()
 @Module({
 	providers: [...databaseProviders],
 	exports: [...databaseProviders]
