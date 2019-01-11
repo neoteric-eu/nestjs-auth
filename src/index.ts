@@ -1,4 +1,5 @@
-import {AppLogger, AppDispatcher} from './app';
+import exitHook from 'async-exit-hook';
+import { AppDispatcher, AppLogger } from './app';
 
 const logger = new AppLogger('Index');
 
@@ -9,8 +10,11 @@ dispatcher.dispatch()
 	.then(() => logger.log('Everything up'))
 	.catch(e => logger.error(e.message, e.trace));
 
-process.on('SIGINT', async () => {
-	await dispatcher.shutdown();
-	logger.log('Graceful shutdown the server');
-	process.exit();
+exitHook(callback => {
+	dispatcher
+		.shutdown()
+		.then(() => {
+			logger.log('Graceful shutdown the server');
+			callback();
+		});
 });

@@ -16,7 +16,7 @@
   "author": "Przemysław Czekaj <pczekaj@neoteric.eu>",
   "license": "MIT",
   "engines": {
-    "node": ">= 8.9.0"
+    "node": ">= 11"
   },
   "precommit": [
     "lint:check"
@@ -28,8 +28,9 @@
     "@nestjs/passport": "^5.1.0",
     "@nestjs/testing": "^5.5.0",
     "@nestjs/websockets": "^5.5.0",
-    "class-validator": "^0.9.1",
+    "async-exit-hook": "^2.0.1",
     "class-transformer": "^0.2.0",
+    "class-validator": "^0.9.1",
     "cors": "^2.8.5",
     "dotenv-safe": "^6.1.0",
     "helmet": "^3.15.0",
@@ -47,21 +48,22 @@
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
     "socket.io": "^2.2.0",
+    "tslib": "^1.9.3",
     "typeorm": "^0.2.11",
     "uuid": "^3.3.2",
     "winston": "^2.4.4"
   },
   "devDependencies": {
     "@nestjs/swagger": "^2.5.1",
-    "@types/node": "^10.12.18",
-    "@types/socket.io": "^2.1.2",
     "@types/express": "^4.16.0",
+    "@types/node": "^10.12.18",
     "@types/redis": "^2.8.10",
+    "@types/socket.io": "^2.1.2",
     "nodemon": "^1.18.9",
     "pre-commit": "^1.2.2",
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.7.0",
     "tslint": "^5.12.1",
-    "typescript": "^3.0"
+    "typescript": "^3.2.2"
   }
 }
