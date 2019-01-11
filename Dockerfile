@@ -1,4 +1,4 @@
-FROM node:8.11-alpine
+FROM node:11-alpine
 
 WORKDIR /usr/src/app
 
@@ -12,5 +12,7 @@ COPY . .
 RUN npm run build
 
 EXPOSE 1337
+
+USER node
 
 CMD [ "npm", "run", "prod" ]
