@@ -38,12 +38,6 @@ export class MetricsInterceptor implements NestInterceptor {
 				const method = req.method;
 				const route = req.route.path;
 				const code = String(res.statusCode);
-				const alertname = 'Nowa ver';
-				const label1 = 'tag1';
-				const label2 = 'tag2';
-				const instance = 'Wypuscilismy nowa ver!';
-				this.duration_a.labels(alertname, label1, label2, instance)
-					.observe(Date.now());
 				this.duration
 					.labels(method, route, code)
 					.observe(Date.now() - now);

@@ -24,7 +24,7 @@ export class AccessControlController extends RestController<AccessControlEntity>
 		action: 'read',
 		possession: 'own'
 	})
-	public indexOwn(@Body() dupa: UserEntity) {
+	public indexOwn(@Body() user: UserEntity) {
 		return new UserEntity();
 	}
 
