@@ -1,8 +1,8 @@
-import {BaseEntity, DeleteResult, DeepPartial} from 'typeorm';
 import { Body, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Req } from '@nestjs/common';
 import {CrudService} from './crud.service';
+import {DeepPartial, ExtendedEntity} from '../app/_helpers';
 
-export class RestController<T extends BaseEntity> {
+export class RestController<T extends ExtendedEntity> {
 	protected service: CrudService<T>;
 
 	@Get('/')
@@ -31,7 +31,7 @@ export class RestController<T extends BaseEntity> {
 	}
 
 	@Delete('/:id')
-	public async delete(@Param('id') id: number): Promise<DeleteResult> {
+	public async delete(@Param('id') id: number): Promise<T> {
 		return this.service.delete(id);
 	}
 }

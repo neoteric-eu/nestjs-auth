@@ -8,7 +8,10 @@ logger.log(`Start`);
 const dispatcher = new AppDispatcher();
 dispatcher.dispatch()
 	.then(() => logger.log('Everything up'))
-	.catch(e => logger.error(e.message, e.trace));
+	.catch(e => {
+		logger.error(e.trace || e.message, e.trace);
+		process.exit(1);
+	});
 
 exitHook(callback => {
 	dispatcher

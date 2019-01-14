@@ -1,12 +1,12 @@
-import * as cors from 'cors';
-import * as helmet from 'helmet';
-import {NestFactory} from '@nestjs/core';
-import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
-import {INestApplication, INestMicroservice} from '@nestjs/common';
-import {config} from '../config';
-import {AppModule} from './app.module';
-import {AppLogger} from './app.logger';
-import {useContainer} from 'class-validator';
+import cors from 'cors';
+import helmet from 'helmet';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { INestApplication, INestMicroservice } from '@nestjs/common';
+import { config } from '../config';
+import { AppModule } from './app.module';
+import { AppLogger } from './app.logger';
+import { useContainer } from 'class-validator';
 import { MetricsInterceptor } from './metrics/metrics.interceptor';
 import { AnyExceptionFilter } from './_helpers';
 

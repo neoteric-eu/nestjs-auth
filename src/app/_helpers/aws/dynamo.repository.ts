@@ -2,6 +2,7 @@ import {Repository} from '../database/repository.interface';
 import {ExtendedEntity} from '../entity/extended-entity';
 import AWS from 'aws-sdk';
 import {plainToClass} from 'class-transformer';
+import {DeepPartial} from '../database/deep-partial';
 
 
 export class DynamoRepository<T extends ExtendedEntity> implements Repository<T> {
@@ -10,17 +11,24 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 
 	}
 
-	async create(model: T): Promise<T> {
-		return this.dynamo.putItem(model.toDynamoDB()).promise().then(() => new this.entity());
+	public create(data: DeepPartial<T>): T {
+		return plainToClass<T, DeepPartial<T>>(this.entity, data);
 	}
 
-	async delete(): Promise<T> {
+	public async save(model: T): Promise<T> {
+		await this.dynamo.putItem(model.toDynamoDB()).promise();
+		return model;
 	}
 
-	public async find(): T[] {
-		const params = { RequestItems : {} };
+	public async delete(): Promise<T> {
+		return {} as any;
+	}
+
+	public async find(): Promise<T[]> {
+		return Promise.resolve({}) as any;
+		/*const params = { RequestItems : {} };
 		params.RequestItems[this.entity.constructor.name] = {};
-		return this.dynamo.batchGetItem(params)/*
+		return this.dynamo.batchGetItem(params)
 			.promise()
 			.then(respose => {
 				const items = [];
@@ -30,13 +38,15 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 					});
 				}
 				return plainToClass(this.entity, items);
-			})*/;
+			});*/
 	}
 
-	findOne() {
+	public async findOne(): Promise<T> {
+		return Promise.resolve({}) as any;
 	}
 
-	findOneOrFail() {
+	public async findOneOrFail(): Promise<T> {
+		return Promise.resolve({}) as any;
 	}
 
 }

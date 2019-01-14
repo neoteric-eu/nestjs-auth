@@ -1,5 +1,5 @@
 import {ApiModelProperty} from '@nestjs/swagger';
-import {DynamoColumn} from '../aws/dynamo-column.decorator';
+import {DYNAMO_COLUMN_DEF, DynamoColumn} from '../aws/dynamo-column.decorator';
 
 export class ExtendedEntity {
 
@@ -23,7 +23,19 @@ export class ExtendedEntity {
 	}
 
 	toDynamoDB(): any {
-		const metadata = Reflect.getOwnMetadataKeys(this);
-
+		const metadataKeys = Reflect.getMetadata(DYNAMO_COLUMN_DEF, this);
+		const item = {};
+		for (const key in metadataKeys) {
+			if (!metadataKeys.hasOwnProperty(key)) {
+				continue;
+			}
+			const val = metadataKeys[key];
+			item[key] = {};
+			item[key][val.type] = this[key];
+		}
+		return {
+			TableName: this.constructor.name,
+			Item: item
+		};
 	}
 }

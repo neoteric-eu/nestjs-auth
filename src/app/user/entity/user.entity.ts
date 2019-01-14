@@ -3,7 +3,6 @@ import {ApiModelProperty} from '@nestjs/swagger';
 import {ExtendedEntity, passwordHash} from '../../_helpers';
 import {IsUserAlreadyExist} from '../user.validator';
 
-@Entity()
 export class UserEntity extends ExtendedEntity {
 
 	@ApiModelProperty()

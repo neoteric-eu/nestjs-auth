@@ -1,11 +1,11 @@
 import { UnprocessableEntityException } from '@nestjs/common';
-import { BaseEntity, DeleteResult, Repository, DeepPartial } from 'typeorm';
 import { validate } from 'class-validator';
 import { config } from '../config';
 import {FindOneOptions} from 'typeorm/find-options/FindOneOptions';
 import {FindConditions} from 'typeorm/find-options/FindConditions';
+import {ExtendedEntity, DeepPartial, Repository} from '../app/_helpers';
 
-export class CrudService<T extends BaseEntity> {
+export class CrudService<T extends ExtendedEntity> {
 	protected repository: Repository<T>;
 
 	public async findAll({user: any}): Promise<T[]> {
@@ -23,7 +23,7 @@ export class CrudService<T extends BaseEntity> {
 	public async create(data: DeepPartial<T>): Promise<T> {
 		const entity: T = this.repository.create(data);
 		await this.validate(entity);
-		return entity.save();
+		return this.repository.save(entity);
 	}
 
 	public async update(data: DeepPartial<T>): Promise<T> {
@@ -34,10 +34,10 @@ export class CrudService<T extends BaseEntity> {
 		const entity: T = await this.findOneById(id);
 		Object.assign(entity, data);
 		await this.validate(entity);
-		return entity.save();
+		return this.repository.save(entity);
 	}
 
-	public async delete(id: number): Promise<DeleteResult> {
+	public async delete(id: number): Promise<T> {
 		return this.repository.delete(id);
 	}
 
