@@ -1,3 +1,4 @@
+require('dotenv-safe').load();
 import exitHook from 'async-exit-hook';
 import { AppDispatcher, AppLogger } from './app';
 
@@ -9,7 +10,7 @@ const dispatcher = new AppDispatcher();
 dispatcher.dispatch()
 	.then(() => logger.log('Everything up'))
 	.catch(e => {
-		logger.error(e.trace || e.message, e.trace);
+		logger.error(e.message, e.stack);
 		process.exit(1);
 	});
 

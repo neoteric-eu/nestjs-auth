@@ -14,8 +14,8 @@ import { MetricsModule } from './metrics/metrics.module';
 		AuthModule,
 		UserModule,
 		MessageModule
-	],
-	providers: [AppGateway]
+	]/*,
+	providers: [AppGateway]*/
 })
 export class AppModule {
 	private logger = new AppLogger(AppModule.name);

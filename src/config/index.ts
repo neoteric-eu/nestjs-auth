@@ -19,7 +19,7 @@ interface Config {
 		timeout: number;
 	};
 	facebook: {
-		app_id: number;
+		app_id: string;
 		app_secret: string;
 	};
 	aws: {
@@ -54,7 +54,7 @@ export const config: Config = {
 		timeout: parseInt(process.env.APP_SESSION_TIMEOUT, 10)
 	},
 	facebook: {
-		app_id: parseInt(process.env.APP_FACEBOOK_APP_ID, 10),
+		app_id: process.env.APP_FACEBOOK_APP_ID,
 		app_secret: process.env.APP_FACEBOOK_APP_SECRET
 	},
 	aws: {

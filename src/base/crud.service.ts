@@ -1,8 +1,6 @@
 import { UnprocessableEntityException } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { config } from '../config';
-import {FindOneOptions} from 'typeorm/find-options/FindOneOptions';
-import {FindConditions} from 'typeorm/find-options/FindConditions';
 import {ExtendedEntity, DeepPartial, Repository} from '../app/_helpers';
 
 export class CrudService<T extends ExtendedEntity> {
@@ -16,7 +14,7 @@ export class CrudService<T extends ExtendedEntity> {
 		return this.repository.findOneOrFail(id);
 	}
 
-	public async findOne(conditions?: FindConditions<T>, options?: FindOneOptions<T>): Promise<T> {
+	public async findOne(conditions?: any, options?: any): Promise<T> {
 		return this.repository.findOne(conditions, options);
 	}
 

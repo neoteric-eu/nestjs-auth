@@ -8,7 +8,7 @@
     "start": "node $NODE_DEBUG_OPTION -r ts-node/register -r dotenv-safe/config src/index.ts",
     "watch": "nodemon",
     "build": "tsc",
-    "prod": "node dist/index.js",
+    "prod": "node -r dotenv-safe/config dist/index.js",
     "lint:check": "tslint --project ./",
     "lint:fix": "tslint --project ./ --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -33,7 +33,7 @@
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
     "cors": "^2.8.5",
-    "dotenv-safe": "^6.1.0",
+    "dotenv-safe": "^5.0.1",
     "helmet": "^3.15.0",
     "jsonwebtoken": "^8.4.0",
     "luxon": "^1.10.0",
