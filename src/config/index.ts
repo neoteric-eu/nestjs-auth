@@ -1,7 +1,5 @@
 import {readFileSync} from 'fs';
-import { ConnectionOptions } from 'typeorm';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
 
 const appPackage = readFileSync(`${__dirname}/../../package.json`, {
 	encoding: 'utf8'
@@ -20,17 +18,20 @@ interface Config {
 		secret: string;
 		timeout: number;
 	};
+	facebook: {
+		app_id: number;
+		app_secret: string;
+	};
+	aws: {
+		api_key: string;
+		secret_key: string;
+	};
 	port: number;
 	host: string;
 	microservice: MicroserviceOptions;
-	database: ConnectionOptions;
 	logger: {
 		level: string;
 		transports?: any[];
-	};
-	cache: {
-		host: string;
-		port: number;
 	};
 	validator: {
 		validationError: {
@@ -52,33 +53,21 @@ export const config: Config = {
 		secret: process.env.APP_SESSION_SECRET,
 		timeout: parseInt(process.env.APP_SESSION_TIMEOUT, 10)
 	},
+	facebook: {
+		app_id: parseInt(process.env.APP_FACEBOOK_APP_ID, 10),
+		app_secret: process.env.APP_FACEBOOK_APP_SECRET
+	},
+	aws: {
+		api_key: process.env.APP_AWS_API_KEY,
+		secret_key: process.env.APP_AWS_SECRET_KEY
+	},
 	port: parseInt(process.env.APP_PORT, 10),
 	host: process.env.APP_HOST,
 	microservice: {
-		transport: Transport.NATS,
-		options: {
-			url: process.env.APP_MESSAGE_SYSTEM_URL
-		}
-	},
-	database: {
-		type: process.env.APP_DATABASE_TYPE as any,
-		host: process.env.APP_DATABASE_HOST,
-		port: parseInt(process.env.APP_DATABASE_PORT, 10),
-		username: process.env.APP_DATABASE_USER,
-		password: process.env.APP_DATABASE_PASSWORD,
-		database: process.env.APP_DATABASE_NAME,
-		synchronize: process.env.NODE_ENV !== 'production',
-		entities: [
-			__dirname + '/../**/entity/*.entity{.ts,.js}'
-		],
-		logging: process.env.APP_DATABASE_LOGGING as LoggerOptions
+		transport: Transport.TCP
 	},
 	logger: {
 		level: process.env.APP_LOGGER_LEVEL
-	},
-	cache: {
-		host: process.env.APP_CACHE_HOST,
-		port: parseInt(process.env.APP_CACHE_PORT, 10)
 	},
 	validator: {
 		validationError: {

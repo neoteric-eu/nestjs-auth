@@ -8,8 +8,6 @@ export class AnyExceptionFilter implements ExceptionFilter {
 		const request = ctx.getRequest();
 		const status = exception.getStatus();
 
-		console.log('hirajem');
-
 		response
 			.status(status)
 			.json({

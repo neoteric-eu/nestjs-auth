@@ -12,17 +12,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			secretOrKey: config.session.secret,
 			issuer: config.uuid,
-			audience: config.session.domain,
-			passReqToCallback: true
+			audience: config.session.domain
 		});
 	}
 
-	async validate(request, payload: JwtPayload, done: Function) {
+	async validate(payload: JwtPayload) {
 		const user = await this.authService.validateUser(payload);
 		if (!user) {
-			return done(new UnauthorizedException(), false);
+			throw new UnauthorizedException();
 		}
-		request.user = user;
-		done(null, user);
+		return user;
 	}
 }

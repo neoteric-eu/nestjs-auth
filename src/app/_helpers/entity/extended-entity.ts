@@ -1,29 +1,29 @@
-import {Column, BaseEntity, Generated, CreateDateColumn, UpdateDateColumn, VersionColumn} from 'typeorm';
 import {ApiModelProperty} from '@nestjs/swagger';
+import {DynamoColumn} from '../aws/dynamo-column.decorator';
 
-export class ExtendedEntity extends BaseEntity {
+export class ExtendedEntity {
 
 	@ApiModelProperty()
-	@Column()
-	@Generated('uuid')
 	public uuid: string;
 
 	@ApiModelProperty()
-	@VersionColumn({
-		type: 'int',
-		nullable: false
-	})
 	public version: number;
 
 	@ApiModelProperty()
-	@CreateDateColumn({
-		type: 'timestamp'
-	})
 	public cratedAt: Date;
 
 	@ApiModelProperty()
-	@UpdateDateColumn({
-		type: 'timestamp'
+	@DynamoColumn({
+		type: 'S'
 	})
 	public updatedAt: Date;
+
+	toString() {
+		return '';
+	}
+
+	toDynamoDB(): any {
+		const metadata = Reflect.getOwnMetadataKeys(this);
+
+	}
 }
