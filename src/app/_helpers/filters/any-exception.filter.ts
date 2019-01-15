@@ -6,7 +6,10 @@ export class AnyExceptionFilter implements ExceptionFilter {
 		const ctx = host.switchToHttp();
 		const response = ctx.getResponse();
 		const request = ctx.getRequest();
-		const status = exception.getStatus();
+		let status = 401;
+		if (exception.getStatus) {
+			status = exception.getStatus();
+		}
 
 		response
 			.status(status)
