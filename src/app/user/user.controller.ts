@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import {Controller, Get} from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
@@ -15,5 +15,10 @@ export class UserController extends RestController<UserEntity> {
 
 	constructor(protected service: UserService) {
 		super();
+	}
+
+	@Get('/test2')
+	public async test2() {
+		const users = this.service.findAll({});
 	}
 }

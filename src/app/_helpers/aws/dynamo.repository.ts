@@ -3,12 +3,31 @@ import {ExtendedEntity} from '../entity/extended-entity';
 import AWS from 'aws-sdk';
 import {plainToClass} from 'class-transformer';
 import {DeepPartial} from '../database/deep-partial';
-
+import {DataMapper, DynamoDbTable, ScanIterator} from '@aws/dynamodb-data-mapper';
+import {NotFoundException} from '@nestjs/common';
+import {config} from '../../../config';
+import {AppLogger} from '../../app.logger';
 
 export class DynamoRepository<T extends ExtendedEntity> implements Repository<T> {
 
-	constructor(private dynamo: AWS.DynamoDB, private entity: new () => T) {
+	private readonly mapper: DataMapper;
+	private readonly logger;
 
+	constructor(dynamo: AWS.DynamoDB, private entity: new () => T) {
+		this.mapper = new DataMapper({
+			client: dynamo,
+			tableNamePrefix: `${config.name}_`
+		});
+		const DynamoDbTabla = Symbol('DynamoDbTableName');
+		this.logger = new AppLogger(`DynamoRepository [${config.name}_${this.entity.name}]`);
+	}
+
+	public async setup(): Promise<void> {
+		await this.mapper.ensureTableExists(this.entity, {
+			readCapacityUnits: 5,
+			writeCapacityUnits: 5
+		});
+		this.logger.debug('table should exists');
 	}
 
 	public create(data: DeepPartial<T>): T {
@@ -16,37 +35,27 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 	}
 
 	public async save(model: T): Promise<T> {
-		await this.dynamo.putItem(model.toDynamoDB()).promise();
-		return model;
+		return this.mapper.put<T>(model);
 	}
 
-	public async delete(): Promise<T> {
-		return {} as any;
+	public async delete(model: T): Promise<T> {
+		return this.mapper.delete<T>(model);
 	}
 
-	public async find(): Promise<T[]> {
-		return Promise.resolve({}) as any;
-		/*const params = { RequestItems : {} };
-		params.RequestItems[this.entity.constructor.name] = {};
-		return this.dynamo.batchGetItem(params)
-			.promise()
-			.then(respose => {
-				const items = [];
-				for (const node of respose) {
-					items.push({
-						...Object.keys(node)
-					});
-				}
-				return plainToClass(this.entity, items);
-			});*/
+	public async find(options): Promise<ScanIterator<T>> {
+		return this.mapper.scan(this.entity, options);
 	}
 
-	public async findOne(): Promise<T> {
-		return Promise.resolve({}) as any;
+	public async findOne(item, options?): Promise<T> {
+		return this.mapper.get(item, options);
 	}
 
-	public async findOneOrFail(): Promise<T> {
-		return Promise.resolve({}) as any;
+	public async findOneOrFail(item, options): Promise<T> {
+		const result = this.findOne(item, options);
+		if (!result) {
+			throw new NotFoundException(`Item doesn't exists`);
+		}
+		return result;
 	}
 
 }

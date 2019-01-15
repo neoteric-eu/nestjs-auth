@@ -6,8 +6,8 @@ import {ExtendedEntity, DeepPartial, Repository} from '../app/_helpers';
 export class CrudService<T extends ExtendedEntity> {
 	protected repository: Repository<T>;
 
-	public async findAll({user: any}): Promise<T[]> {
-		return await this.repository.find();
+	public async findAll(conditions, options?): Promise<AsyncIterableIterator<T>> {
+		return await this.repository.find(conditions, options);
 	}
 
 	public async findOneById(id: number): Promise<T> {

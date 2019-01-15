@@ -6,8 +6,8 @@ export class RestController<T extends ExtendedEntity> {
 	protected service: CrudService<T>;
 
 	@Get('/')
-	public async findAll(@Req() req): Promise<T[]> {
-		return this.service.findAll({user: req.user});
+	public async findAll(@Req() req): Promise<AsyncIterableIterator<T>> {
+		return this.service.findAll({});
 	}
 
 	@Get('/:id')

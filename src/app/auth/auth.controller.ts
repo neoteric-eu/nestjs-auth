@@ -5,6 +5,9 @@ import { ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
 import { AuthService } from './auth.service';
 import { Credentials } from './dto/credentials';
+import {UserService} from '../user/user.service';
+import {User} from '../_helpers/decorators/user.decorator';
+import {FacebookProfile} from './interfaces/facebook-profile.interface';
 
 @ApiUseTags('auth')
 @Controller('auth')
@@ -12,7 +15,8 @@ export class AuthController {
 	private logger = new AppLogger(AuthController.name);
 
 	constructor(
-		private readonly authService: AuthService
+		private readonly authService: AuthService,
+		private readonly userService: UserService
 	) {
 		this.logger.log('hello from the other side');
 	}
@@ -31,7 +35,18 @@ export class AuthController {
 
 	@Post('facebook')
 	@UseGuards(AuthGuard('facebook-token'))
-	public async fbSignIn(@Req() request: Request) {
-		debugger;
+	public async fbSignIn(@User() user: FacebookProfile) {
+		// await this.userService.findOne({socialId: user.id});
+		try {
+			return await this.userService.socialRegister({
+				email: user._json.email,
+				name: user._json.name,
+				socialId: user._json.id,
+				provider: user.provider
+			});
+		} catch (e) {
+			console.error(e);
+			throw e;
+		}
 	}
 }

@@ -7,8 +7,10 @@ import { DynamoRepository } from '../_helpers/';
 export const userProviders = [
 	{
 		provide: USER_TOKEN,
-		useFactory: (dynamoDB: AWS.DynamoDB) => {
-			return new DynamoRepository(dynamoDB, UserEntity);
+		useFactory: async (dynamoDB: AWS.DynamoDB) => {
+			const repository = new DynamoRepository(dynamoDB, UserEntity);
+			await repository.setup();
+			return repository;
 		},
 		inject: [DB_CON_TOKEN]
 	}

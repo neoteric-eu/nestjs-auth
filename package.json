@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-auth",
+  "name": "threeleaf_backend",
   "version": "0.0.1",
   "description": "Authentication and Authorization example for Nest.js TypeScript Framework",
   "main": "dist/index.js",
@@ -23,6 +23,8 @@
     "lint:check"
   ],
   "dependencies": {
+    "@aws/dynamodb-data-mapper": "^0.7.3",
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
     "@nestjs/common": "^5.5.0",
     "@nestjs/core": "^5.5.0",
     "@nestjs/microservices": "^5.5.0",

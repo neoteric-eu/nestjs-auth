@@ -25,4 +25,13 @@ export class UserService extends CrudService<UserEntity> {
 
 		return user;
 	}
+
+	public async socialRegister({name, email, socialId, provider}) {
+		const user = new UserEntity();
+		user.name = name;
+		user.email = email;
+		user.socialId = socialId;
+		user.provider = provider;
+		return this.repository.save(user);
+	}
 }
