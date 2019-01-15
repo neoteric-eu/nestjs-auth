@@ -19,6 +19,9 @@ export class UserController extends RestController<UserEntity> {
 
 	@Get('/test2')
 	public async test2() {
-		const users = this.service.findAll({});
+		/*const users = this.service.findAll({});
+		for await (const user of users) {
+			yield user;
+		}*/
 	}
 }

@@ -11,7 +11,7 @@ export class RestController<T extends ExtendedEntity> {
 	}
 
 	@Get('/:id')
-	public async findOne(@Param('id', new ParseIntPipe()) id: number) {
+	public async findOne(@Param('id') id: string) {
 		return this.service.findOneById(id);
 	}
 
@@ -26,12 +26,12 @@ export class RestController<T extends ExtendedEntity> {
 	}
 
 	@Patch('/:id')
-	public async patch(@Param('id', new ParseIntPipe()) id: number, @Body() data: DeepPartial<T>): Promise<T> {
+	public async patch(@Param('id') id: string, @Body() data: DeepPartial<T>): Promise<T> {
 		return this.service.patch(id, data);
 	}
 
 	@Delete('/:id')
-	public async delete(@Param('id') id: number): Promise<T> {
+	public async delete(@Param('id') id: string): Promise<T> {
 		return this.service.delete(id);
 	}
 }
