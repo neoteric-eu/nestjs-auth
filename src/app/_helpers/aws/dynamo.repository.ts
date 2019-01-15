@@ -39,7 +39,8 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 		return this.mapper.put<T>(model);
 	}
 
-	public async delete(model: T): Promise<T> {
+	public async delete(id: string): Promise<T> {
+		const model = plainToClass<T, object>(this.entity, {id});
 		return this.mapper.delete<T>(model);
 	}
 
