@@ -1,43 +1,49 @@
 version: "3.0"
 services:
-  postgresql:
-    container_name: postgresql
-    image: postgres:10-alpine
-    restart: always
+  dynamodb:
+    container_name: dynamodb
+    image: amazon/dynamodb-local
+    restart: on-failure
     ports:
-      - "127.0.0.1:5432:5432" #just for development purpose
-    environment:
-      - POSTGRES_USER=some_user
-      - POSTGRES_PASSWORD=some_passwd
-      - POSTGRES_DB=some_db
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:5.2.1
-    restart: always
-    ports:
-      - "127.0.0.1:8081:3000" #just for development purpose
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:v2.3.1
-    restart: always
-    ports:
-      - "127.0.0.1:9090:9090" #just for development purpose
-    volumes:
-      - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./metrics/prometheus/alert.yml:/etc/prometheus/alert.yml
-  gnats:
-    container_name: gnats
-    image: nats:latest
-    restart: always
-    ports:
-      - "127.0.0.1:8222:8222"
-      - "127.0.0.1:4222:4222"
-  redis:
-    container_name: redis
-    image: redis:4-alpine
-    restart: always
-    ports:
-      - "127.0.0.1:6379:6379" #just for development purpose
+      - "127.0.0.1:8000:8000"
+#  postgresql:
+#    container_name: postgresql
+#    image: postgres:10-alpine
+#    restart: always
+#    ports:
+#      - "127.0.0.1:5432:5432" #just for development purpose
+#    environment:
+#      - POSTGRES_USER=some_user
+#      - POSTGRES_PASSWORD=some_passwd
+#      - POSTGRES_DB=some_db
+#  grafana:
+#    container_name: grafana
+#    image: grafana/grafana:5.2.1
+#    restart: always
+#    ports:
+#      - "127.0.0.1:8081:3000" #just for development purpose
+#  prometheus:
+#    container_name: prometheus
+#    image: prom/prometheus:v2.3.1
+#    restart: always
+#    ports:
+#      - "127.0.0.1:9090:9090" #just for development purpose
+#    volumes:
+#      - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#      - ./metrics/prometheus/alert.yml:/etc/prometheus/alert.yml
+#  gnats:
+#    container_name: gnats
+#    image: nats:latest
+#    restart: always
+#    ports:
+#      - "127.0.0.1:8222:8222"
+#      - "127.0.0.1:4222:4222"
+#  redis:
+#    container_name: redis
+#    image: redis:4-alpine
+#    restart: always
+#    ports:
+#      - "127.0.0.1:6379:6379" #just for development purpose
 #  nestjs-auth:
 #    container_name: nestjs-auth
 #    image: neoteric-eu/nestjs-auth:latest

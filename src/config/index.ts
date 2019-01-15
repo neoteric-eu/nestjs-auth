@@ -25,6 +25,7 @@ interface Config {
 	aws: {
 		api_key: string;
 		secret_key: string;
+		region: string;
 	};
 	port: number;
 	host: string;
@@ -59,7 +60,8 @@ export const config: Config = {
 	},
 	aws: {
 		api_key: process.env.APP_AWS_API_KEY,
-		secret_key: process.env.APP_AWS_SECRET_KEY
+		secret_key: process.env.APP_AWS_SECRET_KEY,
+		region: process.env.APP_AWS_REGION
 	},
 	port: parseInt(process.env.APP_PORT, 10),
 	host: process.env.APP_HOST,
