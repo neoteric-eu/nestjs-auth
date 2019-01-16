@@ -1,0 +1,98 @@
+type Query {
+    listHomes: [Home]
+    getHome(id: ID!): Home
+}
+
+type Mutation {
+    createHome(createHomeInput: CreateHomeInput): Home
+    deleteHome(deleteHomeInput: DeleteHomeInput): Home
+    updateHome(updateHomeInput: UpdateHomeInput): Home
+}
+
+type Subscription {
+    homeCreated: Home
+}
+
+type Home {
+    id: ID!
+    owner: String
+    price: Float
+    price_adjustment: Float
+    descr: String
+    json: String
+    address_1: String
+    address_2: String
+    city: String
+    state: String
+    zip: String
+    country: String
+    beds: Int
+    baths: Int
+    lot_size: Float
+    sqft: Int
+    lat: Float
+    lng: Float
+    pool: Boolean
+    fav_count: Int
+    showing_count: Int
+    buyers_agent: Boolean
+    buyers_agent_amt: Float
+    buyers_agent_type: Int
+}
+
+input CreateHomeInput {
+    owner: String
+    price: Float
+    price_adjustment: Float
+    descr: String
+    json: String
+    address_1: String
+    address_2: String
+    city: String
+    state: String
+    zip: String
+    country: String
+    beds: Int
+    baths: Int
+    lot_size: Float
+    sqft: Int
+    lat: Float
+    lng: Float
+    pool: Boolean
+    fav_count: Int
+    showing_count: Int
+    buyers_agent: Boolean
+    buyers_agent_amt: Float
+    buyers_agent_type: Int
+}
+
+input UpdateHomeInput {
+    id: ID!
+    owner: String
+    price: Float
+    price_adjustment: Float
+    descr: String
+    json: String
+    address_1: String
+    address_2: String
+    city: String
+    state: String
+    zip: String
+    country: String
+    beds: Int
+    baths: Int
+    lot_size: Float
+    sqft: Int
+    lat: Float
+    lng: Float
+    pool: Boolean
+    fav_count: Int
+    showing_count: Int
+    buyers_agent: Boolean
+    buyers_agent_amt: Float
+    buyers_agent_type: Int
+}
+
+input DeleteHomeInput {
+    id: ID!
+}
