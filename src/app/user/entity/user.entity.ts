@@ -12,11 +12,11 @@ export class UserEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
 	@attribute()
-	public cratedAt: Date;
+	public cratedAt: string;
 
 	@ApiModelProperty()
 	@attribute()
-	public updatedAt: Date;
+	public updatedAt: string;
 
 	@ApiModelProperty()
 	@IsString()
