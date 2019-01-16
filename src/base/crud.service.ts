@@ -24,14 +24,14 @@ export class CrudService<T extends ExtendedEntity> {
 
 	public findAll(conditions, options?): Observable<T[]> {
 		const observable = from(this.repository.find(conditions, options));
-		return observable.pipe(map(result => asyncToObservable<T[]>(result))) as any;
+		return observable.pipe(map((result: any) => asyncToObservable<T[]>(result))) as any;
 	}
 
 	public async findOneById(id: string): Promise<T> {
 		return this.repository.findOneOrFail(id);
 	}
 
-	public async findOne(conditions?: any, options?: any): Promise<T> {
+	public findOne(conditions?: any, options?: any): Observable<T> {
 		return this.repository.findOne(conditions, options);
 	}
 

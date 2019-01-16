@@ -1,13 +1,13 @@
-import {Controller, Post, Get, Body, Headers, UseGuards, Req} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
-import { ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
-import { AppLogger } from '../app.logger';
-import { AuthService } from './auth.service';
-import { Credentials } from './dto/credentials';
+import {Body, Controller, Get, Headers, Post, UseGuards} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
+import {ApiBearerAuth, ApiUseTags} from '@nestjs/swagger';
+import {AppLogger} from '../app.logger';
+import {AuthService} from './auth.service';
+import {Credentials} from './dto/credentials';
 import {UserService} from '../user/user.service';
-import {User} from '../_helpers/decorators/user.decorator';
 import {FacebookProfile} from './interfaces/facebook-profile.interface';
+import {createToken, verifyToken} from './jwt';
+import {Profile} from '../_helpers/decorators';
 
 @ApiUseTags('auth')
 @Controller('auth')
@@ -25,28 +25,29 @@ export class AuthController {
 	@ApiBearerAuth()
 	@UseGuards(AuthGuard('jwt'))
 	public async verify(@Headers('Authorization') token: string) {
-		return this.authService.verifyToken(token);
+		return verifyToken(token);
 	}
 
 	@Post('token')
 	public async getToken(@Body() credentials: Credentials) {
-		return await this.authService.createToken(credentials);
+		const user = await this.userService.login(credentials);
+		return await createToken(user);
 	}
 
 	@Post('facebook')
 	@UseGuards(AuthGuard('facebook-token'))
-	public async fbSignIn(@User() user: FacebookProfile) {
-		await this.userService.findOne({socialId: user.id});
+	public async fbSignIn(@Profile() profile: FacebookProfile) {
 		try {
-			return await this.userService.socialRegister({
-				email: user._json.email,
-				name: user._json.name,
-				socialId: user._json.id,
-				provider: user.provider
-			});
+			return this.userService.findOne({socialId: profile.id})
+				.subscribe(user => createToken(user));
 		} catch (e) {
 			console.error(e);
-			throw e;
+			return await this.userService.socialRegister({
+				email: profile._json.email,
+				name: profile._json.name,
+				socialId: profile._json.id,
+				provider: profile.provider
+			});
 		}
 	}
 }

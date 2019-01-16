@@ -7,8 +7,24 @@ import {ExtendedEntity} from '../entity/extended-entity';
 import {DeepPartial} from '../database/deep-partial';
 import {config} from '../../../config';
 import {AppLogger} from '../../app.logger';
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 export type Constructor<T> = new(...args: any[]) => T;
+
+function asyncToObservable<T>(iterable: AsyncIterableIterator<T>): Observable<T> {
+	return new Observable(observer => void (async () => {
+		try {
+			for await (const item of iterable) {
+				if (observer.closed) { return; }
+				observer.next(item);
+			}
+			observer.complete();
+		} catch (e) {
+			observer.error(e);
+		}
+	})());
+}
 
 export class DynamoRepository<T extends ExtendedEntity> implements Repository<T> {
 
@@ -48,9 +64,10 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 		return this.mapper.scan(this.entity, options);
 	}
 
-	public async findOne(item: object, options?): Promise<T> {
-		const model = plainToClass<T, object>(this.entity, item);
-		return this.mapper.get(model, options);
+	public findOne(item: object, options?): Observable<T> {
+		console.log(item);
+		const result = this.mapper.query(this.entity, item);
+		return asyncToObservable(result).pipe(tap((user: T) => user));
 	}
 
 	public async findOneOrFail(id: string): Promise<T> {

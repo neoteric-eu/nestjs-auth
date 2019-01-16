@@ -8,11 +8,11 @@ import {GraphQLModule} from '@nestjs/graphql';
 import {HomeModule} from './home/home.module';
 import {UserModule} from './user/user.module';
 import {MessageModule} from './message/message.module';
-import {MetricsModule} from './metrics/metrics.module';
+/*import {MetricsModule} from './metrics/metrics.module';*/
 
 @Module({
 	imports: [
-		MetricsModule,
+		/*MetricsModule,*/
 		DatabaseModule,
 		AuthModule,
 		UserModule,
@@ -22,11 +22,13 @@ import {MetricsModule} from './metrics/metrics.module';
 			include: [CatsModule],
 			typePaths: ['./**/*.graphql'],
 			introspection: true,
+			playground: true,
 			installSubscriptionHandlers: true,
 			definitions: {
 				path: join(process.cwd(), 'src/graphql.schema.ts'),
 				outputAs: 'class'
-			}
+			},
+			path: '/graphiql'
 		})
 	]/*,
 	providers: [AppGateway]*/

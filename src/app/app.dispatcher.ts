@@ -1,4 +1,5 @@
 import cors from 'cors';
+import query from 'qs-middleware';
 import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -14,7 +15,7 @@ export class AppDispatcher {
 	private app: INestApplication;
 	private microservice: INestMicroservice;
 	private logger = new AppLogger(AppDispatcher.name);
-	private metrics = new MetricsInterceptor();
+	/*private metrics = new MetricsInterceptor();*/
 
 	async dispatch(): Promise<void> {
 		await this.createServer();
@@ -24,7 +25,7 @@ export class AppDispatcher {
 	}
 
 	async shutdown(): Promise<void> {
-		clearInterval(this.metrics.interval);
+		/*clearInterval(this.metrics.interval);*/
 		await this.app.close();
 	}
 
@@ -34,7 +35,8 @@ export class AppDispatcher {
 		});
 		useContainer(this.app, {fallbackOnErrors: true});
 		this.app.use(cors());
-		this.app.useGlobalInterceptors(this.metrics);
+		this.app.use(query());
+		/*this.app.useGlobalInterceptors(this.metrics);*/
 		this.app.useGlobalFilters(new AnyExceptionFilter());
 		if (config.isProduction) {
 			this.app.use(helmet());
