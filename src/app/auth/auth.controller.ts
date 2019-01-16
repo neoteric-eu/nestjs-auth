@@ -1,6 +1,7 @@
 import {Body, Controller, Get, Headers, Post, UseGuards} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiBearerAuth, ApiUseTags} from '@nestjs/swagger';
+import {equals} from '@aws/dynamodb-expressions';
 import {AppLogger} from '../app.logger';
 import {AuthService} from './auth.service';
 import {Credentials} from './dto/credentials';
@@ -37,17 +38,15 @@ export class AuthController {
 	@Post('facebook')
 	@UseGuards(AuthGuard('facebook-token'))
 	public async fbSignIn(@Profile() profile: FacebookProfile) {
-		try {
-			return this.userService.findOne({socialId: profile.id})
-				.subscribe(user => createToken(user));
-		} catch (e) {
-			console.error(e);
-			return await this.userService.socialRegister({
+		let user = await this.userService.findOne({filter: {...equals(profile.id), subject: 'socialId'}});
+		if (!user) {
+			user = await this.userService.socialRegister({
 				email: profile._json.email,
 				name: profile._json.name,
 				socialId: profile._json.id,
 				provider: profile.provider
 			});
 		}
+		return createToken(user);
 	}
 }

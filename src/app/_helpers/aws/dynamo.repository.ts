@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import {Observable} from 'rxjs';
 import {plainToClass} from 'class-transformer';
 import {NotFoundException} from '@nestjs/common';
 import {DataMapper, ScanIterator} from '@aws/dynamodb-data-mapper';
@@ -7,8 +8,6 @@ import {ExtendedEntity} from '../entity/extended-entity';
 import {DeepPartial} from '../database/deep-partial';
 import {config} from '../../../config';
 import {AppLogger} from '../../app.logger';
-import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
 
 export type Constructor<T> = new(...args: any[]) => T;
 
@@ -29,7 +28,7 @@ function asyncToObservable<T>(iterable: AsyncIterableIterator<T>): Observable<T>
 export class DynamoRepository<T extends ExtendedEntity> implements Repository<T> {
 
 	private readonly mapper: DataMapper;
-	private readonly logger;
+	private readonly logger: AppLogger;
 
 	constructor(dynamo: AWS.DynamoDB, private entity: Constructor<T>) {
 		this.mapper = new DataMapper({
@@ -64,10 +63,9 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 		return this.mapper.scan(this.entity, options);
 	}
 
-	public findOne(item: object, options?): Observable<T> {
-		console.log(item);
-		const result = this.mapper.query(this.entity, item);
-		return asyncToObservable(result).pipe(tap((user: T) => user));
+	public findOne(item: object): Promise<T> {
+		const result = this.mapper.scan(this.entity, {...item, limit: 1});
+		return asyncToObservable<T>(result).toPromise<T>();
 	}
 
 	public async findOneOrFail(id: string): Promise<T> {

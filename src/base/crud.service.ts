@@ -31,8 +31,8 @@ export class CrudService<T extends ExtendedEntity> {
 		return this.repository.findOneOrFail(id);
 	}
 
-	public findOne(conditions?: any, options?: any): Observable<T> {
-		return this.repository.findOne(conditions, options);
+	public findOne(conditions?: any): Promise<T> {
+		return this.repository.findOne(conditions);
 	}
 
 	public async create(data: DeepPartial<T>): Promise<T> {
