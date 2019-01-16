@@ -48,7 +48,6 @@ export class AppDispatcher {
 
 		const document = SwaggerModule.createDocument(this.app, options);
 		SwaggerModule.setup('/swagger', this.app, document);
-		this.logger.log(`Swagger is exposed at ${config.host}:${config.port}/swagger`);
 	}
 
 	private createMicroServices(): void {
@@ -61,6 +60,7 @@ export class AppDispatcher {
 
 	private async startServer(): Promise<void> {
 		await this.app.listen(config.port, config.host);
-		this.logger.log(`Server is listening ${config.host}:${config.port}`);
+		this.logger.log(`Swagger is exposed at http://${config.host}:${config.port}/swagger`);
+		this.logger.log(`Server is listening http://${config.host}:${config.port}`);
 	}
 }

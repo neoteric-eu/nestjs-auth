@@ -36,7 +36,7 @@ export class AuthController {
 	@Post('facebook')
 	@UseGuards(AuthGuard('facebook-token'))
 	public async fbSignIn(@User() user: FacebookProfile) {
-		// await this.userService.findOne({socialId: user.id});
+		await this.userService.findOne({socialId: user.id});
 		try {
 			return await this.userService.socialRegister({
 				email: user._json.email,
