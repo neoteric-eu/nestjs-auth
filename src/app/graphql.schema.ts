@@ -134,6 +134,8 @@ export abstract class IQuery {
 
     abstract getHome(id: string): Home | Promise<Home>;
 
+    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
+
     abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
 
     abstract me(id: string): Home | Promise<Home>;

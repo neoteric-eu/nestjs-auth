@@ -1,7 +1,7 @@
 import {UnauthorizedException, UseGuards} from '@nestjs/common';
 import {Args, Mutation, Query, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
-import {Home} from '../graphql.schema';
+import {Home, HomeFavorite} from '../graphql.schema';
 import {HomeService} from './home.service';
 import {CreateHomeDto, DeleteHomeDto, UpdateHomeDto} from './dto';
 import {AttomDataApiService} from './attom-data-api.service';
@@ -19,8 +19,8 @@ export class HomeResolvers {
 	}
 
 	@Query('listHomes')
-	async findOne() {
-		// return await this.homeService.findAll();
+	async findAll(): Promise<HomeFavorite[]> {
+		return this.homeService.findAll();
 	}
 
 	@Query('getHome')
@@ -54,6 +54,7 @@ export class HomeResolvers {
 	async update(@CurrentUser() user: User, @Args('updateHomeInput') args: UpdateHomeDto): Promise<Home> {
 		const homeToUpdate: Home = await this.homeService.findOneById(args.id);
 		if (homeToUpdate.owner === user.id) {
+			args.owner = user.id;
 			const updatedHome = await this.homeService.update(args);
 			pubSub.publish('homeUpdated', {homeUpdated: updatedHome});
 			return updatedHome;

@@ -89,7 +89,7 @@
 	}
 
 	function authorize({accessToken, data_access_expiration_time, expiresIn, reauthorize_required_in, signedRequest, userID}) {
-		postData(`http://localhost:8080/auth/facebook`, {access_token: accessToken})
+		postData(`http://localhost:3001/auth/facebook`, {access_token: accessToken})
 			.then(data => console.log(JSON.stringify(data))) // JSON-string from `response.json()` call
 			.catch(error => console.error(error));
 

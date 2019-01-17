@@ -1,4 +1,5 @@
 type Query {
+    getHomeFavorites: [HomeFavorite]
     getHomeFavorite(id: ID!): HomeFavorite
 }
 

@@ -1,3 +1,4 @@
+import {equals} from '@aws/dynamodb-expressions';
 import {UnauthorizedException, UseGuards} from '@nestjs/common';
 import {Args, Mutation, Query, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
@@ -16,15 +17,20 @@ export class HomeFavoriteResolvers {
 	constructor(private readonly homeFavoriteService: HomeFavoriteService) {
 	}
 
+	@Query('getHomeFavorites')
+	async findAll(@CurrentUser() user: User): Promise<HomeFavorite[]> {
+		return this.homeFavoriteService.findAll({filter: {...equals(user.id), subject: 'homeFavoriteUserId'}});
+	}
+
 	@Query('getHomeFavorite')
 	async findOneById(@Args('id') id: string): Promise<HomeFavorite> {
-		return await this.homeFavoriteService.findOneById(id);
+		return this.homeFavoriteService.findOneById(id);
 	}
 
 	@Mutation('createHomeFavorite')
 	async create(@CurrentUser() user: User, @Args('createHomeFavoriteInput') args: CreateHomeFavoriteDto): Promise<HomeFavorite> {
-		const createdHomeFavorite = await this.homeFavoriteService.create(args);
 		args.homeFavoriteUserId = user.id;
+		const createdHomeFavorite = await this.homeFavoriteService.create(args);
 		pubSub.publish('homeFavoriteCreated', {homeCreatedFavorite: createdHomeFavorite});
 		return createdHomeFavorite;
 	}

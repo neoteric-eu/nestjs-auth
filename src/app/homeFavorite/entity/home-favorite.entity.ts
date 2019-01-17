@@ -3,7 +3,7 @@ import {ApiModelProperty} from '@nestjs/swagger';
 import {ExtendedEntity} from '../../_helpers';
 import {IsString} from 'class-validator';
 
-@table(`home`)
+@table(`home_favorite`)
 export class HomeFavoriteEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
