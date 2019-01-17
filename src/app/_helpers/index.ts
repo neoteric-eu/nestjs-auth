@@ -6,7 +6,7 @@ export * from './filters/any-exception.filter';
 export * from './database/repository.interface';
 export * from './database/deep-partial';
 export * from './aws/dynamo.repository';
-export * from './graphql.guard';
+export * from './graphql/graphql.guard';
 
 export function passwordHash(password: string) {
 	return crypto.createHmac('sha256', config.salt)
