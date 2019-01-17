@@ -32,7 +32,8 @@ export class AppDispatcher {
 		});
 		useContainer(this.app, {fallbackOnErrors: true});
 		this.app.use(cors());
-		this.app.useGlobalFilters(new AnyExceptionFilter());
+		this.app.use(query());
+		// this.app.useGlobalFilters(new AnyExceptionFilter());
 		if (config.isProduction) {
 			this.app.use(helmet());
 		}

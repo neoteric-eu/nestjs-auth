@@ -22,6 +22,12 @@ interface Config {
 		app_id: string;
 		app_secret: string;
 	};
+	homeApi: {
+		attomData: {
+			apiUrl: string;
+			apiKey: string;
+		};
+	};
 	aws: {
 		api_key: string;
 		secret_key: string;
@@ -57,6 +63,12 @@ export const config: Config = {
 	facebook: {
 		app_id: process.env.APP_FACEBOOK_APP_ID,
 		app_secret: process.env.APP_FACEBOOK_APP_SECRET
+	},
+	homeApi: {
+		attomData: {
+			apiKey: process.env.APP_HOME_API_ATTOM_DATA_API_KEY,
+			apiUrl: 'https://search.onboard-apis.com/propertyapi/v1.0.0'
+		}
 	},
 	aws: {
 		api_key: process.env.APP_AWS_API_KEY,

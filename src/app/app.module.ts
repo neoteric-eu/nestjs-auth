@@ -26,7 +26,8 @@ import {HomeFavoriteModule} from './homeFavorite/home-favorite.module';
 			definitions: {
 				path: join(process.cwd(), 'src/app/graphql.schema.ts'),
 				outputAs: 'class'
-			}
+			},
+			context: ({req}) => ({req})
 		})
 	]/*,
 	providers: [AppGateway]*/

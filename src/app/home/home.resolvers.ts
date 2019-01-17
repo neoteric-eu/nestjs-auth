@@ -5,16 +5,20 @@ import {Home} from '../graphql.schema';
 import {HomeGuard} from './home.guard';
 import {HomeService} from './home.service';
 import {CreateHomeDto, DeleteHomeDto, UpdateHomeDto} from './dto';
+import {AttomDataApiService} from './attom-data-api.service';
+import {AuthGuard} from '@nestjs/passport';
+import {GraphqlGuard} from '../_helpers';
 
 const pubSub = new PubSub();
 
 @Resolver('Home')
+@UseGuards(GraphqlGuard)
 export class HomeResolvers {
-	constructor(private readonly homeService: HomeService) {
+	constructor(private readonly homeService: HomeService,
+							private readonly attomDataService: AttomDataApiService) {
 	}
 
 	@Query('listHomes')
-	@UseGuards(HomeGuard)
 	async findOne() {
 		// return await this.homeService.findAll();
 	}
@@ -26,6 +30,8 @@ export class HomeResolvers {
 
 	@Mutation('createHome')
 	async create(@Args('createHomeInput') args: CreateHomeDto): Promise<Home> {
+		const response = await this.attomDataService.getAVMDetail({address1: args.address_1, address2: args.address_2});
+		args.json = JSON.stringify(response.data);
 		const createdHome = await this.homeService.create(args);
 		pubSub.publish('homeCreated', {homeCreated: createdHome});
 		return createdHome;
