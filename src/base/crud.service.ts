@@ -5,26 +5,11 @@ import {map} from 'rxjs/operators';
 import {config} from '../config';
 import {ExtendedEntity, DeepPartial, Repository} from '../app/_helpers';
 
-function asyncToObservable<T>(iterable: AsyncIterableIterator<T>): Observable<T> {
-	return new Observable(observer => void (async () => {
-		try {
-			for await (const item of iterable) {
-				if (observer.closed) { return; }
-				observer.next(item);
-			}
-			observer.complete();
-		} catch (e) {
-			observer.error(e);
-		}
-	})());
-}
-
 export class CrudService<T extends ExtendedEntity> {
 	protected repository: Repository<T>;
 
-	public findAll(conditions, options?): Observable<T[]> {
-		const observable = from(this.repository.find(conditions, options));
-		return observable.pipe(map((result: any) => asyncToObservable<T[]>(result))) as any;
+	public findAll(conditions?): Promise<T[]> {
+		return this.repository.find(conditions);
 	}
 
 	public async findOneById(id: string): Promise<T> {

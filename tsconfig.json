@@ -14,6 +14,10 @@
     "target": "es2018",
     "allowJs": true,
     "baseUrl": "src",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "typeRoots": [
       "node_modules/@types"
     ]

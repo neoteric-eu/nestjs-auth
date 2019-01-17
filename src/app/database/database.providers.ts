@@ -11,10 +11,7 @@ export const databaseProviders = [
 				secretAccessKey: config.aws.secret_key,
 				region: config.aws.region
 			});
-			if (config.isProduction) {
-				return new AWS.DynamoDB();
-			}
-			return new AWS.DynamoDB({endpoint: 'http://localhost:8000'});
+			return new AWS.DynamoDB();
 		}
 	}
 ];

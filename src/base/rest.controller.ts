@@ -1,4 +1,5 @@
 import { Body, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Req } from '@nestjs/common';
+import {Observable} from 'rxjs';
 import {CrudService} from './crud.service';
 import {DeepPartial, ExtendedEntity} from '../app/_helpers';
 
@@ -6,8 +7,8 @@ export class RestController<T extends ExtendedEntity> {
 	protected service: CrudService<T>;
 
 	@Get('/')
-	public async findAll(@Req() req): Promise<AsyncIterableIterator<T>> {
-		return this.service.findAll({});
+	public findAll(@Req() req): Promise<T[]> {
+		return this.service.findAll();
 	}
 
 	@Get('/:id')
