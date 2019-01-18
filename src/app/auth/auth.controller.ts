@@ -1,11 +1,18 @@
 import {Body, Controller, Get, Headers, Post, UseGuards} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
-import {ApiBearerAuth, ApiUseTags} from '@nestjs/swagger';
+import {ApiImplicitBody, ApiResponse, ApiUseTags} from '@nestjs/swagger';
 import {equals} from '@aws/dynamodb-expressions';
+import {DeepPartial} from '../_helpers/database';
 import {AppLogger} from '../app.logger';
+import {UserEntity} from '../user/entity';
 import {AuthService} from './auth.service';
-import {Credentials} from './dto/credentials';
+import {CredentialsDto} from './dto/credentials.dto';
 import {UserService} from '../user/user.service';
+import {FacebookTokenDto} from './dto/facebook-token.dto';
+import {JwtDto} from './dto/jwt.dto';
+import {RefreshTokenDto} from './dto/refresh-token.dto';
+import {TokenDto} from './dto/token.dto';
+import {UserEntityDto} from './dto/user-entity.dto';
 import {FacebookProfile} from './interfaces/facebook-profile.interface';
 import {createToken, verifyToken} from './jwt';
 import {Profile} from '../_helpers/decorators';
@@ -19,25 +26,43 @@ export class AuthController {
 		private readonly authService: AuthService,
 		private readonly userService: UserService
 	) {
-		this.logger.log('hello from the other side');
+
 	}
 
+
 	@Get('verify')
-	@ApiBearerAuth()
 	@UseGuards(AuthGuard('jwt'))
-	public async verify(@Headers('Authorization') token: string) {
+	@ApiResponse({ status: 200, description: 'OK', type: TokenDto })
+	public async verify(@Headers('Authorization') token: string): Promise<TokenDto> {
 		return verifyToken(token);
 	}
 
-	@Post('token')
-	public async getToken(@Body() credentials: Credentials) {
+	@Post('login')
+	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
+	public async login(@Body() credentials: CredentialsDto): Promise<JwtDto> {
 		const user = await this.userService.login(credentials);
-		return await createToken(user);
+		return createToken(user);
+	}
+
+	@Post('register')
+	@ApiImplicitBody({ required: true, type: UserEntityDto, name: 'UserEntityDto' })
+	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
+	public async register(@Body() data: DeepPartial<UserEntity>): Promise<JwtDto> {
+		const user = await this.userService.create(data);
+		return createToken(user);
+	}
+
+	@Post('refresh')
+	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
+	public async refreshToken(@Body() body: RefreshTokenDto): Promise<JwtDto> {
+		const token = await verifyToken(body.refreshToken);
+		return await createToken({id: token.id});
 	}
 
 	@Post('facebook')
 	@UseGuards(AuthGuard('facebook-token'))
-	public async fbSignIn(@Profile() profile: FacebookProfile) {
+	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
+	public async fbSignIn(@Body() fbToken: FacebookTokenDto, @Profile() profile: FacebookProfile): Promise<JwtDto> {
 		let user = await this.userService.findOne({filter: {...equals(profile.id), subject: 'socialId'}});
 		if (!user) {
 			user = await this.userService.socialRegister({

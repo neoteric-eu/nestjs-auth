@@ -17,6 +17,10 @@ interface Config {
 		domain: string;
 		secret: string;
 		timeout: number;
+		refresh: {
+			secret: string;
+			timeout: number;
+		}
 	};
 	facebook: {
 		app_id: string;
@@ -58,7 +62,11 @@ export const config: Config = {
 	session: {
 		domain: process.env.APP_SESSION_DOMAIN,
 		secret: process.env.APP_SESSION_SECRET,
-		timeout: parseInt(process.env.APP_SESSION_TIMEOUT, 10)
+		timeout: parseInt(process.env.APP_SESSION_TIMEOUT, 10),
+		refresh: {
+			secret: process.env.APP_SESSION_REFRESH_SECRET,
+			timeout: parseInt(process.env.APP_SESSION_REFRESH_TIMEOUT, 10)
+		}
 	},
 	facebook: {
 		app_id: process.env.APP_FACEBOOK_APP_ID,

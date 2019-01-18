@@ -3,8 +3,8 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { UserEntity } from './entity';
 import { USER_TOKEN } from './user.constants';
 import { passwordHash } from '../_helpers';
-import { Credentials } from '../auth/dto/credentials';
-import {Repository} from '../_helpers/database/repository.interface';
+import { CredentialsDto } from '../auth/dto/credentials.dto';
+import {Repository} from '../_helpers/database';
 
 @Injectable()
 export class UserService extends CrudService<UserEntity> {
@@ -13,7 +13,7 @@ export class UserService extends CrudService<UserEntity> {
 		super();
 	}
 
-	public async login(credentials: Credentials): Promise<UserEntity> {
+	public async login(credentials: CredentialsDto): Promise<UserEntity> {
 		const user = await this.repository.findOne({
 			email: credentials.email,
 			password: passwordHash(credentials.password)
