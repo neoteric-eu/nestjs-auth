@@ -1,5 +1,5 @@
 type Query {
-    listHomes: [Home]
+    listHomes(filter: ModelHomeFilterInput, limit: Int): [Home]
     getHome(id: ID!): Home
 }
 
@@ -95,4 +95,34 @@ input UpdateHomeInput {
 
 input DeleteHomeInput {
     id: ID!
+}
+
+input ModelIDFilterInput {
+    ne: ID
+    eq: ID
+    le: ID
+    lt: ID
+    ge: ID
+    gt: ID
+    contains: ID
+    notContains: ID
+    between: [ID]
+    beginsWith: ID
+}
+
+input ModelFloatFilterInput {
+    ne: Float
+    eq: Float
+    le: Float
+    lt: Float
+    ge: Float
+    gt: Float
+    contains: Float
+    notContains: Float
+    between: [Float]
+}
+
+input ModelHomeFilterInput {
+    id: ModelIDFilterInput
+    price: ModelFloatFilterInput
 }

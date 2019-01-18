@@ -42,6 +42,36 @@ export class DeleteUserInput {
     id: string;
 }
 
+export class ModelFloatFilterInput {
+    ne?: number;
+    eq?: number;
+    le?: number;
+    lt?: number;
+    ge?: number;
+    gt?: number;
+    contains?: number;
+    notContains?: number;
+    between?: number[];
+}
+
+export class ModelHomeFilterInput {
+    id?: ModelIDFilterInput;
+    price?: ModelFloatFilterInput;
+}
+
+export class ModelIDFilterInput {
+    ne?: string;
+    eq?: string;
+    le?: string;
+    lt?: string;
+    ge?: string;
+    gt?: string;
+    contains?: string;
+    notContains?: string;
+    between?: string[];
+    beginsWith?: string;
+}
+
 export class UpdateHomeInput {
     id: string;
     owner?: string;
@@ -130,7 +160,7 @@ export abstract class IMutation {
 }
 
 export abstract class IQuery {
-    abstract listHomes(): Home[] | Promise<Home[]>;
+    abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
 
     abstract getHome(id: string): Home | Promise<Home>;
 

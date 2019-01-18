@@ -65,6 +65,7 @@
   "devDependencies": {
     "@nestjs/swagger": "^2.5.1",
     "@types/express": "^4.16.0",
+    "@types/graphql": "^14.0.5",
     "@types/node": "^10.12.18",
     "@types/redis": "^2.8.10",
     "@types/socket.io": "^2.1.2",
