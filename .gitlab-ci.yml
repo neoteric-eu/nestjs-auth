@@ -1,6 +1,11 @@
+services:
+  - docker:dind
+
 build-dev:
   image: docker:latest
   stage: build
+  services:
+    - docker:dind
   environment: development
   tags:
     - docker
