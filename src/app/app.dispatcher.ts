@@ -45,6 +45,7 @@ export class AppDispatcher {
 			.build();
 
 		const document = SwaggerModule.createDocument(this.app, options);
+		document.paths['/graphql'] = {get: { tags: ['graphql']}, post: { tags: ['graphql']}};
 		SwaggerModule.setup('/swagger', this.app, document);
 	}
 
