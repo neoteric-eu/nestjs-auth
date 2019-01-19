@@ -110,6 +110,23 @@ input ModelIDFilterInput {
     beginsWith: ID
 }
 
+input ModelBooleanFilterInput {
+    ne: Boolean
+    eq: Boolean
+}
+
+input ModelIntFilterInput {
+    ne: Int
+    eq: Int
+    le: Int
+    lt: Int
+    ge: Int
+    gt: Int
+    contains: Int
+    notContains: Int
+    between: [Int]
+}
+
 input ModelFloatFilterInput {
     ne: Float
     eq: Float
@@ -122,7 +139,41 @@ input ModelFloatFilterInput {
     between: [Float]
 }
 
+input ModelStringFilterInput {
+    ne: String
+    eq: String
+    le: String
+    lt: String
+    ge: String
+    gt: String
+    contains: String
+    notContains: String
+    between: [String]
+    beginsWith: String
+}
+
 input ModelHomeFilterInput {
     id: ModelIDFilterInput
     price: ModelFloatFilterInput
+    price_adjustment: ModelFloatFilterInput
+    descr: ModelStringFilterInput
+    json: ModelStringFilterInput
+    address_1: ModelStringFilterInput
+    address_2: ModelStringFilterInput
+    city: ModelStringFilterInput
+    state: ModelStringFilterInput
+    zip: ModelStringFilterInput
+    country: ModelStringFilterInput
+    beds: ModelIntFilterInput
+    baths: ModelIntFilterInput
+    lot_size: ModelFloatFilterInput
+    sqft: ModelIntFilterInput
+    lat: ModelFloatFilterInput
+    lng: ModelFloatFilterInput
+    pool: ModelBooleanFilterInput
+    fav_count: ModelIntFilterInput
+    showing_count: ModelIntFilterInput
+    buyers_agent: ModelBooleanFilterInput
+    buyers_agent_amt: ModelFloatFilterInput
+    buyers_agent_type: ModelIntFilterInput
 }

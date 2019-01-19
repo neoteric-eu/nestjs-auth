@@ -1,12 +1,13 @@
+import AWS from 'aws-sdk';
 import {DataMapper} from '@aws/dynamodb-data-mapper';
 import {NotFoundException} from '@nestjs/common';
-import AWS from 'aws-sdk';
 import {plainToClass} from 'class-transformer';
 import {Observable} from 'rxjs';
 import {config} from '../../../config';
 import {AppLogger} from '../../app.logger';
 import {Repository, DeepPartial} from '../database';
 import {ExtendedEntity} from '../entity';
+import {graphqlFilterMapper} from './graphql-filter.mapper';
 
 export type Constructor<T> = new(...args: any[]) => T;
 
@@ -45,7 +46,14 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 		this.logger.debug('table should exists');
 	}
 
-	public async find(options = {}): Promise<T[]> {
+	public async find(options: any): Promise<T[]> {
+		if (options.filter) {
+			options.filter = {
+				type: 'And',
+				conditions: graphqlFilterMapper(options.filter)
+			};
+		}
+		console.log(options);
 		const result = this.mapper.scan(this.entity, options);
 		const items = [];
 		for await(const item of result) {

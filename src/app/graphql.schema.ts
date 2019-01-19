@@ -42,6 +42,11 @@ export class DeleteUserInput {
     id: string;
 }
 
+export class ModelBooleanFilterInput {
+    ne?: boolean;
+    eq?: boolean;
+}
+
 export class ModelFloatFilterInput {
     ne?: number;
     eq?: number;
@@ -57,9 +62,55 @@ export class ModelFloatFilterInput {
 export class ModelHomeFilterInput {
     id?: ModelIDFilterInput;
     price?: ModelFloatFilterInput;
+    price_adjustment?: ModelFloatFilterInput;
+    descr?: ModelStringFilterInput;
+    json?: ModelStringFilterInput;
+    address_1?: ModelStringFilterInput;
+    address_2?: ModelStringFilterInput;
+    city?: ModelStringFilterInput;
+    state?: ModelStringFilterInput;
+    zip?: ModelStringFilterInput;
+    country?: ModelStringFilterInput;
+    beds?: ModelIntFilterInput;
+    baths?: ModelIntFilterInput;
+    lot_size?: ModelFloatFilterInput;
+    sqft?: ModelIntFilterInput;
+    lat?: ModelFloatFilterInput;
+    lng?: ModelFloatFilterInput;
+    pool?: ModelBooleanFilterInput;
+    fav_count?: ModelIntFilterInput;
+    showing_count?: ModelIntFilterInput;
+    buyers_agent?: ModelBooleanFilterInput;
+    buyers_agent_amt?: ModelFloatFilterInput;
+    buyers_agent_type?: ModelIntFilterInput;
 }
 
 export class ModelIDFilterInput {
+    ne?: string;
+    eq?: string;
+    le?: string;
+    lt?: string;
+    ge?: string;
+    gt?: string;
+    contains?: string;
+    notContains?: string;
+    between?: string[];
+    beginsWith?: string;
+}
+
+export class ModelIntFilterInput {
+    ne?: number;
+    eq?: number;
+    le?: number;
+    lt?: number;
+    ge?: number;
+    gt?: number;
+    contains?: number;
+    notContains?: number;
+    between?: number[];
+}
+
+export class ModelStringFilterInput {
     ne?: string;
     eq?: string;
     le?: string;

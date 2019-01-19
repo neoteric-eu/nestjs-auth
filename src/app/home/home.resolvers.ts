@@ -1,7 +1,7 @@
 import {UnauthorizedException, UseGuards} from '@nestjs/common';
 import {Args, Mutation, Query, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
-import {Home, HomeFavorite} from '../graphql.schema';
+import {Home, HomeFavorite, ModelHomeFilterInput} from '../graphql.schema';
 import {HomeService} from './home.service';
 import {CreateHomeDto, DeleteHomeDto, UpdateHomeDto} from './dto';
 import {AttomDataApiService} from './attom-data-api.service';
@@ -19,8 +19,9 @@ export class HomeResolvers {
 	}
 
 	@Query('listHomes')
-	async findAll(): Promise<HomeFavorite[]> {
-		return this.homeService.findAll();
+	async findAll(@Args('filter') filter?: ModelHomeFilterInput, @Args('limit') limit?: number): Promise<HomeFavorite[]> {
+		console.dir(filter);
+		return this.homeService.findAll({filter, limit});
 	}
 
 	@Query('getHome')
