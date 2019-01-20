@@ -4,6 +4,7 @@ import {AuthModule} from './auth/auth.module';
 import {AppLogger} from './app.logger';
 import {DatabaseModule} from './database/database.module';
 import {GraphQLModule} from '@nestjs/graphql';
+import {HealthCheckModule} from './healtcheck/healthcheck.module';
 import {HomeModule} from './home/home.module';
 import {UserModule} from './user/user.module';
 import {MessageModule} from './message/message.module';
@@ -11,6 +12,7 @@ import {HomeFavoriteModule} from './homeFavorite/home-favorite.module';
 
 @Module({
 	imports: [
+		HealthCheckModule,
 		DatabaseModule,
 		AuthModule,
 		UserModule,
