@@ -60,6 +60,7 @@ export class AppDispatcher {
 	private async startServer(): Promise<void> {
 		await this.app.listen(config.port, config.host);
 		this.logger.log(`Swagger is exposed at http://${config.host}:${config.port}/swagger`);
+		this.logger.log(`Graphql is exposed at http://${config.host}:${config.port}/graphql`);
 		this.logger.log(`Server is listening http://${config.host}:${config.port}`);
 	}
 }
