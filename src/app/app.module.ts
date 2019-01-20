@@ -31,8 +31,7 @@ import {HomeFavoriteModule} from './homeFavorite/home-favorite.module';
 			},
 			context: ({req}) => ({req})
 		})
-	]/*,
-	providers: [AppGateway]*/
+	]
 })
 export class AppModule {
 	private logger = new AppLogger(AppModule.name);
