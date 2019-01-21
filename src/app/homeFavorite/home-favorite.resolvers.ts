@@ -3,11 +3,12 @@ import {UnauthorizedException, UseGuards} from '@nestjs/common';
 import {Args, Mutation, Query, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
 import {HomeFavoriteService} from './home-favorite.service';
-import {Home, HomeFavorite} from '../graphql.schema';
+import {HomeFavorite} from '../graphql.schema';
 import {CreateHomeFavoriteDto, DeleteHomeFavoriteDto} from './dto';
 import {GraphqlGuard} from '../_helpers';
 import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
 import {UserEntity as User} from '../user/entity';
+import {HomeFavoriteEntity} from './entity';
 
 const pubSub = new PubSub();
 
@@ -37,8 +38,8 @@ export class HomeFavoriteResolvers {
 
 	@Mutation('deleteHomeFavorite')
 	async delete(@CurrentUser() user: User, @Args('deleteHomeFavoriteInput') args: DeleteHomeFavoriteDto): Promise<HomeFavorite> {
-		const homeFavoritesToDelete: Home = await this.homeFavoriteService.findOneById(args.id);
-		if (homeFavoritesToDelete.owner === user.id) {
+		const homeFavoritesToDelete: HomeFavoriteEntity = await this.homeFavoriteService.findOneById(args.id);
+		if (homeFavoritesToDelete.homeFavoriteUserId === user.id) {
 			const deletedHomeFavorite = await this.homeFavoriteService.delete(args.id);
 			pubSub.publish('homeFavoriteDeleted', {homeFavoriteDeleted: deletedHomeFavorite});
 			return deletedHomeFavorite;

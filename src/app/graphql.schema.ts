@@ -163,7 +163,7 @@ export class UpdateUserInput {
 
 export class Home {
     id: string;
-    owner?: string;
+    owner?: User;
     price?: number;
     price_adjustment?: number;
     descr?: string;

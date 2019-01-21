@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import {JsonWebTokenError, sign, verify} from 'jsonwebtoken';
 import {DeepPartial} from '../../_helpers/database';
 import {UserEntity} from '../../user/entity';
 import {config} from '../../../config';
@@ -6,12 +6,12 @@ import {TokenDto} from '../dto/token.dto';
 
 export async function createToken({id}: DeepPartial<UserEntity>) {
 	const expiresIn = config.session.timeout;
-	const accessToken = jwt.sign({id}, config.session.secret, {
+	const accessToken = sign({id}, config.session.secret, {
 		expiresIn,
 		audience: config.session.domain,
 		issuer: config.uuid
 	});
-	const refreshToken = jwt.sign({id}, config.session.refresh.secret, {
+	const refreshToken = sign({id}, config.session.refresh.secret, {
 		expiresIn: config.session.refresh.timeout,
 		audience: config.session.domain,
 		issuer: config.uuid
@@ -23,8 +23,13 @@ export async function createToken({id}: DeepPartial<UserEntity>) {
 	};
 }
 
-export async function verifyToken(token: string): Promise<TokenDto> {
-	return new Promise(resolve => {
-		jwt.verify(token, config.session.secret, decoded => resolve(decoded));
+export async function verifyToken(token: string, secret: string): Promise<TokenDto> {
+	return new Promise((resolve, reject) => {
+		verify(token, secret, (err, decoded) => {
+			if (decoded instanceof JsonWebTokenError) {
+				return reject(decoded);
+			}
+			resolve(decoded as TokenDto);
+		});
 	});
 }

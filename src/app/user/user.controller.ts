@@ -5,7 +5,7 @@ import {UserService} from './user.service';
 @Controller()
 export class UserController {
 
-	@Client({ transport: Transport.NATS })
+	@Client({ transport: Transport.TCP })
 	private client: ClientProxy;
 
 	constructor(protected service: UserService) {

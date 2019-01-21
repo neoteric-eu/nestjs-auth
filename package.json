@@ -30,6 +30,7 @@
     "@nestjs/microservices": "^5.5.0",
     "@nestjs/passport": "^5.1.0",
     "@nestjs/testing": "^5.5.0",
+    "@types/jsonwebtoken": "^8.3.0",
     "apollo-server-express": "^2.3.1",
     "async-exit-hook": "^2.0.1",
     "aws-sdk": "^2.387.0",

@@ -16,6 +16,7 @@ import {UserEntityDto} from './dto/user-entity.dto';
 import {FacebookProfile} from './interfaces/facebook-profile.interface';
 import {createToken, verifyToken} from './jwt';
 import {Profile} from '../_helpers/decorators';
+import {config} from '../../config';
 
 @ApiUseTags('auth')
 @Controller('auth')
@@ -34,7 +35,7 @@ export class AuthController {
 	@UseGuards(AuthGuard('jwt'))
 	@ApiResponse({ status: 200, description: 'OK', type: TokenDto })
 	public async verify(@Headers('Authorization') token: string): Promise<TokenDto> {
-		return verifyToken(token);
+		return verifyToken(token, config.session.secret);
 	}
 
 	@Post('login')
@@ -55,7 +56,7 @@ export class AuthController {
 	@Post('refresh')
 	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
 	public async refreshToken(@Body() body: RefreshTokenDto): Promise<JwtDto> {
-		const token = await verifyToken(body.refreshToken);
+		const token = await verifyToken(body.refreshToken, config.session.refresh.secret);
 		return await createToken({id: token.id});
 	}
 

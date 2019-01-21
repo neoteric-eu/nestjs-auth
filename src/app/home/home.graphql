@@ -15,7 +15,7 @@ type Subscription {
 
 type Home {
     id: ID!
-    owner: String
+    owner: User
     price: Float
     price_adjustment: Float
     descr: String
