@@ -1,7 +1,7 @@
 import {UnauthorizedException, UseGuards} from '@nestjs/common';
 import {Args, Mutation, Query, Resolver, Subscription, ResolveProperty, Parent} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
-import {Home, HomeFavorite, ModelHomeFilterInput} from '../graphql.schema';
+import {GetAVMDetailInput, Home, HomeFavorite, ModelHomeFilterInput} from '../graphql.schema';
 import {HomeService} from './home.service';
 import {CreateHomeDto, DeleteHomeDto, UpdateHomeDto} from './dto';
 import {AttomDataApiService} from './attom-data-api.service';
@@ -21,6 +21,25 @@ export class HomeResolvers {
 							private readonly userService: UserService) {
 	}
 
+	@Query('getAVMDetail')
+	async getDetail(@Args('getAVMDetailInput') args: GetAVMDetailInput) {
+		const schoolsDetails = [];
+		const avmDetailsResponse = await this.attomDataService.getAVMDetail({address1: args.address_1, address2: args.address_2});
+		for (const property of avmDetailsResponse.data.property) {
+			const propertyId = property.identifier.obPropId;
+			const detailWithSchoolsResponse = await this.attomDataService.getDetailWithSchools({id: propertyId});
+			const propertyWithAssociatedSchools = detailWithSchoolsResponse.data.property.find(el => el.identifier.obPropId === propertyId);
+			for (const school of propertyWithAssociatedSchools.school) {
+				const schoolDetailResponse = await this.attomDataService.getSchoolDetail({id: school.OBInstID});
+				schoolsDetails.push(schoolDetailResponse.data.school[0]);
+			}
+		}
+		return {
+			properties: avmDetailsResponse.data.property,
+			schools: schoolsDetails
+		};
+	}
+
 	@Query('listHomes')
 	async findAll(@Args('filter') filter?: ModelHomeFilterInput, @Args('limit') limit?: number): Promise<HomeFavorite[]> {
 		console.dir(filter);
@@ -34,8 +53,6 @@ export class HomeResolvers {
 
 	@Mutation('createHome')
 	async create(@CurrentUser() user: User, @Args('createHomeInput') args: CreateHomeDto): Promise<HomeEntity> {
-		const response = await this.attomDataService.getAVMDetail({address1: args.address_1, address2: args.address_2});
-		args.json = JSON.stringify(response.data);
 		args.owner = user.id;
 		const createdHome = await this.homeService.create(args);
 		pubSub.publish('homeCreated', {homeCreated: createdHome});

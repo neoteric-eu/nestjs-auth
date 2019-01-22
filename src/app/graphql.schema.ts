@@ -42,6 +42,11 @@ export class DeleteUserInput {
     id: string;
 }
 
+export class GetAVMDetailInput {
+    address_1?: string;
+    address_2?: string;
+}
+
 export class ModelBooleanFilterInput {
     ne?: boolean;
     eq?: boolean;
@@ -161,6 +166,35 @@ export class UpdateUserInput {
     password?: string;
 }
 
+export class Address {
+    country?: string;
+    countrySubd?: string;
+    line1?: string;
+    line2?: string;
+    locality?: string;
+    matchCode?: string;
+    oneLine?: string;
+    postal1?: string;
+    postal2?: string;
+    postal3?: string;
+}
+
+export class Area {
+    blockNum?: string;
+    countyuse1?: string;
+    countrysecsubd?: string;
+    munname?: string;
+    muncode?: string;
+    subdname?: string;
+    subdtractnum?: string;
+    taxcodearea?: string;
+}
+
+export class AVM {
+    properties?: Property[];
+    schools?: School[];
+}
+
 export class Home {
     id: string;
     owner?: User;
@@ -210,10 +244,17 @@ export abstract class IMutation {
     abstract deleteUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
 }
 
+export class Property {
+    address?: Address;
+    area?: Area;
+}
+
 export abstract class IQuery {
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
 
     abstract getHome(id: string): Home | Promise<Home>;
+
+    abstract getAVMDetail(getAVMDetailInput?: GetAVMDetailInput): AVM | Promise<AVM>;
 
     abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
 
@@ -222,6 +263,10 @@ export abstract class IQuery {
     abstract me(id: string): Home | Promise<Home>;
 
     abstract temp__(): boolean | Promise<boolean>;
+}
+
+export class School {
+    id?: string;
 }
 
 export abstract class ISubscription {

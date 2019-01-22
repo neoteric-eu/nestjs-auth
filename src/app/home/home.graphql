@@ -1,6 +1,7 @@
 type Query {
     listHomes(filter: ModelHomeFilterInput, limit: Int): [Home]
     getHome(id: ID!): Home
+    getAVMDetail(getAVMDetailInput: GetAVMDetailInput): AVM
 }
 
 type Mutation {
@@ -12,6 +13,80 @@ type Mutation {
 type Subscription {
     homeCreated: Home
 }
+
+type AVM {
+    properties: [Property]
+    schools: [School]
+}
+
+type School {
+    id: String
+}
+
+type Property {
+    address: Address
+    area: Area
+#    avm: AVM
+}
+
+type Area {
+    blockNum: String
+    countyuse1: String
+    countrysecsubd: String
+    munname: String
+    muncode: String
+    subdname: String
+    subdtractnum: String
+    taxcodearea: String
+}
+
+type Address {
+    country: String
+    countrySubd: String
+    line1: String
+    line2: String
+    locality: String
+    matchCode: String
+    oneLine: String
+    postal1: String
+    postal2: String
+    postal3: String
+}
+
+#type AVM {
+#    amount: {
+#        scr: String
+#        value: String
+#        high: String
+#        low: String
+#        valueRange: String
+#    }
+#    calculations: {
+#        perSizeUnit: String
+#        ratioTaxAmt: String
+#        ratioTaxValue: String
+#        monthlyChgPct: String
+#        monthlyChgValue: String
+#        rangePctOfValue: String
+#    }
+#    condition: {
+#        avmpoorlow: String
+#        avmpoorhigh: String
+#        avmpoorscore: String
+#        avmgoodlow: String
+#        avmgoodhigh: String
+#        avmgoodscore: String
+#        avmexcellentlow: String
+#        avmexcellenthigh: String
+#        avmexcellentscore: String
+#    }
+#    eventDate: String
+#    AVMChane: {
+#        avmlastmonthvalue: String
+#        avmamountchange: String
+#        avmpercentchange: String
+#    }
+#}
 
 type Home {
     id: ID!
@@ -176,4 +251,9 @@ input ModelHomeFilterInput {
     buyers_agent: ModelBooleanFilterInput
     buyers_agent_amt: ModelFloatFilterInput
     buyers_agent_type: ModelIntFilterInput
+}
+
+input GetAVMDetailInput {
+    address_1: String
+    address_2: String
 }
