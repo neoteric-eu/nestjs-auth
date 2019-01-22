@@ -1,6 +1,10 @@
 services:
   - docker:dind
 
+stages:
+  - build
+  - deploy
+
 build-dev:
   image: docker:latest
   stage: build
@@ -20,3 +24,19 @@ build-dev:
     - docker push 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
   only:
     - develop
+
+deploy-dev:
+  image: python:latest
+  stage: deploy
+  environment: development
+  tags:
+    - docker
+  dependencies:
+    - build-dev
+  script:
+    - pip install awscli
+    - curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
+    - echo "$(curl -s https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest.md5) /usr/local/bin/ecs-cli" | md5sum -c -
+    - ecs-cli configure --cluster threeleaf-backend --region $AWS_REGION --default-launch-type FARGATE --config-name threeleaf-backend
+    - ecs-cli configure profile --access-key $AWS_KEY --secret-key $AWS_SECRET --profile-name threeleaf-backend
+    - ecs-cli compose service up --project-name threeleaf-backend --cluster-config threeleaf-backend --timeout 30 --region $AWS_REGION --force-deployment --target-group-arn $AWS_TARGET_GROUP_ARN --container-name threeleaf-backend --container-port 80

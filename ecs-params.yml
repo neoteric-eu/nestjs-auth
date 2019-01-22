@@ -5,12 +5,49 @@ task_definition:
   task_size:
     mem_limit: 0.5GB
     cpu_limit: 256
+  services:
+    threeleaf-backend:
+      secrets:
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/node_env
+          name: NODE_ENV
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_uuid
+          name: APP_UUID
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_salt
+          name: APP_SALT
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_domain
+          name: APP_SESSION_DOMAIN
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_secret
+          name: APP_SESSION_SECRET
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_timeout
+          name: APP_SESSION_TIMEOUT
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_refresh_secret
+          name: APP_SESSION_REFRESH_SECRET
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_refresh_timeout
+          name: APP_SESSION_REFRESH_TIMEOUT
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_facebook_app_id
+          name: APP_FACEBOOK_APP_ID
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_facebook_app_secret
+          name: APP_FACEBOOK_APP_SECRET
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_api_key
+          name: APP_AWS_API_KEY
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_secret_key
+          name: APP_AWS_SECRET_KEY
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_region
+          name: APP_AWS_REGION
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_port
+          name: APP_PORT
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_host
+          name: APP_HOST
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_logger_level
+          name: APP_LOGGER_LEVEL
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_home_api_attom_data_api_key
+          name: APP_HOME_API_ATTOM_DATA_API_KEY
 run_params:
   network_configuration:
     awsvpc_configuration:
       subnets:
-        - "subnet ID 1"
-        - "subnet ID 2"
+        - "subnet-003ca58b53fce6ff1"
+        - "subnet-0b33d7fcc07d0e794"
       security_groups:
-        - "security group ID"
+        - "sg-03b4344e485235887"
       assign_public_ip: ENABLED

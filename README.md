@@ -92,19 +92,19 @@ ecs-cli configure --cluster threeleaf-backend --region us-east-1 --default-launc
 ### Create a Cluster and Security Group
 
 ```bash
-ecs-cli up
+ecs-cli up --cluster threeleaf-backend --region us-east-1
 ```
 
 Replace `VPC_ID` from the previous output 
 
 ```bash
-aws ec2 create-security-group --group-name "threeleaf-sg" --description "Three Leaf Security Group" --vpc-id "VPC_ID"
+aws ec2 create-security-group --group-name "threeleaf-sg" --description "Three Leaf Security Group" --vpc-id "VPC_ID" --region us-east-1
 ```
 
 replace `security_group_id` from previous output
 
 ```bash
-aws ec2 authorize-security-group-ingress --group-id "security_group_id" --protocol tcp --port 80 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id "security_group_id" --protocol tcp --port 80 --cidr 0.0.0.0/0 --region us-east-1
 ```
 
 Then update `ecs-params.yml` for `subnets` and `security_groups`
@@ -112,7 +112,7 @@ Then update `ecs-params.yml` for `subnets` and `security_groups`
 ### Deploy
 
 ```bash
-ecs-cli compose --project-name threeleaf-backend service up --create-log-groups --cluster-config threeleaf-backend --timeout 30
+ecs-cli compose --project-name threeleaf-backend service up --create-log-groups --cluster-config threeleaf-backend --timeout 30 --region us-east-1
 ```
 
 
