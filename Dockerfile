@@ -4,6 +4,9 @@ FROM node:11-alpine as builder
 
 WORKDIR /usr/src/app
 
+ENV OPENCOLLECTIVE_HIDE=1
+ENV SUPPRESS_SUPPORT=1
+
 COPY package.json package-lock.json ./
 
 RUN npm install --loglevel error
@@ -38,8 +41,6 @@ WORKDIR /usr/src/app
 
 COPY --from=cleaner /usr/src/app .
 
-EXPOSE 1337
-
-USER node
+EXPOSE 80
 
 CMD [ "npm", "run", "prod" ]
