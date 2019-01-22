@@ -29,6 +29,7 @@
     "@nestjs/graphql": "^5.5.1",
     "@nestjs/microservices": "^5.5.0",
     "@nestjs/passport": "^5.1.0",
+    "@nestjs/swagger": "^2.5.1",
     "@nestjs/testing": "^5.5.0",
     "@types/jsonwebtoken": "^8.3.0",
     "apollo-server-express": "^2.3.1",
@@ -57,7 +58,6 @@
     "winston": "^2.4.4"
   },
   "devDependencies": {
-    "@nestjs/swagger": "^2.5.1",
     "@types/express": "^4.16.0",
     "@types/graphql": "^14.0.5",
     "@types/node": "^10.12.18",
