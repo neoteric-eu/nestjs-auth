@@ -37,6 +37,6 @@ export class AppModule {
 	private logger = new AppLogger(AppModule.name);
 
 	constructor() {
-		this.logger.log('Initialize');
+		this.logger.log('Initialize constructor');
 	}
 }
