@@ -219,7 +219,7 @@ export abstract class IQuery {
 
     abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
 
-    abstract me(id: string): Home | Promise<Home>;
+    abstract me(id: string): User | Promise<User>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
