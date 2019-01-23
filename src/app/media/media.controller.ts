@@ -1,7 +1,10 @@
-import {Controller, FileInterceptor, Post, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {ApiConsumes, ApiImplicitFile, ApiUseTags} from '@nestjs/swagger';
+import {Controller, FileInterceptor, Post, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
+import {ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiUseTags} from '@nestjs/swagger';
+import {AuthGuard} from '@nestjs/passport';
 
 @ApiUseTags('media')
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller()
 export class MediaController {
 
