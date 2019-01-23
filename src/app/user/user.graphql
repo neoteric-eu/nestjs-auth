@@ -1,5 +1,5 @@
 type Query {
-    me(id: ID!): Home
+    me: User
 }
 
 type Mutation {
@@ -13,23 +13,25 @@ type Subscription {
 
 type User {
     id: ID!
-    cratedAt: String
-    updatedAt: String
-    name: String
+    first_name: String
+    last_name: String
     email: String
+    phone_num: String
+    profile_img: String
+    password: String
     provider: String
     socialId: String
-    password: String
+    createdAt: String
+    updatedAt: String
 }
 
 input UpdateUserInput {
     id: ID!
-    cratedAt: String
-    updatedAt: String
-    name: String
+    first_name: String
+    last_name: String
     email: String
-    provider: String
-    socialId: String
+    phone_num: String
+    profile_img: String
     password: String
 }
 

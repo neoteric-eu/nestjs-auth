@@ -157,12 +157,11 @@ export class UpdateHomeInput {
 
 export class UpdateUserInput {
     id: string;
-    cratedAt?: string;
-    updatedAt?: string;
-    name?: string;
+    first_name?: string;
+    last_name?: string;
     email?: string;
-    provider?: string;
-    socialId?: string;
+    phone_num?: string;
+    profile_img?: string;
     password?: string;
 }
 
@@ -205,15 +204,15 @@ export class HomeFavorite {
 }
 
 export abstract class IMutation {
+    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
     abstract createHome(createHomeInput?: CreateHomeInput): Home | Promise<Home>;
 
     abstract deleteHome(deleteHomeInput?: DeleteHomeInput): Home | Promise<Home>;
 
     abstract updateHome(updateHomeInput?: UpdateHomeInput): Home | Promise<Home>;
-
-    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
-
-    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
 
     abstract updateUser(deleteUserInput?: DeleteUserInput): User | Promise<User>;
 
@@ -411,17 +410,17 @@ export class PropertyVintage {
 }
 
 export abstract class IQuery {
+    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
+
+    abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
+
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
 
     abstract getHome(id: string): Home | Promise<Home>;
 
     abstract getAVMDetail(getAVMDetailInput?: GetAVMDetailInput): AVM | Promise<AVM>;
 
-    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
-
-    abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
-
-    abstract me(id: string): Home | Promise<Home>;
+    abstract me(): User | Promise<User>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
@@ -603,20 +602,23 @@ export class SchoolVintage {
 }
 
 export abstract class ISubscription {
-    abstract homeCreated(): Home | Promise<Home>;
-
     abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract homeCreated(): Home | Promise<Home>;
 
     abstract userCreated(): User | Promise<User>;
 }
 
 export class User {
     id: string;
-    cratedAt?: string;
-    updatedAt?: string;
-    name?: string;
+    first_name?: string;
+    last_name?: string;
     email?: string;
+    phone_num?: string;
+    profile_img?: string;
+    password?: string;
     provider?: string;
     socialId?: string;
-    password?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }

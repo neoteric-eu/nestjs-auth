@@ -68,7 +68,8 @@ export class AuthController {
 		if (!user) {
 			user = await this.userService.socialRegister({
 				email: profile._json.email,
-				name: profile._json.name,
+				first_name: profile._json.first_name,
+				last_name: profile._json.last_name,
 				socialId: profile._json.id,
 				provider: profile.provider
 			});

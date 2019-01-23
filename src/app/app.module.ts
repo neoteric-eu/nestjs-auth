@@ -8,7 +8,8 @@ import {HealthCheckModule} from './healtcheck/healthcheck.module';
 import {HomeModule} from './home/home.module';
 import {UserModule} from './user/user.module';
 import {MessageModule} from './message/message.module';
-import {HomeFavoriteModule} from './homeFavorite/home-favorite.module';
+import {HomeFavoriteModule} from './home-favorite/home-favorite.module';
+import {MediaModule} from './media/media.module';
 
 @Module({
 	imports: [
@@ -16,6 +17,7 @@ import {HomeFavoriteModule} from './homeFavorite/home-favorite.module';
 		DatabaseModule,
 		AuthModule,
 		UserModule,
+		MediaModule,
 		HomeModule,
 		HomeFavoriteModule,
 		MessageModule,
@@ -37,6 +39,6 @@ export class AppModule {
 	private logger = new AppLogger(AppModule.name);
 
 	constructor() {
-		this.logger.log('Initialize');
+		this.logger.log('Initialize constructor');
 	}
 }

@@ -11,17 +11,14 @@ export class UserEntity extends ExtendedEntity {
 	public id: string;
 
 	@ApiModelProperty()
+	@IsString()
 	@attribute()
-	public cratedAt: string;
-
-	@ApiModelProperty()
-	@attribute()
-	public updatedAt: string;
+	public first_name: string;
 
 	@ApiModelProperty()
 	@IsString()
 	@attribute()
-	public name: string;
+	public last_name: string;
 
 	@ApiModelProperty()
 	@IsEmail()
@@ -30,6 +27,22 @@ export class UserEntity extends ExtendedEntity {
 	})*/
 	@attribute()
 	public email: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@attribute()
+	public phone_num: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@attribute()
+	public profile_img: string;
+
+	@ApiModelProperty()
+	@MinLength(7)
+	@IsOptional()
+	@attribute()
+	public password: string;
 
 	@ApiModelProperty()
 	@IsOptional()
@@ -42,10 +55,12 @@ export class UserEntity extends ExtendedEntity {
 	public socialId: string;
 
 	@ApiModelProperty()
-	@MinLength(7)
-	@IsOptional()
 	@attribute()
-	public password: string;
+	public createdAt: string;
+
+	@ApiModelProperty()
+	@attribute()
+	public updatedAt: string;
 
 	hashPassword() {
 		this.password = passwordHash(this.password);

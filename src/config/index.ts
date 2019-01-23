@@ -36,6 +36,9 @@ interface Config {
 		api_key: string;
 		secret_key: string;
 		region: string;
+		s3: {
+			bucket_name: string
+		};
 	};
 	port: number;
 	host: string;
@@ -81,7 +84,10 @@ export const config: Config = {
 	aws: {
 		api_key: process.env.APP_AWS_API_KEY,
 		secret_key: process.env.APP_AWS_SECRET_KEY,
-		region: process.env.APP_AWS_REGION
+		region: process.env.APP_AWS_REGION,
+		s3: {
+			bucket_name: process.env.APP_AWS_S3_BUCKET_NAME
+		}
 	},
 	port: parseInt(process.env.APP_PORT, 10),
 	host: process.env.APP_HOST,

@@ -14,7 +14,6 @@ import {HomeEntity} from './entity';
 const pubSub = new PubSub();
 
 @Resolver('Home')
-@UseGuards(GraphqlGuard)
 export class HomeResolvers {
 	constructor(private readonly homeService: HomeService,
 							private readonly attomDataService: AttomDataApiService,
@@ -47,11 +46,13 @@ export class HomeResolvers {
 	}
 
 	@Query('getHome')
+	@UseGuards(GraphqlGuard)
 	async findOneById(@Args('id') id: string): Promise<HomeEntity> {
 		return await this.homeService.findOneById(id);
 	}
 
 	@Mutation('createHome')
+	@UseGuards(GraphqlGuard)
 	async create(@CurrentUser() user: User, @Args('createHomeInput') args: CreateHomeDto): Promise<HomeEntity> {
 		args.owner = user.id;
 		const createdHome = await this.homeService.create(args);
@@ -60,6 +61,7 @@ export class HomeResolvers {
 	}
 
 	@Mutation('deleteHome')
+	@UseGuards(GraphqlGuard)
 	async delete(@CurrentUser() user: User, @Args('deleteHomeInput') args: DeleteHomeDto): Promise<HomeEntity> {
 		const homeToDelete: HomeEntity = await this.homeService.findOneById(args.id);
 		if (homeToDelete.owner === user.id) {
@@ -72,6 +74,7 @@ export class HomeResolvers {
 	}
 
 	@Mutation('updateHome')
+	@UseGuards(GraphqlGuard)
 	async update(@CurrentUser() user: User, @Args('updateHomeInput') args: UpdateHomeDto): Promise<HomeEntity> {
 		const homeToUpdate: HomeEntity = await this.homeService.findOneById(args.id);
 		if (homeToUpdate.owner === user.id) {
