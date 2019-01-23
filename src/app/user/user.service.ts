@@ -1,9 +1,10 @@
-import { CrudService } from '../../base';
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { UserEntity } from './entity';
-import { USER_TOKEN } from './user.constants';
-import { passwordHash } from '../_helpers';
-import { CredentialsDto } from '../auth/dto/credentials.dto';
+import {Inject, Injectable, NotFoundException} from '@nestjs/common';
+import {DateTime} from 'luxon';
+import {CrudService} from '../../base';
+import {UserEntity} from './entity';
+import {USER_TOKEN} from './user.constants';
+import {DeepPartial, passwordHash} from '../_helpers';
+import {CredentialsDto} from '../auth/dto/credentials.dto';
 import {Repository} from '../_helpers/database';
 
 @Injectable()
@@ -14,24 +15,35 @@ export class UserService extends CrudService<UserEntity> {
 	}
 
 	public async login(credentials: CredentialsDto): Promise<UserEntity> {
-		const user = await this.repository.findOne({
-			email: credentials.email,
-			password: passwordHash(credentials.password)
+		const user = await this.repository.find({
+			filter: {
+				email: {eq: credentials.email},
+				password: {eq: passwordHash(credentials.password)}
+			},
+			limit: 1
 		});
 
-		if (!user) {
+		if (!user || !user.length) {
 			throw new NotFoundException('User not found');
 		}
 
-		return user;
+		return user[0];
 	}
 
-	public async socialRegister({name, email, socialId, provider}) {
-		const user = new UserEntity();
-		user.name = name;
-		user.email = email;
-		user.socialId = socialId;
-		user.provider = provider;
+	public async create(data: DeepPartial<UserEntity>): Promise<UserEntity> {
+		const entity = this.repository.create(data);
+		entity.hashPassword();
+		if (!entity.createdAt) {
+			entity.createdAt = DateTime.utc().toString();
+		}
+		entity.updatedAt = DateTime.utc().toString();
+		return this.repository.save(entity);
+	}
+
+	public async socialRegister(data: DeepPartial<UserEntity>) {
+		const user = this.repository.create(data);
+		user.createdAt = DateTime.utc().toString();
+		user.updatedAt = DateTime.utc().toString();
 		return this.repository.save(user);
 	}
 }

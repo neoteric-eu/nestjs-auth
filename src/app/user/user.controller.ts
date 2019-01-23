@@ -10,4 +10,6 @@ export class UserController {
 
 	constructor(protected service: UserService) {
 	}
+
+
 }

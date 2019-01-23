@@ -4,7 +4,11 @@ import {IsEmail, IsString, MinLength} from 'class-validator';
 export class UserEntityDto {
 	@ApiModelProperty()
 	@IsString()
-	public name: string;
+	public first_name: string;
+
+	@ApiModelProperty()
+	@IsString()
+	public last_name: string;
 
 	@ApiModelProperty()
 	@IsEmail()
@@ -13,4 +17,8 @@ export class UserEntityDto {
 	@ApiModelProperty()
 	@MinLength(7)
 	public password: string;
+
+	@ApiModelProperty()
+	@IsString()
+	public phone_num: string;
 }

@@ -152,12 +152,11 @@ export class UpdateHomeInput {
 
 export class UpdateUserInput {
     id: string;
-    cratedAt?: string;
-    updatedAt?: string;
-    name?: string;
+    first_name?: string;
+    last_name?: string;
     email?: string;
-    provider?: string;
-    socialId?: string;
+    phone_num?: string;
+    profile_img?: string;
     password?: string;
 }
 
@@ -219,7 +218,7 @@ export abstract class IQuery {
 
     abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
 
-    abstract me(id: string): User | Promise<User>;
+    abstract me(): User | Promise<User>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
@@ -234,11 +233,14 @@ export abstract class ISubscription {
 
 export class User {
     id: string;
-    cratedAt?: string;
-    updatedAt?: string;
-    name?: string;
+    first_name?: string;
+    last_name?: string;
     email?: string;
+    phone_num?: string;
+    profile_img?: string;
+    password?: string;
     provider?: string;
     socialId?: string;
-    password?: string;
+    cratedAt?: string;
+    updatedAt?: string;
 }
