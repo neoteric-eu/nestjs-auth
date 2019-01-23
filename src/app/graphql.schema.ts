@@ -166,32 +166,8 @@ export class UpdateUserInput {
     password?: string;
 }
 
-export class Address {
-    country?: string;
-    countrySubd?: string;
-    line1?: string;
-    line2?: string;
-    locality?: string;
-    matchCode?: string;
-    oneLine?: string;
-    postal1?: string;
-    postal2?: string;
-    postal3?: string;
-}
-
-export class Area {
-    blockNum?: string;
-    countyuse1?: string;
-    countrysecsubd?: string;
-    munname?: string;
-    muncode?: string;
-    subdname?: string;
-    subdtractnum?: string;
-    taxcodearea?: string;
-}
-
 export class AVM {
-    properties?: Property[];
+    properties?: Property;
     schools?: School[];
 }
 
@@ -245,8 +221,193 @@ export abstract class IMutation {
 }
 
 export class Property {
-    address?: Address;
-    area?: Area;
+    address?: PropertyAddress;
+    area?: PropertyArea;
+    avm?: PropertyAVMDetails;
+    building?: PropertyBuilding;
+    identifier?: PropertyIdentifier;
+    location?: PropertyLocation;
+    lot?: PropertyLot;
+    summary?: PropertySummary;
+    utilities?: PropertyUtilities;
+    vintage?: PropertyVintage;
+}
+
+export class PropertyAddress {
+    country?: string;
+    countrySubd?: string;
+    line1?: string;
+    line2?: string;
+    locality?: string;
+    matchCode?: string;
+    oneLine?: string;
+    postal1?: string;
+    postal2?: string;
+    postal3?: string;
+}
+
+export class PropertyArea {
+    blockNum?: string;
+    countyuse1?: string;
+    countrysecsubd?: string;
+    munname?: string;
+    muncode?: string;
+    subdname?: string;
+    subdtractnum?: string;
+    taxcodearea?: string;
+}
+
+export class PropertyAVMAmount {
+    scr?: number;
+    value?: number;
+    high?: number;
+    low?: number;
+    valueRange?: number;
+}
+
+export class PropertyAVMCalculations {
+    perSizeUnit?: number;
+    ratioTaxAmt?: number;
+    ratioTaxValue?: number;
+    monthlyChgPct?: number;
+    monthlyChgValue?: number;
+    rangePctOfValue?: number;
+}
+
+export class PropertyAVMChange {
+    avmlastmonthvalue?: number;
+    avmamountchange?: number;
+    avmpercentchange?: number;
+}
+
+export class PropertyAVMCondition {
+    avmpoorlow?: number;
+    avmpoorhigh?: number;
+    avmpoorscore?: number;
+    avmgoodlow?: number;
+    avmgoodhigh?: number;
+    avmgoodscore?: number;
+    avmexcellentlow?: number;
+    avmexcellenthigh?: number;
+    avmexcellentscore?: number;
+}
+
+export class PropertyAVMDetails {
+    amount?: PropertyAVMAmount;
+    calculations?: PropertyAVMCalculations;
+    condition?: PropertyAVMCondition;
+    eventDate?: string;
+    AVMChange?: PropertyAVMChange;
+}
+
+export class PropertyBuilding {
+    construction?: PropertyBuildingConstruction;
+    interior?: PropertyBuildingInterior;
+    parking?: PropertyBuildingParking;
+    rooms?: PropertyBuildingRooms;
+    size?: PropertyBuildingSize;
+    summary?: PropertyBuildingSummary;
+}
+
+export class PropertyBuildingConstruction {
+    foundationtype?: string;
+    frameType?: string;
+    roofcover?: string;
+    wallType?: string;
+}
+
+export class PropertyBuildingInterior {
+    bsmtsize?: number;
+    fplccount?: number;
+}
+
+export class PropertyBuildingParking {
+    garagetype?: string;
+    prkgSize?: number;
+    prkgSpaces?: string;
+    prkgType?: string;
+}
+
+export class PropertyBuildingRooms {
+    bathfixtures?: number;
+    baths1qtr?: number;
+    baths3qtr?: number;
+    bathscalc?: number;
+    bathsfull?: number;
+    bathshalf?: number;
+    bathstotal?: number;
+    beds?: number;
+    roomsTotal?: number;
+}
+
+export class PropertyBuildingSize {
+    bldgsize?: number;
+    grosssize?: number;
+    grosssizeadjusted?: number;
+    groundfloorsize?: number;
+    livingsize?: number;
+    sizeInd?: string;
+    universalsize?: number;
+}
+
+export class PropertyBuildingSummary {
+    bldgsNum?: number;
+    bldgType?: string;
+    imprType?: string;
+    levels?: number;
+    mobileHomeInd?: string;
+    quality?: string;
+    storyDesc?: string;
+    unitsCount?: string;
+    yearbuilteffective?: number;
+}
+
+export class PropertyIdentifier {
+    obPropId?: string;
+    fips?: string;
+    apn?: string;
+    apnOrig?: string;
+    attomId?: string;
+}
+
+export class PropertyLocation {
+    accuracy?: string;
+    elevation?: number;
+    latitude?: string;
+    longitude?: string;
+    distance?: number;
+    geoid?: string;
+}
+
+export class PropertyLot {
+    depth?: number;
+    frontage?: number;
+    lotnum?: string;
+    lotsize1?: number;
+    lotsize2?: number;
+    pooltype?: string;
+}
+
+export class PropertySummary {
+    absenteeInd?: string;
+    propclass?: string;
+    propsubtype?: string;
+    proptype?: string;
+    yearbuilt?: number;
+    propLandUse?: string;
+    propIndicator?: string;
+    legal1?: string;
+}
+
+export class PropertyUtilities {
+    coolingtype?: string;
+    heatingtype?: string;
+    wallType?: string;
+}
+
+export class PropertyVintage {
+    lastModified?: string;
+    pubDate?: string;
 }
 
 export abstract class IQuery {
@@ -266,7 +427,179 @@ export abstract class IQuery {
 }
 
 export class School {
-    id?: string;
+    Identifier?: SchoolIdentifier;
+    SchoolProfileAndDistrictInfo?: SchoolProfileAndDistrictInfo;
+    Vintage?: SchoolVintage;
+}
+
+export class SchoolContact {
+    phone?: string;
+    Prefixliteral?: string;
+    Firstname?: string;
+    Lastname?: string;
+    Gender?: string;
+    Englishtitle?: string;
+    Websiteurl?: string;
+}
+
+export class SchoolDetail {
+    educationClimateIndex?: string;
+    advancedPlacement?: string;
+    beforeandafterschoolprgms?: string;
+    blueribbonschool?: string;
+    charterschools?: string;
+    giftedandtalented?: string;
+    internationbaccalaureate?: string;
+    magnetschool?: string;
+    sitebased?: string;
+    collegebound?: number;
+    voctech?: string;
+    adulteducationclasses?: string;
+    adultother?: string;
+    specialeducation?: string;
+    alterantiveprogram?: string;
+    yearroundclasses?: string;
+    ESL?: string;
+    Povertylevel?: string;
+    Instructionalexpensepupil?: number;
+    AYPschool?: string;
+}
+
+export class SchoolDistrictContact {
+    Prefixliteral?: string;
+    Firstname?: string;
+    Lastname?: string;
+    Gender?: string;
+    Englishtitle?: string;
+    Websiteurl?: string;
+}
+
+export class SchoolDistrictSummary {
+    Obdistrictnumber?: string;
+    districttype?: string;
+    districtname?: string;
+    COUNTY3?: string;
+    COUNTYNAME?: string;
+    COUNTY?: string;
+    latitude?: number;
+    longitude?: number;
+    locationaddress?: string;
+    locationcity?: string;
+    fipsState?: string;
+    stateabbrev?: string;
+    zip54?: string;
+    ZIP?: string;
+    phone?: string;
+    startDate?: string;
+    endDate?: string;
+    GStestrating?: number;
+}
+
+export class SchoolEnrollment {
+    Enrollmentbygradeprek?: number;
+    Enrollmentbygradekgtn?: number;
+    Enrollmentbygradeone?: number;
+    Enrollmentbygradetwo?: number;
+    Enrollmentbygradethree?: number;
+    Enrollmentbygradefour?: number;
+    Enrollmentbygradefive?: number;
+    Enrollmentbygradesix?: number;
+    Enrollmentbygradeseven?: number;
+    Enrollmentbygradeeight?: number;
+    Enrollmentbygradenine?: number;
+    Enrollmentbygradeten?: number;
+    Enrollmentbygradeeleven?: number;
+    Enrollmentbygradetwelve?: number;
+    Enrollmentshift?: string;
+    Studentsnumberof?: number;
+    Studentsgrade?: number;
+    Studentteacher?: string;
+}
+
+export class SchoolIdentifier {
+    OBInstID?: string;
+}
+
+export class SchoolLocation {
+    COUNTY3?: string;
+    COUNTYNAME?: string;
+    COUNTY?: string;
+    geocodinglatitude?: number;
+    geocodinglongitude?: number;
+    locationaddress?: string;
+    locationcity?: string;
+    fipsState?: string;
+    stateabbrev?: string;
+    zip54?: string;
+    ZIP?: string;
+    Obdistrictnumber?: string;
+    districttype?: string;
+    districtname?: string;
+    geoid?: string;
+}
+
+export class SchoolMeasurementResults {
+    measureTypeId?: string;
+    year?: string;
+    subjectName?: string;
+    grade?: string;
+    measure?: string;
+    insttype?: string;
+}
+
+export class SchoolMeasurementType {
+    measureTypeId?: string;
+    measuretype?: string;
+    measureunits?: string;
+    measurename?: string;
+    measureabbrev?: string;
+    resulttype?: string;
+    scaledefinition?: string;
+    rankmax?: string;
+    year?: string;
+    purposedescription?: string;
+}
+
+export class SchoolProfileAndDistrictInfo {
+    DistrictContact?: SchoolDistrictContact;
+    DistrictSummary?: SchoolDistrictSummary;
+    MeasurementResults?: SchoolMeasurementResults[];
+    MeasurementType?: SchoolMeasurementType[];
+    Programs?: string[];
+    SchoolEnrollment?: SchoolEnrollment;
+    SchoolDetail?: SchoolDetail;
+    SchoolContact?: SchoolContact;
+    SchoolLocation?: SchoolLocation;
+    SchoolSummary?: SchoolSummary;
+    SchoolTech?: SchoolTech;
+}
+
+export class SchoolSummary {
+    Filetypetext?: string;
+    buildingtypetext?: string;
+    institutionname?: string;
+    startDate?: string;
+    endDate?: string;
+    gradelevel1lotext?: string;
+    gradelevel1hitext?: string;
+    gradelevel1locode?: string;
+    gradelevel1hicode?: string;
+    gradespancodebldgtext?: string;
+    Preschool?: string;
+    Elementary?: string;
+    Middle?: string;
+    High?: string;
+    GStestrating?: number;
+}
+
+export class SchoolTech {
+    Technologymeasuretype?: string;
+    Computergrandtotal?: number;
+    OStype?: string;
+}
+
+export class SchoolVintage {
+    onboardDate?: string;
 }
 
 export abstract class ISubscription {

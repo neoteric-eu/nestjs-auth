@@ -25,17 +25,17 @@ export class HomeResolvers {
 	async getDetail(@Args('getAVMDetailInput') args: GetAVMDetailInput) {
 		const schoolsDetails = [];
 		const avmDetailsResponse = await this.attomDataService.getAVMDetail({address1: args.address_1, address2: args.address_2});
-		for (const property of avmDetailsResponse.data.property) {
-			const propertyId = property.identifier.obPropId;
-			const detailWithSchoolsResponse = await this.attomDataService.getDetailWithSchools({id: propertyId});
-			const propertyWithAssociatedSchools = detailWithSchoolsResponse.data.property.find(el => el.identifier.obPropId === propertyId);
-			for (const school of propertyWithAssociatedSchools.school) {
-				const schoolDetailResponse = await this.attomDataService.getSchoolDetail({id: school.OBInstID});
-				schoolsDetails.push(schoolDetailResponse.data.school[0]);
-			}
+		const property = avmDetailsResponse.data.property[0];
+		const propertyId = property.identifier.obPropId;
+		const detailWithSchoolsResponse = await this.attomDataService.getDetailWithSchools({id: propertyId});
+		const schools = detailWithSchoolsResponse.data.property[0].school;
+		for (const school of schools) {
+			const schoolDetailResponse = await this.attomDataService.getSchoolDetail({id: school.OBInstID});
+			schoolsDetails.push(schoolDetailResponse.data.school[0]);
 		}
+
 		return {
-			properties: avmDetailsResponse.data.property,
+			properties: property,
 			schools: schoolsDetails
 		};
 	}
