@@ -194,15 +194,15 @@ export class HomeFavorite {
 }
 
 export abstract class IMutation {
+    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
     abstract createHome(createHomeInput?: CreateHomeInput): Home | Promise<Home>;
 
     abstract deleteHome(deleteHomeInput?: DeleteHomeInput): Home | Promise<Home>;
 
     abstract updateHome(updateHomeInput?: UpdateHomeInput): Home | Promise<Home>;
-
-    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
-
-    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
 
     abstract updateUser(deleteUserInput?: DeleteUserInput): User | Promise<User>;
 
@@ -210,13 +210,13 @@ export abstract class IMutation {
 }
 
 export abstract class IQuery {
-    abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
-
-    abstract getHome(id: string): Home | Promise<Home>;
-
     abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
 
     abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
+
+    abstract getHome(id: string): Home | Promise<Home>;
 
     abstract me(): User | Promise<User>;
 
@@ -224,9 +224,9 @@ export abstract class IQuery {
 }
 
 export abstract class ISubscription {
-    abstract homeCreated(): Home | Promise<Home>;
-
     abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract homeCreated(): Home | Promise<Home>;
 
     abstract userCreated(): User | Promise<User>;
 }
@@ -241,6 +241,6 @@ export class User {
     password?: string;
     provider?: string;
     socialId?: string;
-    cratedAt?: string;
+    createdAt?: string;
     updatedAt?: string;
 }

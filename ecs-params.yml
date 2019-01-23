@@ -34,6 +34,8 @@ task_definition:
           name: APP_AWS_SECRET_KEY
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_region
           name: APP_AWS_REGION
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_s3_bucket_name
+          name: APP_AWS_S3_BUCKET_NAME
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_port
           name: APP_PORT
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_host
