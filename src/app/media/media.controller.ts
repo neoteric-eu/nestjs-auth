@@ -5,7 +5,7 @@ import {AuthGuard} from '@nestjs/passport';
 @ApiUseTags('media')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
-@Controller()
+@Controller('media')
 export class MediaController {
 
 	@Post('upload')
