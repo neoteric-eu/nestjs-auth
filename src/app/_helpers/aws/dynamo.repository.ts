@@ -53,7 +53,6 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 				conditions: graphqlFilterMapper(options.filter)
 			};
 		}
-		console.log(options);
 		const result = this.mapper.scan(this.entity, options);
 		const items = [];
 		for await(const item of result) {
