@@ -1,6 +1,7 @@
 type Query {
     listHomes(filter: ModelHomeFilterInput, limit: Int): [Home]
     getHome(id: ID!): Home
+    getAVMDetail(getAVMDetailInput: GetAVMDetailInput): AVM
 }
 
 type Mutation {
@@ -12,6 +13,376 @@ type Mutation {
 type Subscription {
     homeCreated: Home
 }
+
+type AVM {
+    property: Property
+    schools: [School]
+}
+
+#############################################
+#Properties
+type Property {
+    address: PropertyAddress
+    area: PropertyArea
+    avm: PropertyAVMDetails
+    building: PropertyBuilding
+    identifier: PropertyIdentifier
+    location: PropertyLocation
+    lot: PropertyLot
+    summary: PropertySummary
+    utilities: PropertyUtilities
+    vintage: PropertyVintage
+}
+
+#AVMDetails
+type PropertyAVMDetails {
+    amount: PropertyAVMAmount
+    calculations: PropertyAVMCalculations
+    condition: PropertyAVMCondition
+    eventDate: String
+    AVMChange: PropertyAVMChange
+}
+
+type PropertyAVMAmount {
+    scr: Int
+    value: Int
+    high: Int
+    low: Int
+    valueRange: Int
+}
+
+type PropertyAVMCalculations {
+    perSizeUnit: Float
+    ratioTaxAmt: Float
+    ratioTaxValue: Float
+    monthlyChgPct: Float
+    monthlyChgValue: Float
+    rangePctOfValue: Float
+}
+
+type PropertyAVMCondition {
+    avmpoorlow: Int
+    avmpoorhigh: Int
+    avmpoorscore: Float
+    avmgoodlow: Int
+    avmgoodhigh: Int
+    avmgoodscore: Float
+    avmexcellentlow: Int
+    avmexcellenthigh: Int
+    avmexcellentscore: Float
+}
+
+type PropertyAVMChange {
+    avmlastmonthvalue: Int
+    avmamountchange: Int
+    avmpercentchange: Int
+}
+
+# Building Schema
+type PropertyBuilding {
+    construction: PropertyBuildingConstruction
+    interior: PropertyBuildingInterior
+    parking: PropertyBuildingParking
+    rooms: PropertyBuildingRooms
+    size: PropertyBuildingSize
+    summary: PropertyBuildingSummary
+}
+
+type PropertyBuildingConstruction{
+    foundationtype: String
+    frameType: String
+    roofcover: String
+    wallType: String
+}
+type PropertyBuildingInterior{
+    bsmtsize: Float
+    fplccount: Int
+}
+type PropertyBuildingParking{
+    garagetype: String
+    prkgSize: Int
+    prkgSpaces: String
+    prkgType: String
+}
+type PropertyBuildingRooms{
+    bathfixtures: Int
+    baths1qtr: Int
+    baths3qtr: Int
+    bathscalc: Int
+    bathsfull: Int
+    bathshalf: Int
+    bathstotal: Int
+    beds: Int
+    roomsTotal: Int
+}
+type PropertyBuildingSize{
+    bldgsize: Int
+    grosssize: Int
+    grosssizeadjusted: Int
+    groundfloorsize: Int
+    livingsize: Int
+    sizeInd: String
+    universalsize: Int
+}
+type PropertyBuildingSummary{
+    bldgsNum: Int
+    bldgType: String
+    imprType: String
+    levels: Int
+    mobileHomeInd: String
+    quality: String
+    storyDesc: String
+    unitsCount: String
+    yearbuilteffective: Int
+}
+
+#Rest Property types
+type PropertySummary{
+    absenteeInd: String
+    propclass: String
+    propsubtype: String
+    proptype: String
+    yearbuilt: Int
+    propLandUse: String
+    propIndicator: String
+    legal1: String
+}
+type PropertyLot{
+    depth: Int
+    frontage: Int
+    lotnum: String
+    lotsize1: Float
+    lotsize2: Float
+    pooltype: String
+}
+type PropertyLocation{
+    accuracy: String
+    elevation: Float
+    latitude: String
+    longitude: String
+    distance: Float
+    geoid: String
+}
+type PropertyIdentifier {
+    obPropId: String
+    fips: String
+    apn: String
+    apnOrig: String
+    attomId: String
+}
+type PropertyVintage {
+    lastModified: String
+    pubDate: String
+}
+type PropertyUtilities {
+    coolingtype: String
+    heatingtype: String
+    wallType: String
+}
+
+type PropertyArea {
+    blockNum: String
+    countyuse1: String
+    countrysecsubd: String
+    munname: String
+    muncode: String
+    subdname: String
+    subdtractnum: String
+    taxcodearea: String
+}
+
+type PropertyAddress {
+    country: String
+    countrySubd: String
+    line1: String
+    line2: String
+    locality: String
+    matchCode: String
+    oneLine: String
+    postal1: String
+    postal2: String
+    postal3: String
+}
+
+#####################################
+#School
+type School {
+    Identifier: SchoolIdentifier
+    SchoolProfileAndDistrictInfo: SchoolProfileAndDistrictInfo
+    Vintage: SchoolVintage
+}
+
+type SchoolIdentifier {
+    OBInstID: String
+}
+
+type SchoolVintage {
+    onboardDate: String
+}
+
+type SchoolProfileAndDistrictInfo {
+    DistrictContact: SchoolDistrictContact
+    DistrictSummary: SchoolDistrictSummary
+    MeasurementResults: [SchoolMeasurementResults]
+    MeasurementType: [SchoolMeasurementType]
+    Programs: [String]
+    SchoolEnrollment: SchoolEnrollment
+    SchoolDetail: SchoolDetail
+    SchoolContact: SchoolContact
+    SchoolLocation: SchoolLocation
+    SchoolSummary: SchoolSummary
+    SchoolTech: SchoolTech
+}
+
+type SchoolLocation {
+    COUNTY3: String
+    COUNTYNAME: String
+    COUNTY: String
+    geocodinglatitude: Float
+    geocodinglongitude: Float
+    locationaddress: String
+    locationcity: String
+    fipsState: String
+    stateabbrev: String
+    zip54: String
+    ZIP: String
+    Obdistrictnumber: String
+    districttype: String
+    districtname: String
+    geoid: String
+}
+
+type SchoolSummary {
+    Filetypetext: String
+    buildingtypetext: String
+    institutionname: String
+    startDate: String
+    endDate: String
+    gradelevel1lotext: String
+    gradelevel1hitext: String
+    gradelevel1locode: String
+    gradelevel1hicode: String
+    gradespancodebldgtext: String
+    Preschool: String
+    Elementary: String
+    Middle: String
+    High: String
+    GStestrating: Int
+}
+
+type SchoolTech {
+    Technologymeasuretype: String
+    Computergrandtotal: Int
+    OStype: String
+}
+
+type SchoolContact {
+    phone: String
+    Prefixliteral: String
+    Firstname: String
+    Lastname: String
+    Gender: String
+    Englishtitle: String
+    Websiteurl: String
+}
+
+type SchoolDetail {
+    educationClimateIndex: String
+    advancedPlacement: String
+    beforeandafterschoolprgms: String
+    blueribbonschool: String
+    charterschools: String
+    giftedandtalented: String
+    internationbaccalaureate: String
+    magnetschool: String
+    sitebased: String
+    collegebound: Int
+    voctech: String
+    adulteducationclasses: String
+    adultother: String
+    specialeducation: String
+    alterantiveprogram: String
+    yearroundclasses: String
+    ESL: String
+    Povertylevel: String
+    Instructionalexpensepupil: Int
+    AYPschool: String
+}
+
+type SchoolEnrollment {
+    Enrollmentbygradeprek: Int
+    Enrollmentbygradekgtn: Int
+    Enrollmentbygradeone: Int
+    Enrollmentbygradetwo: Int
+    Enrollmentbygradethree: Int
+    Enrollmentbygradefour: Int
+    Enrollmentbygradefive: Int
+    Enrollmentbygradesix: Int
+    Enrollmentbygradeseven: Int
+    Enrollmentbygradeeight: Int
+    Enrollmentbygradenine: Int
+    Enrollmentbygradeten: Int
+    Enrollmentbygradeeleven: Int
+    Enrollmentbygradetwelve: Int
+    Enrollmentshift: String
+    Studentsnumberof: Int
+    Studentsgrade: Int
+    Studentteacher: String
+}
+
+type SchoolMeasurementType {
+    measureTypeId: String
+    measuretype: String
+    measureunits: String
+    measurename: String
+    measureabbrev: String
+    resulttype: String
+    scaledefinition: String
+    rankmax: String
+    year: String
+    purposedescription: String
+}
+
+type SchoolMeasurementResults {
+    measureTypeId: String
+    year: String
+    subjectName: String
+    grade: String
+    measure: String
+    insttype: String
+}
+
+type SchoolDistrictContact {
+    Prefixliteral: String
+    Firstname: String
+    Lastname: String
+    Gender: String
+    Englishtitle: String
+    Websiteurl: String
+}
+
+type SchoolDistrictSummary {
+    Obdistrictnumber: String
+    districttype: String
+    districtname: String
+    COUNTY3: String
+    COUNTYNAME: String
+    COUNTY: String
+    latitude: Float
+    longitude: Float
+    locationaddress: String
+    locationcity: String
+    fipsState: String
+    stateabbrev: String
+    zip54: String
+    ZIP: String
+    phone: String
+    startDate: String
+    endDate: String
+    GStestrating: Int
+}
+
+###################################################
 
 type Home {
     id: ID!
@@ -176,4 +547,9 @@ input ModelHomeFilterInput {
     buyers_agent: ModelBooleanFilterInput
     buyers_agent_amt: ModelFloatFilterInput
     buyers_agent_type: ModelIntFilterInput
+}
+
+input GetAVMDetailInput {
+    address_1: String
+    address_2: String
 }
