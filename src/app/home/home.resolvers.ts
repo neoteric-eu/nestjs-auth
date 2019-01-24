@@ -10,6 +10,7 @@ import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
 import {UserEntity as User} from '../user/entity/user.entity';
 import {UserService} from '../user/user.service';
 import {HomeEntity} from './entity';
+import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
 
 const pubSub = new PubSub();
 
@@ -17,7 +18,8 @@ const pubSub = new PubSub();
 export class HomeResolvers {
 	constructor(private readonly homeService: HomeService,
 							private readonly attomDataService: AttomDataApiService,
-							private readonly userService: UserService) {
+							private readonly userService: UserService,
+							private readonly homeFavoriteService: HomeFavoriteService) {
 	}
 
 	@Query('getAVMDetail')
@@ -72,6 +74,7 @@ export class HomeResolvers {
 	async delete(@CurrentUser() user: User, @Args('deleteHomeInput') args: DeleteHomeDto): Promise<HomeEntity> {
 		const homeToDelete: HomeEntity = await this.homeService.findOneById(args.id);
 		if (homeToDelete.owner === user.id) {
+			await this.homeFavoriteService.deleteAll({filter: {homeFavoriteHomeId: {eq: args.id}}});
 			const deletedHome = await this.homeService.delete(args.id);
 			pubSub.publish('homeDeleted', {homeDeleted: deletedHome});
 			return deletedHome;

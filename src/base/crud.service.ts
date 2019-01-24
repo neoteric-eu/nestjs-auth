@@ -39,6 +39,10 @@ export class CrudService<T extends ExtendedEntity> {
 		return this.repository.delete(id);
 	}
 
+	public deleteAll(conditions?): Promise<T[]> {
+		return this.repository.deleteAll(conditions);
+	}
+
 	private async validate(entity: T) {
 		const errors = await validate(entity, config.validator);
 		if (errors.length) {
