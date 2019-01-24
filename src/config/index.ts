@@ -94,7 +94,7 @@ export const config: Config = {
 		}
 	},
 	googleApi: {
-		apiKey: process.env.APP_GOOGLE_API_KEY,
+		apiKey: process.env.APP_GOOGLE_API_SECRET,
 		apiUrl: 'https://maps.googleapis.com/maps/api/geocode/json'
 	},
 	aws: {
