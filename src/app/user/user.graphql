@@ -3,12 +3,13 @@ type Query {
 }
 
 type Mutation {
-    updateUser(deleteUserInput: DeleteUserInput): User
-    deleteUser(updateUserInput: UpdateUserInput): User
+    updateUser(updateUserInput: UpdateUserInput): User
+    deleteUser(deleteUserInput: DeleteUserInput): User
 }
 
 type Subscription {
     userCreated: User
+    userDeleted: User
 }
 
 type User {

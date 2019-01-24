@@ -41,4 +41,11 @@ export class UserResolvers {
 			subscribe: () => pubSub.asyncIterator('userCreated')
 		};
 	}
+
+	@Subscription('userDeleted')
+	userDeleted() {
+		return {
+			subscribe: () => pubSub.asyncIterator('userDeleted')
+		};
+	}
 }
