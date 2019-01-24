@@ -1,0 +1,33 @@
+type Query {
+    getHomeMedia(homeId: ID!): [HomeMedia]
+}
+
+type Mutation {
+    createHomeMedia(createHomeMediaInput: CreateHomeMediaInput): HomeMedia
+    deleteHomeMedia(deleteHomeMediaInput: DeleteHomeMediaInput): HomeMedia
+}
+
+type Subscription {
+    homeMediaCreated: HomeMedia
+    homeMediaDeleted: HomeMedia
+}
+
+type HomeMedia {
+    id: ID!
+    homeId: String
+    originalname: String
+    mimetype: String
+    size: Int
+    url: String
+}
+
+input CreateHomeMediaInput {
+    homeId: String
+    mimetype: String
+    size: Int
+    url: String
+}
+
+input DeleteHomeMediaInput {
+    id: ID!
+}

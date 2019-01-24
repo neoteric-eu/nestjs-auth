@@ -30,11 +30,22 @@ export class CreateHomeInput {
     buyers_agent_type?: number;
 }
 
+export class CreateHomeMediaInput {
+    homeId?: string;
+    mimetype?: string;
+    size?: number;
+    url?: string;
+}
+
 export class DeleteHomeFavoriteInput {
     id: string;
 }
 
 export class DeleteHomeInput {
+    id: string;
+}
+
+export class DeleteHomeMediaInput {
     id: string;
 }
 
@@ -173,6 +184,7 @@ export class AVM {
 export class Home {
     id: string;
     owner?: User;
+    media?: HomeMedia[];
     price?: number;
     price_adjustment?: number;
     descr?: string;
@@ -203,10 +215,23 @@ export class HomeFavorite {
     homeFavoriteHomeId?: string;
 }
 
+export class HomeMedia {
+    id: string;
+    homeId?: string;
+    originalname?: string;
+    mimetype?: string;
+    size?: number;
+    url?: string;
+}
+
 export abstract class IMutation {
     abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
 
     abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract createHomeMedia(createHomeMediaInput?: CreateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
+
+    abstract deleteHomeMedia(deleteHomeMediaInput?: DeleteHomeMediaInput): HomeMedia | Promise<HomeMedia>;
 
     abstract createHome(createHomeInput?: CreateHomeInput): Home | Promise<Home>;
 
@@ -414,6 +439,8 @@ export abstract class IQuery {
 
     abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
 
+    abstract getHomeMedia(homeId: string): HomeMedia[] | Promise<HomeMedia[]>;
+
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
 
     abstract getHome(id: string): Home | Promise<Home>;
@@ -603,6 +630,10 @@ export class SchoolVintage {
 
 export abstract class ISubscription {
     abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract homeMediaCreated(): HomeMedia | Promise<HomeMedia>;
+
+    abstract homeMediaDeleted(): HomeMedia | Promise<HomeMedia>;
 
     abstract homeCreated(): Home | Promise<Home>;
 

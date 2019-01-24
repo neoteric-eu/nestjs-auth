@@ -14,7 +14,6 @@ export class UserController {
 
 	@MessagePattern({ cmd: USER_CMD_REGISTER })
 	public async onUserRegister(user: UserEntity): Promise<void> {
-		console.log(user);
 		return mail({
 			subject: `Welcome ${user.first_name} to ${config.name}`,
 			to: user.email,

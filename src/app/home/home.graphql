@@ -387,6 +387,7 @@ type SchoolDistrictSummary {
 type Home {
     id: ID!
     owner: User
+    media: [HomeMedia]
     price: Float
     price_adjustment: Float
     descr: String

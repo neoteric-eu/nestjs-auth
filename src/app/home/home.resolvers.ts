@@ -10,6 +10,8 @@ import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
 import {UserEntity as User} from '../user/entity/user.entity';
 import {UserService} from '../user/user.service';
 import {HomeEntity} from './entity';
+import {HomeMediaService} from '../home-media/home-media.service';
+import {HomeMediaEntity} from '../home-media/entity';
 
 const pubSub = new PubSub();
 
@@ -17,7 +19,9 @@ const pubSub = new PubSub();
 export class HomeResolvers {
 	constructor(private readonly homeService: HomeService,
 							private readonly attomDataService: AttomDataApiService,
-							private readonly userService: UserService) {
+							private readonly userService: UserService,
+							private readonly homeMediaService: HomeMediaService
+	) {
 	}
 
 	@Query('getAVMDetail')
@@ -103,6 +107,15 @@ export class HomeResolvers {
 
 	@ResolveProperty('owner')
 	async getOwner(@Parent() home: HomeEntity): Promise<Home> {
-		return await this.userService.findOneById(home.owner);
+		try {
+			return this.userService.findOneById(home.owner);
+		} catch (e) {
+			return this.userService.create({});
+		}
+	}
+
+	@ResolveProperty('media')
+	async getMedia(@Parent() home: HomeEntity): Promise<HomeMediaEntity[]> {
+		return this.homeMediaService.findAll({filter: {homeId: {eq: home.id}}});
 	}
 }

@@ -10,6 +10,7 @@ import {UserModule} from './user/user.module';
 import {MessageModule} from './message/message.module';
 import {HomeFavoriteModule} from './home-favorite/home-favorite.module';
 import {MediaModule} from './media/media.module';
+import {HomeMediaModule} from './home-media/home-media.module';
 
 @Module({
 	imports: [
@@ -20,9 +21,10 @@ import {MediaModule} from './media/media.module';
 		MediaModule,
 		HomeModule,
 		HomeFavoriteModule,
+		HomeMediaModule,
 		MessageModule,
 		GraphQLModule.forRoot({
-			include: [HomeModule, UserModule, HomeFavoriteModule],
+			include: [HomeModule, UserModule, HomeFavoriteModule, HomeMediaModule],
 			typePaths: ['./**/*.graphql'],
 			introspection: true,
 			playground: true,
