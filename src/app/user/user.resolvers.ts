@@ -29,8 +29,8 @@ export class UserResolvers {
 	}
 
 	@Mutation('updateUser')
-	async update(@Args('updateUserInput') args: UpdateUserDto): Promise<UserEntity> {
-		const updatedUser = await this.userService.update(args);
+	async update(@CurrentUser() user: UserEntity, @Args('updateUserInput') args: UpdateUserDto): Promise<UserEntity> {
+		const updatedUser = await this.userService.patch(user.id, args);
 		pubSub.publish('userUpdated', {userUpdated: updatedUser});
 		return updatedUser;
 	}

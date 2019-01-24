@@ -27,7 +27,6 @@ type User {
 }
 
 input UpdateUserInput {
-    id: ID!
     first_name: String
     last_name: String
     email: String
