@@ -88,4 +88,22 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 		return this.mapper.delete<T>(model);
 	}
 
+	public async deleteAll(options: any): Promise<T[]> {
+		if (options.filter) {
+			options.filter = {
+				type: 'And',
+				conditions: graphqlFilterMapper(options.filter)
+			};
+		}
+		const result = this.mapper.scan(this.entity, options) as any;
+		const items = [];
+		const deletedItems = [];
+		for await(const item of result) {
+			items.push(item);
+		}
+		for await (const deletedItem of this.mapper.batchDelete(items)) {
+			deletedItems.push(deletedItem);
+		}
+		return deletedItems;
+	}
 }

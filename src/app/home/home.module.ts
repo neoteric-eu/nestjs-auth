@@ -6,10 +6,11 @@ import {DatabaseModule} from '../database/database.module';
 import {AttomDataApiService} from './attom-data-api.service';
 import {UserModule} from '../user/user.module';
 import {HomeMediaModule} from '../home-media/home-media.module';
+import {HomeFavoriteModule} from '../home-favorite/home-favorite.module';
 
 @Module({
 	providers: [...homeProviders, HomeService, HomeResolvers, AttomDataApiService],
-	imports: [HttpModule, DatabaseModule, UserModule, HomeMediaModule],
+	imports: [HttpModule, DatabaseModule, UserModule, HomeFavoriteModule, HomeMediaModule],
 	exports: [HomeService]
 })
 export class HomeModule {

@@ -12,6 +12,7 @@ import {UserService} from '../user/user.service';
 import {HomeEntity} from './entity';
 import {HomeMediaService} from '../home-media/home-media.service';
 import {HomeMediaEntity} from '../home-media/entity';
+import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
 
 const pubSub = new PubSub();
 
@@ -20,8 +21,8 @@ export class HomeResolvers {
 	constructor(private readonly homeService: HomeService,
 							private readonly attomDataService: AttomDataApiService,
 							private readonly userService: UserService,
-							private readonly homeMediaService: HomeMediaService
-	) {
+							private readonly homeMediaService: HomeMediaService,
+							private readonly homeFavoriteService: HomeFavoriteService) {
 	}
 
 	@Query('getAVMDetail')
@@ -76,6 +77,7 @@ export class HomeResolvers {
 	async delete(@CurrentUser() user: User, @Args('deleteHomeInput') args: DeleteHomeDto): Promise<HomeEntity> {
 		const homeToDelete: HomeEntity = await this.homeService.findOneById(args.id);
 		if (homeToDelete.owner === user.id) {
+			await this.homeFavoriteService.deleteAll({filter: {homeFavoriteHomeId: {eq: args.id}}});
 			const deletedHome = await this.homeService.delete(args.id);
 			pubSub.publish('homeDeleted', {homeDeleted: deletedHome});
 			return deletedHome;
@@ -102,6 +104,20 @@ export class HomeResolvers {
 	homeCreated() {
 		return {
 			subscribe: () => pubSub.asyncIterator('homeCreated')
+		};
+	}
+
+	@Subscription('homeDeleted')
+	homeDeleted() {
+		return {
+			subscribe: () => pubSub.asyncIterator('homeDeleted')
+		};
+	}
+
+	@Subscription('homeUpdated')
+	homeUpdated() {
+		return {
+			subscribe: () => pubSub.asyncIterator('homeUpdated')
 		};
 	}
 

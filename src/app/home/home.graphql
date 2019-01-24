@@ -12,6 +12,8 @@ type Mutation {
 
 type Subscription {
     homeCreated: Home
+    homeUpdated: Home
+    homeDeleted: Home
 }
 
 type AVM {

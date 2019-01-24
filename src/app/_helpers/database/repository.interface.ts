@@ -7,4 +7,5 @@ export interface Repository<T> {
 	create(model: DeepPartial<T>): T;
 	save(model: T): Promise<T>;
 	delete(id: string): Promise<T>;
+	deleteAll(options): Promise<T[]>;
 }
