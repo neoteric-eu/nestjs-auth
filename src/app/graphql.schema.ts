@@ -166,7 +166,7 @@ export class UpdateUserInput {
 }
 
 export class AVM {
-    properties?: Property;
+    property?: Property;
     schools?: School[];
 }
 

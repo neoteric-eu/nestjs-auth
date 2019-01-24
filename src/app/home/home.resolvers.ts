@@ -23,8 +23,15 @@ export class HomeResolvers {
 	@Query('getAVMDetail')
 	async getDetail(@Args('getAVMDetailInput') args: GetAVMDetailInput) {
 		const schoolsDetails = [];
+
+		const locationResponse = await this.attomDataService.getLocation({address: `${args.address_1} ${args.address_2}`});
 		const avmDetailsResponse = await this.attomDataService.getAVMDetail({address1: args.address_1, address2: args.address_2});
 		const property = avmDetailsResponse.data.property[0];
+		if (locationResponse.data.results.length === 1) {
+			const location = locationResponse.data.results[0].geometry.location;
+			property.location.latitude = location.lat;
+			property.location.longitude = location.lng;
+		}
 		const propertyId = property.identifier.obPropId;
 		const detailWithSchoolsResponse = await this.attomDataService.getDetailWithSchools({id: propertyId});
 		const schools = detailWithSchoolsResponse.data.property[0].school;
@@ -34,7 +41,7 @@ export class HomeResolvers {
 		}
 
 		return {
-			properties: property,
+			property: property,
 			schools: schoolsDetails
 		};
 	}

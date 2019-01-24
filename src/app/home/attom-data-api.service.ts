@@ -40,4 +40,13 @@ export class AttomDataApiService {
 			}
 		}).toPromise();
 	}
+
+	public async getLocation({address}) {
+		return this.httpService.get(config.googleApi.apiUrl, {
+			params: {
+				address,
+				key: config.googleApi.apiKey
+			}
+		}).toPromise();
+	}
 }

@@ -32,6 +32,10 @@ interface Config {
 			apiKey: string;
 		};
 	};
+	googleApi: {
+		apiUrl: string;
+		apiKey: string;
+	};
 	aws: {
 		api_key: string;
 		secret_key: string;
@@ -80,6 +84,10 @@ export const config: Config = {
 			apiKey: process.env.APP_HOME_API_ATTOM_DATA_API_KEY,
 			apiUrl: 'https://search.onboard-apis.com/propertyapi/v1.0.0'
 		}
+	},
+	googleApi: {
+		apiKey: process.env.APP_GOOGLE_API_KEY,
+		apiUrl: 'https://maps.googleapis.com/maps/api/geocode/json'
 	},
 	aws: {
 		api_key: process.env.APP_AWS_API_KEY,

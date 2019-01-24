@@ -15,7 +15,7 @@ type Subscription {
 }
 
 type AVM {
-    properties: Property
+    property: Property
     schools: [School]
 }
 
