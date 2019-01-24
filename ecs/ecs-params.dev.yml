@@ -36,6 +36,14 @@ task_definition:
           name: APP_AWS_REGION
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_s3_bucket_name
           name: APP_AWS_S3_BUCKET_NAME
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_pinpoint_smtp_host
+          name: APP_AWS_PINPOINT_SMTP_HOST
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_pinpoint_smtp_port
+          name: APP_AWS_PINPOINT_SMTP_PORT
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_pinpoint_smtp_user
+          name: APP_AWS_PINPOINT_SMTP_USER
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_aws_pinpoint_smtp_secret
+          name: APP_AWS_PINPOINT_SMTP_SECRET
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_port
           name: APP_PORT
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_host
@@ -44,6 +52,8 @@ task_definition:
           name: APP_LOGGER_LEVEL
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_home_api_attom_data_api_key
           name: APP_HOME_API_ATTOM_DATA_API_KEY
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_google_api_secret
+          name: APP_GOOGLE_API_SECRET
 run_params:
   network_configuration:
     awsvpc_configuration:
