@@ -28,11 +28,16 @@ if (!keyId) {
 	console.error('Missing KeyId as argument for decryption');
 	process.exit(1);
 }
-console.log(envs);
+
 for (const line of envs.split('\n')) {
 	if (!line) continue;
-	const [key, val] = line.split('=');
+	let [key, val] = line.split('=');
 	const isSecret = key.indexOf('SECRET') !== -1;
+	if (key === 'APP_PORT') {
+		val = ''+80;
+	} else if(key === 'APP_HOST') {
+		val = '0.0.0.0';
+	}
 	const params = {
 		Name: `/${env}/threeleaf/${key.toLocaleLowerCase()}`,
 		Type: isSecret ?  'SecureString' : 'String',
@@ -42,12 +47,11 @@ for (const line of envs.split('\n')) {
 	if (isSecret) {
 		params.KeyId = keyId;
 	}
-	console.log(params);
 	ssm.putParameter(params, (err, data) => {
 		if (err) {
 			console.error(err);
 		} else {
-			console.log(data);
+			console.log(`${key} updated wit value`, params.Value);
 		}
 	});
 }
