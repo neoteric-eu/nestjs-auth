@@ -104,6 +104,20 @@ export class HomeResolvers {
 		};
 	}
 
+	@Subscription('homeDeleted')
+	homeDeleted() {
+		return {
+			subscribe: () => pubSub.asyncIterator('homeDeleted')
+		};
+	}
+
+	@Subscription('homeUpdated')
+	homeUpdated() {
+		return {
+			subscribe: () => pubSub.asyncIterator('homeUpdated')
+		};
+	}
+
 	@ResolveProperty('owner')
 	async getOwner(@Parent() home: HomeEntity): Promise<Home> {
 		return await this.userService.findOneById(home.owner);
