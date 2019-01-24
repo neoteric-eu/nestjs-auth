@@ -39,6 +39,14 @@ interface Config {
 		s3: {
 			bucket_name: string
 		};
+		pinpoint: {
+			smtp: {
+				host: string;
+				port: number;
+				user: string;
+				secret: string;
+			}
+		};
 	};
 	port: number;
 	host: string;
@@ -87,6 +95,14 @@ export const config: Config = {
 		region: process.env.APP_AWS_REGION,
 		s3: {
 			bucket_name: process.env.APP_AWS_S3_BUCKET_NAME
+		},
+		pinpoint: {
+			smtp: {
+				host: process.env.APP_AWS_PINPOINT_SMTP_HOST,
+				port: parseInt(process.env.APP_AWS_PINPOINT_SMTP_PORT, 10),
+				user: process.env.APP_AWS_PINPOINT_SMTP_USER,
+				secret: process.env.APP_AWS_PINPOINT_SMTP_SECRET
+			}
 		}
 	},
 	port: parseInt(process.env.APP_PORT, 10),

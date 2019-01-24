@@ -1,9 +1,8 @@
-import {Body, Controller, Get, Headers, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Headers, OnModuleInit, Post, UseGuards} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiImplicitBody, ApiResponse, ApiUseTags} from '@nestjs/swagger';
 import {equals} from '@aws/dynamodb-expressions';
 import {DeepPartial} from '../_helpers/database';
-import {AppLogger} from '../app.logger';
 import {UserEntity} from '../user/entity';
 import {AuthService} from './auth.service';
 import {CredentialsDto} from './dto/credentials.dto';
@@ -17,11 +16,15 @@ import {FacebookProfile} from './interfaces/facebook-profile.interface';
 import {createToken, verifyToken} from './jwt';
 import {Profile} from '../_helpers/decorators';
 import {config} from '../../config';
+import {Client, ClientProxy, Transport} from '@nestjs/microservices';
+import {USER_CMD_REGISTER} from '../user';
 
 @ApiUseTags('auth')
 @Controller('auth')
 export class AuthController {
-	private logger = new AppLogger(AuthController.name);
+
+	@Client({ transport: Transport.TCP })
+	private client: ClientProxy;
 
 	constructor(
 		private readonly authService: AuthService,
@@ -29,7 +32,6 @@ export class AuthController {
 	) {
 
 	}
-
 
 	@Get('verify')
 	@UseGuards(AuthGuard('jwt'))
@@ -50,6 +52,7 @@ export class AuthController {
 	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
 	public async register(@Body() data: DeepPartial<UserEntity>): Promise<JwtDto> {
 		const user = await this.userService.create(data);
+		this.client.send({cmd: USER_CMD_REGISTER}, user).subscribe();
 		return createToken(user);
 	}
 
