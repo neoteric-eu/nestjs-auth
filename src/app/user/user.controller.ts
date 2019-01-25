@@ -22,7 +22,7 @@ export class UserController {
 			await mail({
 				subject: `Welcome ${user.first_name} to ${config.name}`,
 				to: user.email,
-				html: await renderTemplate(`${__dirname}/misc/mail/registration.twig`, {user, config})
+				html: await renderTemplate(`${config.assetsPath}/mail/registration.twig`, {user, config})
 			});
 			this.logger.debug('[onUserRegister] Registration email sent');
 		} catch (err) {

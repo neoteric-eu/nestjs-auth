@@ -14,6 +14,8 @@ task_definition:
           name: APP_UUID
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_salt
           name: APP_SALT
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_mail_from
+          name: APP_MAIL_FROM
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_domain
           name: APP_SESSION_DOMAIN
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_secret

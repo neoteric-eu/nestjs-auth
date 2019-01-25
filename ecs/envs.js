@@ -35,8 +35,10 @@ for (const line of envs.split('\n')) {
 	const isSecret = key.indexOf('SECRET') !== -1;
 	if (key === 'APP_PORT') {
 		val = ''+80;
-	} else if(key === 'APP_HOST') {
+	} else if (key === 'APP_HOST') {
 		val = '0.0.0.0';
+	} else if (key === 'APP_AWS_REGION') {
+		val = 'us-east-2';
 	}
 	const params = {
 		Name: `/${env}/threeleaf/${key.toLocaleLowerCase()}`,

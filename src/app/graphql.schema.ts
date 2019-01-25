@@ -167,7 +167,6 @@ export class UpdateHomeInput {
 }
 
 export class UpdateUserInput {
-    id: string;
     first_name?: string;
     last_name?: string;
     email?: string;
@@ -239,9 +238,9 @@ export abstract class IMutation {
 
     abstract updateHome(updateHomeInput?: UpdateHomeInput): Home | Promise<Home>;
 
-    abstract updateUser(deleteUserInput?: DeleteUserInput): User | Promise<User>;
+    abstract updateUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
 
-    abstract deleteUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
+    abstract deleteUser(deleteUserInput?: DeleteUserInput): User | Promise<User>;
 }
 
 export class Property {
@@ -637,7 +636,13 @@ export abstract class ISubscription {
 
     abstract homeCreated(): Home | Promise<Home>;
 
+    abstract homeUpdated(): Home | Promise<Home>;
+
+    abstract homeDeleted(): Home | Promise<Home>;
+
     abstract userCreated(): User | Promise<User>;
+
+    abstract userDeleted(): User | Promise<User>;
 }
 
 export class User {

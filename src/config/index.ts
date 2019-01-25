@@ -13,6 +13,10 @@ interface Config {
 	uuid: string;
 	isProduction: boolean;
 	salt: string;
+	assetsPath: string;
+	mail: {
+		from: string
+	};
 	session: {
 		domain: string;
 		secret: string;
@@ -74,6 +78,10 @@ export const config: Config = {
 	uuid: process.env.APP_UUID,
 	isProduction: process.env.NODE_ENV === 'production',
 	salt: process.env.APP_SALT,
+	assetsPath: `${__dirname}/../assets`,
+	mail: {
+		from: process.env.APP_MAIL_FROM
+	},
 	session: {
 		domain: process.env.APP_SESSION_DOMAIN,
 		secret: process.env.APP_SESSION_SECRET,
