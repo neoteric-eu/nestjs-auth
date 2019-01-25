@@ -17,13 +17,16 @@ export class UserController {
 
 	@MessagePattern({ cmd: USER_CMD_REGISTER })
 	public async onUserRegister(user: UserEntity): Promise<void> {
-		this.logger.debug(`[onUserRegister] Send registration email for user ${user.email}`);
-		return mail({
-			subject: `Welcome ${user.first_name} to ${config.name}`,
-			to: user.email,
-			html: await renderTemplate(`${__dirname}/misc/mail/registration.twig`, {user, config})
-		})
-			.then(() => this.logger.debug('[onUserRegister] Registration email sent'))
-			.catch(err => this.logger.error(`[onUserRegister] Mail not sent, because ${err.message}`, err.stack));
+		try {
+			this.logger.debug(`[onUserRegister] Send registration email for user ${user.email}`);
+			await mail({
+				subject: `Welcome ${user.first_name} to ${config.name}`,
+				to: user.email,
+				html: await renderTemplate(`${__dirname}/misc/mail/registration.twig`, {user, config})
+			});
+			this.logger.debug('[onUserRegister] Registration email sent');
+		} catch (err) {
+			this.logger.error(`[onUserRegister] Mail not sent, because ${err.message}`, err.stack);
+		}
 	}
 }
