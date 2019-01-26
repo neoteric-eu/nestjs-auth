@@ -1,6 +1,6 @@
 import {createTransport, SendMailOptions, SentMessageInfo} from 'nodemailer';
 import {renderFile} from 'twig';
-import fs from 'fs';
+import {TwingEnvironment, TwingLoaderFilesystem} from 'twing';
 import {config} from '../../../config';
 
 export async function mail(options: SendMailOptions): Promise<SentMessageInfo> {
@@ -17,18 +17,8 @@ export async function mail(options: SendMailOptions): Promise<SentMessageInfo> {
 	return transporter.sendMail({...options, from: config.mail.from});
 }
 
-export async function renderTemplate(path: string, data: any): Promise<string> {
-	return new Promise((resolve, reject) => {
-		fs.access(path, err => {
-			if (err) {
-				return reject(new Error(`File at path ${path} doesn't exists`));
-			}
-			renderFile(path, data, (inner_err, html) => {
-				if (err) {
-					return reject(err);
-				}
-				resolve(html);
-			});
-		});
-	});
+export function renderTemplate(path: string, data: any): string {
+	const loader = new TwingLoaderFilesystem(config.assetsPath);
+	const twing = new TwingEnvironment(loader);
+	return twing.render(path, data);
 }

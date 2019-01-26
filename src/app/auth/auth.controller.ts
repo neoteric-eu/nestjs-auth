@@ -1,12 +1,17 @@
-import {Body, Controller, Get, Headers, OnModuleInit, Post, UseGuards} from '@nestjs/common';
+import {equals} from '@aws/dynamodb-expressions';
+import {Body, Controller, Get, Headers, Post, UseGuards} from '@nestjs/common';
+import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiImplicitBody, ApiResponse, ApiUseTags} from '@nestjs/swagger';
-import {equals} from '@aws/dynamodb-expressions';
+import {config} from '../../config';
 import {DeepPartial} from '../_helpers/database';
+import {Profile} from '../_helpers/decorators';
+import {AppLogger} from '../app.logger';
+import {USER_CMD_REGISTER} from '../user';
 import {UserEntity} from '../user/entity';
+import {UserService} from '../user/user.service';
 import {AuthService} from './auth.service';
 import {CredentialsDto} from './dto/credentials.dto';
-import {UserService} from '../user/user.service';
 import {FacebookTokenDto} from './dto/facebook-token.dto';
 import {JwtDto} from './dto/jwt.dto';
 import {RefreshTokenDto} from './dto/refresh-token.dto';
@@ -14,11 +19,6 @@ import {TokenDto} from './dto/token.dto';
 import {UserEntityDto} from './dto/user-entity.dto';
 import {FacebookProfile} from './interfaces/facebook-profile.interface';
 import {createToken, verifyToken} from './jwt';
-import {Profile} from '../_helpers/decorators';
-import {config} from '../../config';
-import {Client, ClientProxy, Transport} from '@nestjs/microservices';
-import {USER_CMD_REGISTER} from '../user';
-import {AppLogger} from '../app.logger';
 
 @ApiUseTags('auth')
 @Controller('auth')

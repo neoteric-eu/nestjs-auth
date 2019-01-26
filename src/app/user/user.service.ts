@@ -32,6 +32,7 @@ export class UserService extends CrudService<UserEntity> {
 
 	public async create(data: DeepPartial<UserEntity>): Promise<UserEntity> {
 		const entity = this.repository.create(data);
+		await this.validate(entity);
 		entity.hashPassword();
 		if (!entity.createdAt) {
 			entity.createdAt = DateTime.utc().toString();
@@ -41,9 +42,10 @@ export class UserService extends CrudService<UserEntity> {
 	}
 
 	public async socialRegister(data: DeepPartial<UserEntity>) {
-		const user = this.repository.create(data);
-		user.createdAt = DateTime.utc().toString();
-		user.updatedAt = DateTime.utc().toString();
-		return this.repository.save(user);
+		const entity = this.repository.create(data);
+		await this.validate(entity, { skipMissingProperties: true });
+		entity.createdAt = DateTime.utc().toString();
+		entity.updatedAt = DateTime.utc().toString();
+		return this.repository.save(entity);
 	}
 }

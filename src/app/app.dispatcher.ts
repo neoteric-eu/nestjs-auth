@@ -1,14 +1,13 @@
+import {INestApplication, INestMicroservice} from '@nestjs/common';
+import {NestFactory} from '@nestjs/core';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {useContainer} from 'class-validator';
 import cors from 'cors';
-import query from 'qs-middleware';
 import helmet from 'helmet';
-import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { INestApplication, INestMicroservice } from '@nestjs/common';
-import { config } from '../config';
-import { AppModule } from './app.module';
-import { AppLogger } from './app.logger';
-import { useContainer } from 'class-validator';
-import { AnyExceptionFilter } from './_helpers';
+import query from 'qs-middleware';
+import {config} from '../config';
+import {AppLogger} from './app.logger';
+import {AppModule} from './app.module';
 
 export class AppDispatcher {
 	private app: INestApplication;

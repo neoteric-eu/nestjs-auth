@@ -57,7 +57,7 @@
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
     "tslib": "^1.9.3",
-    "twig": "^1.13.2",
+    "twing": "^2.1.2",
     "uuid": "^3.3.2",
     "winston": "^2.4.4"
   },
@@ -69,7 +69,6 @@
     "@types/nodemailer": "^4.6.5",
     "@types/redis": "^2.8.10",
     "@types/socket.io": "^2.1.2",
-    "@types/twig": "^1.12.2",
     "nodemon": "^1.18.9",
     "pre-commit": "^1.2.2",
     "ts-node": "^7.0.1",

@@ -11,6 +11,8 @@ export class AnyExceptionFilter implements ExceptionFilter {
 			status = exception.getStatus();
 		}
 
+		console.error(exception);
+
 		response
 			.status(status)
 			.json({
