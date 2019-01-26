@@ -1,5 +1,4 @@
 import {createTransport, SendMailOptions, SentMessageInfo} from 'nodemailer';
-import {renderFile} from 'twig';
 import {TwingEnvironment, TwingLoaderFilesystem} from 'twing';
 import {config} from '../../../config';
 
