@@ -24,6 +24,10 @@ interface Config {
 		refresh: {
 			secret: string;
 			timeout: number;
+		};
+		password_reset: {
+			secret: string;
+			timeout: number;
 		}
 	};
 	facebook: {
@@ -89,6 +93,10 @@ export const config: Config = {
 		refresh: {
 			secret: process.env.APP_SESSION_REFRESH_SECRET,
 			timeout: parseInt(process.env.APP_SESSION_REFRESH_TIMEOUT, 10)
+		},
+		password_reset: {
+			secret: process.env.APP_SESSION_PASSWORD_RESET_SECRET,
+			timeout: parseInt(process.env.APP_SESSION_PASSWORD_RESET_TIMEOUT, 10)
 		}
 	},
 	facebook: {

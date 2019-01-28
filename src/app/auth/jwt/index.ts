@@ -4,23 +4,23 @@ import {UserEntity} from '../../user/entity';
 import {config} from '../../../config';
 import {TokenDto} from '../dto/token.dto';
 
-export async function createToken({id}: DeepPartial<UserEntity>) {
+export async function createAuthToken({id}: DeepPartial<UserEntity>) {
 	const expiresIn = config.session.timeout;
-	const accessToken = sign({id}, config.session.secret, {
-		expiresIn,
-		audience: config.session.domain,
-		issuer: config.uuid
-	});
-	const refreshToken = sign({id}, config.session.refresh.secret, {
-		expiresIn: config.session.refresh.timeout,
-		audience: config.session.domain,
-		issuer: config.uuid
-	});
+	const accessToken = createToken(id, expiresIn, config.session.secret);
+	const refreshToken = createToken(id, config.session.refresh.timeout, config.session.refresh.secret);
 	return {
 		expiresIn,
 		accessToken,
 		refreshToken
 	};
+}
+
+export function createToken(id, expiresIn, secret) {
+	return sign({id}, secret, {
+		expiresIn,
+		audience: config.session.domain,
+		issuer: config.uuid
+	});
 }
 
 export async function verifyToken(token: string, secret: string): Promise<TokenDto> {

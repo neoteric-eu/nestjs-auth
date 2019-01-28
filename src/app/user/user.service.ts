@@ -41,6 +41,15 @@ export class UserService extends CrudService<UserEntity> {
 		return this.repository.save(entity);
 	}
 
+	public async update(data: DeepPartial<UserEntity>): Promise<UserEntity> {
+		const entity = await this.repository.findOneOrFail(data.id);
+		entity.password = data.password;
+		await this.validate(entity);
+		entity.hashPassword();
+		entity.updatedAt = DateTime.utc().toString();
+		return this.repository.save(entity);
+	}
+
 	public async socialRegister(data: DeepPartial<UserEntity>) {
 		const entity = this.repository.create(data);
 		await this.validate(entity, { skipMissingProperties: true });
