@@ -24,7 +24,7 @@ import {HomeMediaModule} from './home-media/home-media.module';
 		HomeMediaModule,
 		MessageModule,
 		GraphQLModule.forRoot({
-			include: [HomeModule, UserModule, HomeFavoriteModule, HomeMediaModule],
+			include: [HomeModule, UserModule, HomeFavoriteModule, HomeMediaModule, MessageModule],
 			typePaths: ['./**/*.graphql'],
 			introspection: true,
 			playground: true,
