@@ -36,17 +36,7 @@ export class MessageEntity extends ExtendedEntity {
 	public isSent: boolean;
 
 	@ApiModelProperty()
-	@IsString()
+	@IsBoolean()
 	@attribute()
-	public recipientId: string;
-
-	@ApiModelProperty()
-	@IsString()
-	@attribute()
-	public sender: string;
-
-	@ApiModelProperty()
-	@IsString()
-	@attribute()
-	public type: string;
+	public isRead: boolean;
 }

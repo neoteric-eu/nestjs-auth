@@ -1,4 +1,10 @@
 /* tslint:disable */
+export class CreateConversationInput {
+    name: string;
+    type: string;
+    recipientId: string;
+}
+
 export class CreateHomeFavoriteInput {
     homeFavoriteUserId?: string;
     homeFavoriteHomeId?: string;
@@ -181,10 +187,11 @@ export class AVM {
 }
 
 export class Conversation {
-    createdAt?: string;
     id: string;
-    messages?: Message[];
     name: string;
+    type?: string;
+    messages?: Message[];
+    createdAt?: string;
 }
 
 export class Home {
@@ -231,14 +238,13 @@ export class HomeMedia {
 }
 
 export class Message {
+    id: string;
     author?: User;
     content: string;
     conversationId: string;
-    createdAt?: string;
-    id: string;
     isSent?: boolean;
-    recipient?: User;
-    sender?: string;
+    isRead?: boolean;
+    createdAt?: string;
 }
 
 export abstract class IMutation {
@@ -256,11 +262,9 @@ export abstract class IMutation {
 
     abstract updateHome(updateHomeInput?: UpdateHomeInput): Home | Promise<Home>;
 
-    abstract createConversation(name: string): Conversation | Promise<Conversation>;
+    abstract createConversation(conversationInput?: CreateConversationInput): UserConversation | Promise<UserConversation>;
 
     abstract createMessage(conversationId: string, content?: string): Message | Promise<Message>;
-
-    abstract createUserConversations(conversationId: string, userId: string): UserConversations | Promise<UserConversations>;
 
     abstract updateUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
 
@@ -470,11 +474,9 @@ export abstract class IQuery {
 
     abstract getAVMDetail(getAVMDetailInput?: GetAVMDetailInput): AVM | Promise<AVM>;
 
-    abstract allMessages(conversationId: string, after?: string, first?: number): Message[] | Promise<Message[]>;
+    abstract allConversations(): UserConversation[] | Promise<UserConversation[]>;
 
-    abstract allConversations(): UserConversations[] | Promise<UserConversations[]>;
-
-    abstract allMessagesFrom(conversationId: string, sender: string, after?: string, first?: number): Message[] | Promise<Message[]>;
+    abstract allMessages(conversationId: string, after?: string, limit?: number): Message[] | Promise<Message[]>;
 
     abstract me(): User | Promise<User>;
 
@@ -670,9 +672,9 @@ export abstract class ISubscription {
 
     abstract homeDeleted(): Home | Promise<Home>;
 
-    abstract subscribeToNewMessage(conversationId: string): Message | Promise<Message>;
+    abstract newMessage(conversationId: string): Message | Promise<Message>;
 
-    abstract subscribeToNewUCs(userId: string): UserConversations | Promise<UserConversations>;
+    abstract newUserConversation(userId: string): UserConversation | Promise<UserConversation>;
 
     abstract userCreated(): User | Promise<User>;
 
@@ -693,7 +695,7 @@ export class User {
     updatedAt?: string;
 }
 
-export class UserConversations {
+export class UserConversation {
     conversation?: Conversation;
     user?: User;
 }

@@ -11,7 +11,6 @@ export class ConversationEntity extends ExtendedEntity {
 	public id: string;
 
 	@ApiModelProperty()
-	@IsString()
 	@attribute()
 	public createdAt: string;
 
@@ -19,4 +18,9 @@ export class ConversationEntity extends ExtendedEntity {
 	@IsString()
 	@attribute()
 	public name: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@attribute()
+	public type: string;
 }

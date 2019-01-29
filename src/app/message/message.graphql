@@ -1,39 +1,43 @@
 type Query {
-    allMessages(conversationId: ID!, after: String, first: Int): [Message]
-    allConversations: [UserConversations]
-    allMessagesFrom(conversationId: ID!, sender: String!, after: String, first: Int): [Message]
+    allConversations: [UserConversation]
+    allMessages(conversationId: ID!, after: String, limit: Int): [Message]
 }
 
 type Mutation {
-    createConversation(name: String!): Conversation
+    createConversation(conversationInput: CreateConversationInput): UserConversation
     createMessage(conversationId: ID!, content: String): Message
-    createUserConversations(conversationId: ID!, userId: ID!): UserConversations
 }
 
 type Subscription {
-    subscribeToNewMessage(conversationId: ID!): Message
-    subscribeToNewUCs(userId: ID!): UserConversations
+    newMessage(conversationId: ID!): Message
+    newUserConversation(userId: ID!): UserConversation
 }
 
 type Conversation {
-    createdAt: String
     id: ID!
-    messages: [Message]
     name: String!
+    type: String
+    messages: [Message]
+    createdAt: String
 }
 
-type UserConversations {
+input CreateConversationInput {
+    name: String!,
+    type: String!,
+    recipientId: String!
+}
+
+type UserConversation {
     conversation: Conversation
     user: User
 }
 
 type Message {
+    id: ID!
     author: User
     content: String!
     conversationId: ID!
-    createdAt: String
-    id: ID!
     isSent: Boolean
-    recipient: User
-    sender: String
+    isRead: Boolean
+    createdAt: String
 }
