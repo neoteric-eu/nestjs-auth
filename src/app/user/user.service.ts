@@ -41,7 +41,7 @@ export class UserService extends CrudService<UserEntity> {
 		return this.repository.save(entity);
 	}
 
-	public async update(data: DeepPartial<UserEntity>): Promise<UserEntity> {
+	public async updatePassword(data: DeepPartial<UserEntity>): Promise<UserEntity> {
 		const entity = await this.repository.findOneOrFail(data.id);
 		entity.password = data.password;
 		await this.validate(entity);

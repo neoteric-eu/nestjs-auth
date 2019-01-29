@@ -48,6 +48,10 @@ export class UserEntity extends ExtendedEntity {
 	public password: string;
 
 	@ApiModelProperty()
+	@attribute()
+	public is_verified = false;
+
+	@ApiModelProperty()
 	@IsOptional()
 	@attribute()
 	public provider: string;
