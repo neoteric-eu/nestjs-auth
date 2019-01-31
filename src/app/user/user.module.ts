@@ -4,11 +4,11 @@ import { UserController } from './user.controller';
 import { userProviders } from './user.providers';
 import { UserService } from './user.service';
 import { IsUserAlreadyExist } from './user.validator';
-import { UserResolvers } from './user.resolvers';
+import { UserResolver } from './user.resolver';
 
 @Module({
 	controllers: [UserController],
-	providers: [...userProviders, IsUserAlreadyExist, UserService, UserResolvers],
+	providers: [...userProviders, IsUserAlreadyExist, UserService, UserResolver],
 	imports: [DatabaseModule],
 	exports: [UserService]
 })

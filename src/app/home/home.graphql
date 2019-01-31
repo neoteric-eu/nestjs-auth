@@ -412,6 +412,7 @@ type Home {
     buyers_agent: Boolean
     buyers_agent_amt: Float
     buyers_agent_type: Int
+    favorite: Boolean
 }
 
 input CreateHomeInput {

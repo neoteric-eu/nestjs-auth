@@ -11,7 +11,7 @@ const pubSub = new PubSub();
 
 @Resolver('User')
 @UseGuards(GraphqlGuard)
-export class UserResolvers {
+export class UserResolver {
 	constructor(private readonly userService: UserService) {
 	}
 

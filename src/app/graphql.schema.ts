@@ -220,6 +220,7 @@ export class Home {
     buyers_agent?: boolean;
     buyers_agent_amt?: number;
     buyers_agent_type?: number;
+    favorite?: boolean;
 }
 
 export class HomeFavorite {
