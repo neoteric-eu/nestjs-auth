@@ -30,6 +30,10 @@ task_definition:
           name: APP_SESSION_PASSWORD_RESET_SECRET
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_password_reset_timeout
           name: APP_SESSION_PASSWORD_RESET_TIMEOUT
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_verify_secret
+          name: APP_SESSION_VERIFY_SECRET
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_session_verify_timeout
+          name: APP_SESSION_VERIFY_TIMEOUT
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_facebook_app_id
           name: APP_FACEBOOK_APP_ID
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_facebook_app_secret
