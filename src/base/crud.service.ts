@@ -1,10 +1,17 @@
-import {UnprocessableEntityException} from '@nestjs/common';
+import {HttpException, HttpStatus, UnprocessableEntityException} from '@nestjs/common';
 import {validate, ValidatorOptions} from 'class-validator';
 import {config} from '../config';
 import {ExtendedEntity, DeepPartial, Repository} from '../app/_helpers';
 
 export class CrudService<T extends ExtendedEntity> {
 	protected repository: Repository<T>;
+
+	constructor(repository?: Repository<T>) {
+		if (repository) {
+			this.repository = repository;
+		}
+	}
+
 
 	public findAll(conditions?): Promise<T[]> {
 		return this.repository.find(conditions);
@@ -46,7 +53,10 @@ export class CrudService<T extends ExtendedEntity> {
 	protected async validate(entity: T, options?: ValidatorOptions) {
 		const errors = await validate(entity, {...config.validator, options} as ValidatorOptions);
 		if (errors.length) {
-			throw new UnprocessableEntityException(errors);
+			throw new HttpException({
+				message: errors,
+				error: 'Validation'
+			}, HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 }

@@ -7,7 +7,7 @@ import {config} from '../../config';
 import {DeepPartial} from '../_helpers/database';
 import {Profile} from '../_helpers/decorators';
 import {AppLogger} from '../app.logger';
-import {USER_CMD_PASSWORD_NEW, USER_CMD_PASSWORD_RESET, USER_CMD_REGISTER} from '../user';
+import {USER_CMD_PASSWORD_NEW, USER_CMD_PASSWORD_RESET, USER_CMD_REGISTER, USER_CMD_REGISTER_VERIFY} from '../user';
 import {UserEntity} from '../user/entity';
 import {UserService} from '../user/user.service';
 import {AuthService} from './auth.service';
@@ -21,6 +21,8 @@ import {FacebookProfile} from './interfaces/facebook-profile.interface';
 import {createAuthToken, verifyToken} from './jwt';
 import {PasswordResetDto} from './dto/password-reset.dto';
 import {PasswordTokenDto} from './dto/password-token.dto';
+import {VerifyTokenDto} from './dto/verify-token.dto';
+import {VerifyResendDto} from './dto/verify-resend.dto';
 
 @ApiUseTags('auth')
 @Controller('auth')
@@ -36,15 +38,6 @@ export class AuthController {
 		private readonly userService: UserService
 	) {
 
-	}
-
-	@Get('verify')
-	@HttpCode(200)
-	@UseGuards(AuthGuard('jwt'))
-	@ApiResponse({ status: 200, description: 'OK', type: TokenDto })
-	public async verify(@Headers('Authorization') token: string): Promise<TokenDto> {
-		this.logger.debug(`[verify] Token ${token}`);
-		return verifyToken(token, config.session.secret);
 	}
 
 	@Post('login')
@@ -68,6 +61,36 @@ export class AuthController {
 		return createAuthToken(user);
 	}
 
+	@Post('register/verify')
+	@HttpCode(204)
+	@ApiImplicitBody({ required: true, type: VerifyTokenDto, name: 'VerifyTokenDto' })
+	@ApiResponse({ status: 204, description: 'NO CONTENT' })
+	public async registerVerify(@Body() body: VerifyTokenDto): Promise<void> {
+		this.logger.debug(`[registerVerify] Token ${body.verifyToken}`);
+		const token = await verifyToken(body.verifyToken, config.session.verify.secret);
+		await this.userService.patch(token.id, {is_verified: true});
+		this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, token.id).subscribe();
+		this.logger.debug(`[registerVerify] Sent command register verify for user id ${token.id}`);
+	}
+
+	@Post('register/verify/resend')
+	@HttpCode(204)
+	@ApiImplicitBody({ required: true, type: VerifyResendDto, name: 'VerifyResendDto' })
+	@ApiResponse({ status: 204, description: 'NO CONTENT' })
+	public async registerVerifyResend(@Body() body: VerifyResendDto): Promise<void> {
+		try {
+			this.logger.debug(`[registerVerifyResend] Email where resend verification ${body.email}`);
+			const user = await this.userService.findByEmail(body.email);
+			if (user.is_verified) {
+				throw new Error(`User ${user.email} already verified`);
+			}
+			this.client.send({cmd: USER_CMD_REGISTER}, user).subscribe();
+			this.logger.debug(`[registerVerify] Sent command registry verify for email ${body.email}`);
+		} catch (err) {
+			this.logger.error(`[registerVerifyResend] ${err.message}`, err.stack);
+		}
+	}
+
 	@Post('password/reset')
 	@HttpCode(204)
 	@ApiImplicitBody({ required: true, type: PasswordResetDto, name: 'PasswordResetDto' })
@@ -84,7 +107,7 @@ export class AuthController {
 	public async passwordNew(@Body() body: PasswordTokenDto): Promise<void> {
 		this.logger.debug(`[passwordNew] Token ${body.resetToken}`);
 		const token = await verifyToken(body.resetToken, config.session.password_reset.secret);
-		const user = await this.userService.update({id: token.id, password: body.password});
+		const user = await this.userService.updatePassword({id: token.id, password: body.password});
 		this.logger.debug(`[passwordNew] Send change password email for user ${user.email}`);
 		this.client.send({cmd: USER_CMD_PASSWORD_NEW}, user).subscribe();
 	}
@@ -112,8 +135,10 @@ export class AuthController {
 				first_name: profile._json.first_name,
 				last_name: profile._json.last_name,
 				socialId: profile._json.id,
-				provider: profile.provider
+				provider: profile.provider,
+				is_verified: true
 			});
+			this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user.id).subscribe();
 		}
 		return createAuthToken(user);
 	}

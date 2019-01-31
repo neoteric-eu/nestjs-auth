@@ -41,3 +41,5 @@ deploy-dev:
     - ecs-cli configure --cluster threeleaf-backend --region $AWS_REGION --default-launch-type FARGATE --config-name threeleaf-backend
     - ecs-cli configure profile --access-key $AWS_KEY --secret-key $AWS_SECRET --profile-name threeleaf-backend
     - ecs-cli compose --project-name threeleaf-backend --ecs-params ./ecs/ecs-params.dev.yml service up --cluster-config threeleaf-backend --timeout 30 --region $AWS_REGION --force-deployment --target-group-arn $AWS_TARGET_GROUP_ARN --container-name threeleaf-backend --container-port 80
+  only:
+    - develop

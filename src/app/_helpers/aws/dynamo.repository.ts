@@ -70,7 +70,7 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 		const model = plainToClass<T, object>(this.entity, {id});
 		const result = await this.mapper.get(model);
 		if (!result) {
-			throw new NotFoundException(`Item doesn't exists`);
+			throw new NotFoundException({message: `Item doesn't exists`});
 		}
 		return result;
 	}

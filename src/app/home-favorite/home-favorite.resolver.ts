@@ -14,7 +14,7 @@ const pubSub = new PubSub();
 
 @Resolver('HomeFavorite')
 @UseGuards(GraphqlGuard)
-export class HomeFavoriteResolvers {
+export class HomeFavoriteResolver {
 	constructor(private readonly homeFavoriteService: HomeFavoriteService) {
 	}
 

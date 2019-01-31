@@ -7,6 +7,7 @@ const appPackage = readFileSync(`${__dirname}/../../package.json`, {
 const appData = JSON.parse(appPackage);
 
 interface Config {
+	appRootPath: string;
 	version: string;
 	name: string;
 	description: string;
@@ -26,6 +27,10 @@ interface Config {
 			timeout: number;
 		};
 		password_reset: {
+			secret: string;
+			timeout: number;
+		};
+		verify: {
 			secret: string;
 			timeout: number;
 		}
@@ -76,6 +81,7 @@ interface Config {
 }
 
 export const config: Config = {
+	appRootPath: `${__dirname}/../app`,
 	version: appData.version,
 	name: appData.name,
 	description: appData.description,
@@ -97,6 +103,10 @@ export const config: Config = {
 		password_reset: {
 			secret: process.env.APP_SESSION_PASSWORD_RESET_SECRET,
 			timeout: parseInt(process.env.APP_SESSION_PASSWORD_RESET_TIMEOUT, 10)
+		},
+		verify: {
+			secret: process.env.APP_SESSION_VERIFY_SECRET,
+			timeout: parseInt(process.env.APP_SESSION_VERIFY_TIMEOUT, 10)
 		}
 	},
 	facebook: {

@@ -1,5 +1,4 @@
 import {Module} from '@nestjs/common';
-import {join} from 'path';
 import {AuthModule} from './auth/auth.module';
 import {AppLogger} from './app.logger';
 import {DatabaseModule} from './database/database.module';
@@ -11,6 +10,7 @@ import {MessageModule} from './message/message.module';
 import {HomeFavoriteModule} from './home-favorite/home-favorite.module';
 import {MediaModule} from './media/media.module';
 import {HomeMediaModule} from './home-media/home-media.module';
+import {GqlConfigService} from './_helpers';
 
 @Module({
 	imports: [
@@ -23,17 +23,9 @@ import {HomeMediaModule} from './home-media/home-media.module';
 		HomeFavoriteModule,
 		HomeMediaModule,
 		MessageModule,
-		GraphQLModule.forRoot({
-			include: [HomeModule, UserModule, HomeFavoriteModule, HomeMediaModule],
-			typePaths: ['./**/*.graphql'],
-			introspection: true,
-			playground: true,
-			installSubscriptionHandlers: true,
-			definitions: {
-				path: join(process.cwd(), 'src/app/graphql.schema.ts'),
-				outputAs: 'class'
-			},
-			context: ({req}) => ({req})
+		GraphQLModule.forRootAsync({
+			imports: [UserModule],
+			useClass: GqlConfigService
 		})
 	]
 })

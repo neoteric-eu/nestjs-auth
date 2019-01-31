@@ -1,4 +1,10 @@
 /* tslint:disable */
+export class CreateConversationInput {
+    name: string;
+    type: string;
+    recipientId: string;
+}
+
 export class CreateHomeFavoriteInput {
     homeFavoriteUserId?: string;
     homeFavoriteHomeId?: string;
@@ -180,6 +186,14 @@ export class AVM {
     schools?: School[];
 }
 
+export class Conversation {
+    id: string;
+    name: string;
+    type?: string;
+    messages?: Message[];
+    createdAt?: string;
+}
+
 export class Home {
     id: string;
     owner?: User;
@@ -206,6 +220,7 @@ export class Home {
     buyers_agent?: boolean;
     buyers_agent_amt?: number;
     buyers_agent_type?: number;
+    favorite?: boolean;
 }
 
 export class HomeFavorite {
@@ -223,6 +238,16 @@ export class HomeMedia {
     url?: string;
 }
 
+export class Message {
+    id: string;
+    author?: User;
+    content: string;
+    conversationId: string;
+    isSent?: boolean;
+    isRead?: boolean;
+    createdAt?: string;
+}
+
 export abstract class IMutation {
     abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
 
@@ -237,6 +262,10 @@ export abstract class IMutation {
     abstract deleteHome(deleteHomeInput?: DeleteHomeInput): Home | Promise<Home>;
 
     abstract updateHome(updateHomeInput?: UpdateHomeInput): Home | Promise<Home>;
+
+    abstract createConversation(conversationInput?: CreateConversationInput): UserConversation | Promise<UserConversation>;
+
+    abstract createMessage(conversationId: string, content?: string): Message | Promise<Message>;
 
     abstract updateUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
 
@@ -446,6 +475,10 @@ export abstract class IQuery {
 
     abstract getAVMDetail(getAVMDetailInput?: GetAVMDetailInput): AVM | Promise<AVM>;
 
+    abstract allConversations(): UserConversation[] | Promise<UserConversation[]>;
+
+    abstract allMessages(conversationId: string, after?: string, limit?: number): Message[] | Promise<Message[]>;
+
     abstract me(): User | Promise<User>;
 
     abstract temp__(): boolean | Promise<boolean>;
@@ -640,6 +673,10 @@ export abstract class ISubscription {
 
     abstract homeDeleted(): Home | Promise<Home>;
 
+    abstract newMessage(conversationId: string): Message | Promise<Message>;
+
+    abstract newUserConversation(userId: string): UserConversation | Promise<UserConversation>;
+
     abstract userCreated(): User | Promise<User>;
 
     abstract userDeleted(): User | Promise<User>;
@@ -657,4 +694,9 @@ export class User {
     socialId?: string;
     createdAt?: string;
     updatedAt?: string;
+}
+
+export class UserConversation {
+    conversation?: Conversation;
+    user?: User;
 }

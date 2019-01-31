@@ -1,12 +1,13 @@
 {
-  "name": "threeleaf_backend",
-  "version": "0.0.1",
-  "description": "Authentication and Authorization example for Nest.js TypeScript Framework",
+  "name": "ava",
+  "version": "0.0.2",
+  "description": "AVA - The new agent in town",
   "main": "dist/index.js",
   "repository": "git@github.com:neoteric-eu/nestjs-auth.git",
   "scripts": {
     "start": "node $NODE_DEBUG_OPTION -r ts-node/register -r dotenv-safe/config src/index.ts",
     "watch": "nodemon",
+    "prebuild": "rm -rf ./dist",
     "build": "tsc",
     "postbuild": "cp -R ./src/assets ./dist",
     "prod": "node -r dotenv-safe/config dist/index.js",
