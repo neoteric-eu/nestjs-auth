@@ -48,7 +48,8 @@ export class UserConversationResolver {
 	@UseGuards(GraphqlGuard)
 	newUserConversation() {
 		return {
-			subscribe: withFilter(() => pubSub.asyncIterator('newUserConversation'), this.subscriptionsService.newUserConversation)
+			subscribe: withFilter(() => pubSub.asyncIterator('newUserConversation'),
+				(payload, variables, context) => this.subscriptionsService.newUserConversation(payload, variables, context))
 		};
 	}
 

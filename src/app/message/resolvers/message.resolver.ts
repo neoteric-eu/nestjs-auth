@@ -43,7 +43,8 @@ export class MessageResolver {
 	@Subscription('newMessage')
 	newMessage() {
 		return {
-			subscribe: withFilter(() => pubSub.asyncIterator('newMessage'), this.subscriptionsService.newMessage)
+			subscribe: withFilter(() => pubSub.asyncIterator('newMessage'),
+				(payload, variables, context) => this.subscriptionsService.newMessage(payload, variables, context))
 		};
 	}
 
