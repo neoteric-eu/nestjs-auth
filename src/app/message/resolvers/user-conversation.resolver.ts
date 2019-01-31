@@ -36,7 +36,7 @@ export class UserConversationResolver {
 
 		const createdAuthorConversation = await this.userConversationService
 			.create({userId: user.id, conversationId: createdConversation.id});
-		const createdRecipientConversation = await this.userConversationService
+		await this.userConversationService
 			.create({userId: conversationInput.recipientId, conversationId: createdConversation.id});
 
 		pubSub.publish('newUserConversation', {newUserConversation: createdAuthorConversation});

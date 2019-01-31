@@ -10,13 +10,10 @@ export class SubscriptionsService {
 	constructor(private readonly userConversationService: UserConversationService) {
 	}
 
-	public newUserConversation(payload, variables, context) {
+	public async newUserConversation(payload, variables, context) {
 		const user = context.req.user;
-		if (payload.newUserConversation.userId !== variables.userId) {
-			this.logger.debug(`[newConversation] different userId for listening`);
-			return false;
-		}
-		return variables.userId === user.id;
+		const conversations = await this.userConversationService.findAll({ filter: { userId: {eq: user.id }}});
+		return conversations.some(conversation => conversation.conversationId === payload.newUserConversation.conversationId);
 	}
 
 	public async newMessage(payload, variables, context) {

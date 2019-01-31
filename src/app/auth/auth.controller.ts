@@ -1,5 +1,5 @@
 import {equals} from '@aws/dynamodb-expressions';
-import {Body, Controller, Get, Headers, HttpCode, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, HttpCode, Post, UseGuards} from '@nestjs/common';
 import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiImplicitBody, ApiResponse, ApiUseTags} from '@nestjs/swagger';
@@ -15,7 +15,6 @@ import {CredentialsDto} from './dto/credentials.dto';
 import {FacebookTokenDto} from './dto/facebook-token.dto';
 import {JwtDto} from './dto/jwt.dto';
 import {RefreshTokenDto} from './dto/refresh-token.dto';
-import {TokenDto} from './dto/token.dto';
 import {UserEntityDto} from './dto/user-entity.dto';
 import {FacebookProfile} from './interfaces/facebook-profile.interface';
 import {createAuthToken, verifyToken} from './jwt';
@@ -50,15 +49,14 @@ export class AuthController {
 	}
 
 	@Post('register')
-	@HttpCode(201)
+	@HttpCode(204)
 	@ApiImplicitBody({ required: true, type: UserEntityDto, name: 'UserEntityDto' })
-	@ApiResponse({ status: 201, description: 'CREATED', type: JwtDto })
-	public async register(@Body() data: DeepPartial<UserEntity>): Promise<JwtDto> {
+	@ApiResponse({ status: 204, description: 'NO_CONTENT' })
+	public async register(@Body() data: DeepPartial<UserEntity>): Promise<void> {
 		const user = await this.userService.create(data);
 		this.logger.debug(`[register] User ${data.email} register`);
 		this.client.send({cmd: USER_CMD_REGISTER}, user).subscribe();
 		this.logger.debug(`[register] Send registration email for email ${data.email}`);
-		return createAuthToken(user);
 	}
 
 	@Post('register/verify')

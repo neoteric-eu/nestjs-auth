@@ -10,7 +10,7 @@ type Mutation {
 
 type Subscription {
     newMessage(conversationId: ID!): Message
-    newUserConversation(userId: ID!): UserConversation
+    newUserConversation: UserConversation
 }
 
 type Conversation {

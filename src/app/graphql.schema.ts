@@ -675,7 +675,7 @@ export abstract class ISubscription {
 
     abstract newMessage(conversationId: string): Message | Promise<Message>;
 
-    abstract newUserConversation(userId: string): UserConversation | Promise<UserConversation>;
+    abstract newUserConversation(): UserConversation | Promise<UserConversation>;
 
     abstract userCreated(): User | Promise<User>;
 
