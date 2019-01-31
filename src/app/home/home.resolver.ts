@@ -17,7 +17,7 @@ import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
 const pubSub = new PubSub();
 
 @Resolver('Home')
-export class HomeResolvers {
+export class HomeResolver {
 	constructor(private readonly homeService: HomeService,
 							private readonly attomDataService: AttomDataApiService,
 							private readonly userService: UserService,
@@ -32,7 +32,7 @@ export class HomeResolvers {
 		const locationResponse = await this.attomDataService.getLocation({address: `${args.address_1} ${args.address_2}`});
 		const avmDetailsResponse = await this.attomDataService.getAVMDetail({address1: args.address_1, address2: args.address_2});
 		const property = avmDetailsResponse.data.property[0];
-		if (locationResponse.data.results.length === 1) {
+		if (locationResponse.data.results.length) {
 			const location = locationResponse.data.results[0].geometry.location;
 			property.location.latitude = location.lat;
 			property.location.longitude = location.lng;
@@ -52,9 +52,8 @@ export class HomeResolvers {
 	}
 
 	@Query('listHomes')
-	async findAll(@Args('filter') filter?: ModelHomeFilterInput, @Args('limit') limit?: number): Promise<HomeFavorite[]> {
-		console.dir(filter);
-		return this.homeService.findAll({filter, limit});
+	async findAll(@Args('filter') filter?: ModelHomeFilterInput, @Args('limit') limit?: number): Promise<HomeEntity[]> {
+		return this.homeService.findAll({ filter, limit });
 	}
 
 	@Query('getHome')
@@ -133,5 +132,12 @@ export class HomeResolvers {
 	@ResolveProperty('media')
 	async getMedia(@Parent() home: HomeEntity): Promise<HomeMediaEntity[]> {
 		return this.homeMediaService.findAll({filter: {homeId: {eq: home.id}}});
+	}
+
+	@ResolveProperty('favorite')
+	@UseGuards(GraphqlGuard)
+	async getFavorite(@CurrentUser() user: User, @Parent() home: HomeEntity): Promise<Boolean> {
+		const homeFavorites = await this.homeFavoriteService.findAll({ filter: { homeFavoriteUserId: { eq: user.id }}});
+		return homeFavorites.some(homeFavorite => homeFavorite.homeFavoriteHomeId === home.id);
 	}
 }

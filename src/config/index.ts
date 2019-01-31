@@ -7,6 +7,7 @@ const appPackage = readFileSync(`${__dirname}/../../package.json`, {
 const appData = JSON.parse(appPackage);
 
 interface Config {
+	appRootPath: string;
 	version: string;
 	name: string;
 	description: string;
@@ -80,6 +81,7 @@ interface Config {
 }
 
 export const config: Config = {
+	appRootPath: `${__dirname}/../app`,
 	version: appData.version,
 	name: appData.name,
 	description: appData.description,

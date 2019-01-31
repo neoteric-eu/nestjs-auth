@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node $NODE_DEBUG_OPTION -r ts-node/register -r dotenv-safe/config src/index.ts",
     "watch": "nodemon",
+    "prebuild": "rm -rf ./dist",
     "build": "tsc",
     "postbuild": "cp -R ./src/assets ./dist",
     "prod": "node -r dotenv-safe/config dist/index.js",
