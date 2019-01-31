@@ -26,8 +26,8 @@ export function createToken(id, expiresIn, secret) {
 export async function verifyToken(token: string, secret: string): Promise<TokenDto> {
 	return new Promise((resolve, reject) => {
 		verify(token, secret, (err, decoded) => {
-			if (decoded instanceof JsonWebTokenError) {
-				return reject(decoded);
+			if (err) {
+				return reject(err);
 			}
 			resolve(decoded as TokenDto);
 		});

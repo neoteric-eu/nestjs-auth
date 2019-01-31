@@ -28,6 +28,10 @@ interface Config {
 		password_reset: {
 			secret: string;
 			timeout: number;
+		};
+		verify: {
+			secret: string;
+			timeout: number;
 		}
 	};
 	facebook: {
@@ -97,6 +101,10 @@ export const config: Config = {
 		password_reset: {
 			secret: process.env.APP_SESSION_PASSWORD_RESET_SECRET,
 			timeout: parseInt(process.env.APP_SESSION_PASSWORD_RESET_TIMEOUT, 10)
+		},
+		verify: {
+			secret: process.env.APP_SESSION_VERIFY_SECRET,
+			timeout: parseInt(process.env.APP_SESSION_VERIFY_TIMEOUT, 10)
 		}
 	},
 	facebook: {

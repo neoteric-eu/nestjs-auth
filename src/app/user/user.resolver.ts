@@ -1,7 +1,7 @@
 import {Args, Mutation, Query, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
 import {UserService} from './user.service';
-import {DeleteUserDto, UpdateUserDto} from '../user/dto';
+import {DeleteUserDto, UpdateUserDto} from './dto';
 import {UseGuards} from '@nestjs/common';
 import {GraphqlGuard} from '../_helpers/graphql';
 import {UserEntity} from './entity';
@@ -11,7 +11,7 @@ const pubSub = new PubSub();
 
 @Resolver('User')
 @UseGuards(GraphqlGuard)
-export class UserResolvers {
+export class UserResolver {
 	constructor(private readonly userService: UserService) {
 	}
 

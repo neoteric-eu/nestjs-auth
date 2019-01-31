@@ -4,7 +4,7 @@ import {IsEmail, IsOptional, IsString, IsUrl, MinLength, Validate, ValidateIf} f
 import {ExtendedEntity, passwordHash} from '../../_helpers';
 import {IsUserAlreadyExist} from '../user.validator';
 
-@table(`users`)
+@table(`user`)
 export class UserEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
@@ -46,6 +46,10 @@ export class UserEntity extends ExtendedEntity {
 	@IsOptional()
 	@attribute()
 	public password: string;
+
+	@ApiModelProperty()
+	@attribute()
+	public is_verified = false;
 
 	@ApiModelProperty()
 	@IsOptional()
