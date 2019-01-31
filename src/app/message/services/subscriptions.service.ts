@@ -10,7 +10,7 @@ export class SubscriptionsService {
 	constructor(private readonly userConversationService: UserConversationService) {
 	}
 
-	public newUserConversation(payload, variables, context) {
+	public newUserConversation = (payload, variables, context) => {
 		const user = context.req.user;
 		if (payload.newUserConversation.userId !== variables.userId) {
 			this.logger.debug(`[newConversation] different userId for listening`);
@@ -19,7 +19,7 @@ export class SubscriptionsService {
 		return variables.userId === user.id;
 	}
 
-	public async newMessage(payload, variables, context) {
+	public newMessage = async (payload, variables, context) => {
 		const user = context.req.user;
 		if (payload.newMessage.conversationId !== variables.conversationId) {
 			this.logger.debug(`[newMessage] different conversationId for listening`);
