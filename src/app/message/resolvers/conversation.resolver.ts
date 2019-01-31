@@ -1,10 +1,10 @@
 import {Resolver, ResolveProperty, Parent} from '@nestjs/graphql';
 import {ConversationEntity} from '../entity';
-import {Conversation, Message} from '../../graphql.schema';
+import {Conversation} from '../../graphql.schema';
 import {MessageService} from '../services/message.service';
 
 @Resolver('Conversation')
-export class ConversationResolvers {
+export class ConversationResolver {
 	constructor(private readonly messageService: MessageService) {
 	}
 

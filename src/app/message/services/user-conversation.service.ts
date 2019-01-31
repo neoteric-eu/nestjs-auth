@@ -1,7 +1,7 @@
 import { CrudService } from '../../../base';
 import { Injectable, Inject } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { Repository } from '../../_helpers/database/repository.interface';
+import { Repository } from '../../_helpers/database';
 import { USER_CONVERSATION_TOKEN } from '../message.constants';
 import { UserConversationEntity } from '../entity';
 
