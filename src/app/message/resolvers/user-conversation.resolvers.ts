@@ -8,12 +8,16 @@ import {UseGuards} from '@nestjs/common';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
 import {UserConversationService} from '../services/user-conversation.service';
 import {PubSub, withFilter} from 'graphql-subscriptions';
+import {AppLogger} from '../../app.logger';
+import {MessageResolvers} from './message.resolvers';
 
 const pubSub = new PubSub();
 
 
 @Resolver('UserConversation')
 export class UserConversationResolvers {
+	private logger = new AppLogger(MessageResolvers.name);
+
 	constructor(
 		private readonly conversationService: ConversationService,
 		private readonly userConversationService: UserConversationService,
@@ -45,8 +49,14 @@ export class UserConversationResolvers {
 	@UseGuards(GraphqlGuard)
 	newUserConversation() {
 		return {
-			subscribe: withFilter(() => pubSub.asyncIterator('newUserConversation'), (payload, variables) => {
-				return payload.newUserConversation.userId === variables.userId;
+			subscribe: withFilter(() => pubSub.asyncIterator('newUserConversation'), async (payload, variables, context) => {
+				const user = context.req.user;
+				if (payload.newUserConversation.userId !== variables.userId) {
+					this.logger.debug(`[newMessage] different userId for listening`);
+					return false;
+				}
+
+				return variables.userId === user.id;
 			})
 		};
 	}
