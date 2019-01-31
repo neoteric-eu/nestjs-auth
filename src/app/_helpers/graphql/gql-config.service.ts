@@ -16,13 +16,13 @@ export class GqlConfigService implements GqlOptionsFactory {
 	}
 	createGqlOptions(): GqlModuleOptions {
 		return {
-			typePaths: [`${config.appRootPath}/**/*.graphql`],
+			typePaths: [join(process.cwd(), '**/*.graphql')],
 			introspection: true,
 			playground: true,
 			installSubscriptionHandlers: true,
 			tracing: true,
 			definitions: {
-				path: join(config.appRootPath, '/graphql.schema.ts'),
+				path: join(process.cwd(), 'src/app/graphql.schema.ts'),
 				outputAs: 'class'
 			},
 			subscriptions: {
