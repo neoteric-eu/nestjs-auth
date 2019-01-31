@@ -40,15 +40,6 @@ export class AuthController {
 
 	}
 
-	@Get('verify')
-	@HttpCode(200)
-	@UseGuards(AuthGuard('jwt'))
-	@ApiResponse({ status: 200, description: 'OK', type: TokenDto })
-	public async verify(@Headers('Authorization') token: string): Promise<TokenDto> {
-		this.logger.debug(`[verify] Token ${token}`);
-		return verifyToken(token, config.session.secret);
-	}
-
 	@Post('login')
 	@HttpCode(200)
 	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
@@ -77,8 +68,9 @@ export class AuthController {
 	public async registerVerify(@Body() body: VerifyTokenDto): Promise<void> {
 		this.logger.debug(`[registerVerify] Token ${body.verifyToken}`);
 		const token = await verifyToken(body.verifyToken, config.session.verify.secret);
+		await this.userService.patch(token.id, {is_verified: true});
 		this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, token.id).subscribe();
-		this.logger.debug(`[registerVerify] Sent command registry verify for user id ${token.id}`);
+		this.logger.debug(`[registerVerify] Sent command register verify for user id ${token.id}`);
 	}
 
 	@Post('register/verify/resend')
@@ -86,9 +78,17 @@ export class AuthController {
 	@ApiImplicitBody({ required: true, type: VerifyResendDto, name: 'VerifyResendDto' })
 	@ApiResponse({ status: 204, description: 'NO CONTENT' })
 	public async registerVerifyResend(@Body() body: VerifyResendDto): Promise<void> {
-		this.logger.debug(`[registerVerifyResend] Email where resend verification ${body.email}`);
-		this.client.send({cmd: USER_CMD_REGISTER}, body.email).subscribe();
-		this.logger.debug(`[registerVerify] Sent command registry verify for email ${body.email}`);
+		try {
+			this.logger.debug(`[registerVerifyResend] Email where resend verification ${body.email}`);
+			const user = await this.userService.findByEmail(body.email);
+			if (user.is_verified) {
+				throw new Error(`User ${user.email} already verified`);
+			}
+			this.client.send({cmd: USER_CMD_REGISTER}, user).subscribe();
+			this.logger.debug(`[registerVerify] Sent command registry verify for email ${body.email}`);
+		} catch (err) {
+			this.logger.error(`[registerVerifyResend] ${err.message}`, err.stack);
+		}
 	}
 
 	@Post('password/reset')
@@ -135,8 +135,10 @@ export class AuthController {
 				first_name: profile._json.first_name,
 				last_name: profile._json.last_name,
 				socialId: profile._json.id,
-				provider: profile.provider
+				provider: profile.provider,
+				is_verified: true
 			});
+			this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user.id).subscribe();
 		}
 		return createAuthToken(user);
 	}

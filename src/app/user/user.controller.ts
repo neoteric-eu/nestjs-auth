@@ -1,5 +1,6 @@
 import {equals} from '@aws/dynamodb-expressions';
-import {Controller} from '@nestjs/common';
+import {ApiResponse, ApiUseTags} from '@nestjs/swagger';
+import {Controller, HttpCode, Post} from '@nestjs/common';
 import {MessagePattern} from '@nestjs/microservices';
 import {UserService} from './user.service';
 import {UserEntity} from './entity';
@@ -8,13 +9,22 @@ import {USER_CMD_PASSWORD_NEW, USER_CMD_PASSWORD_RESET, USER_CMD_REGISTER, USER_
 import {config} from '../../config';
 import {AppLogger} from '../app.logger';
 import {createToken} from '../auth/jwt';
+import {User} from '../_helpers/decorators';
 
-@Controller()
+@Controller('user')
+@ApiUseTags('user')
 export class UserController {
 	private logger = new AppLogger(UserController.name);
 
 	constructor(protected service: UserService) {
 
+	}
+
+	@Post('unsubscribe/email')
+	@HttpCode(204)
+	@ApiResponse({ status: 204, description: 'NO CONTENT' })
+	public async unsubscribeEmail(@User() user: UserEntity): Promise<void> {
+		await this.service.subscription.patch(user.id, {email: false});
 	}
 
 	@MessagePattern({ cmd: USER_CMD_REGISTER })
@@ -36,8 +46,7 @@ export class UserController {
 	@MessagePattern({ cmd: USER_CMD_REGISTER_VERIFY })
 	public async onUserRegisterVerify(id: string): Promise<void> {
 		try {
-			const user = await this.service.patch(id, {is_verified: true});
-			this.logger.debug(`[onUserRegisterVerify] User ${user.email} verified his email`);
+			const user = await this.service.findOneById(id);
 			this.logger.debug(`[onUserRegisterVerify] Send welcome email for user ${user.email}`);
 			await mail({
 				subject: `Welcome ${user.first_name} to ${config.name.toUpperCase()}`,
