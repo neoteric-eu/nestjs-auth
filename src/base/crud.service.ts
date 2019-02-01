@@ -1,50 +1,62 @@
-import { UnprocessableEntityException } from '@nestjs/common';
-import { BaseEntity, DeleteResult, Repository, DeepPartial } from 'typeorm';
-import { validate } from 'class-validator';
-import { config } from '../config';
-import {FindOneOptions} from 'typeorm/find-options/FindOneOptions';
-import {FindConditions} from 'typeorm/find-options/FindConditions';
+import {HttpException, HttpStatus, UnprocessableEntityException} from '@nestjs/common';
+import {validate, ValidatorOptions} from 'class-validator';
+import {config} from '../config';
+import {ExtendedEntity, DeepPartial, Repository} from '../app/_helpers';
 
-export class CrudService<T extends BaseEntity> {
+export class CrudService<T extends ExtendedEntity> {
 	protected repository: Repository<T>;
 
-	public async findAll({user: any}): Promise<T[]> {
-		return await this.repository.find();
+	constructor(repository?: Repository<T>) {
+		if (repository) {
+			this.repository = repository;
+		}
 	}
 
-	public async findOneById(id: number): Promise<T> {
+
+	public findAll(conditions?): Promise<T[]> {
+		return this.repository.find(conditions);
+	}
+
+	public async findOneById(id: string): Promise<T> {
 		return this.repository.findOneOrFail(id);
 	}
 
-	public async findOne(conditions?: FindConditions<T>, options?: FindOneOptions<T>): Promise<T> {
-		return this.repository.findOne(conditions, options);
+	public findOne(conditions?: any): Promise<T> {
+		return this.repository.findOne(conditions);
 	}
 
 	public async create(data: DeepPartial<T>): Promise<T> {
 		const entity: T = this.repository.create(data);
 		await this.validate(entity);
-		return entity.save();
+		return this.repository.save(entity);
 	}
 
 	public async update(data: DeepPartial<T>): Promise<T> {
 		return this.create(data);
 	}
 
-	public async patch(id: number, data: DeepPartial<T>): Promise<T> {
+	public async patch(id: string, data: DeepPartial<T>): Promise<T> {
 		const entity: T = await this.findOneById(id);
 		Object.assign(entity, data);
 		await this.validate(entity);
-		return entity.save();
+		return this.repository.save(entity);
 	}
 
-	public async delete(id: number): Promise<DeleteResult> {
+	public async delete(id: string): Promise<T> {
 		return this.repository.delete(id);
 	}
 
-	private async validate(entity: T) {
-		const errors = await validate(entity, config.validator);
+	public deleteAll(conditions?): Promise<T[]> {
+		return this.repository.deleteAll(conditions);
+	}
+
+	protected async validate(entity: T, options?: ValidatorOptions) {
+		const errors = await validate(entity, {...config.validator, options} as ValidatorOptions);
 		if (errors.length) {
-			throw new UnprocessableEntityException(errors);
+			throw new HttpException({
+				message: errors,
+				error: 'Validation'
+			}, HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 }

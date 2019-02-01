@@ -1,0 +1,40 @@
+type Query {
+    me: User
+}
+
+type Mutation {
+    updateUser(updateUserInput: UpdateUserInput): User
+    deleteUser(deleteUserInput: DeleteUserInput): User
+}
+
+type Subscription {
+    userCreated: User
+    userDeleted: User
+}
+
+type User {
+    id: ID!
+    first_name: String
+    last_name: String
+    email: String
+    phone_num: String
+    profile_img: String
+    password: String
+    provider: String
+    socialId: String
+    createdAt: String
+    updatedAt: String
+}
+
+input UpdateUserInput {
+    first_name: String
+    last_name: String
+    email: String
+    phone_num: String
+    profile_img: String
+    password: String
+}
+
+input DeleteUserInput {
+    id: ID!
+}

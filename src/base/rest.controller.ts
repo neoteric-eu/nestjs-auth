@@ -1,17 +1,18 @@
-import {BaseEntity, DeleteResult, DeepPartial} from 'typeorm';
 import { Body, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Req } from '@nestjs/common';
+import {Observable} from 'rxjs';
 import {CrudService} from './crud.service';
+import {DeepPartial, ExtendedEntity} from '../app/_helpers';
 
-export class RestController<T extends BaseEntity> {
+export class RestController<T extends ExtendedEntity> {
 	protected service: CrudService<T>;
 
 	@Get('/')
-	public async findAll(@Req() req): Promise<T[]> {
-		return this.service.findAll({user: req.user});
+	public findAll(@Req() req): Promise<T[]> {
+		return this.service.findAll();
 	}
 
 	@Get('/:id')
-	public async findOne(@Param('id', new ParseIntPipe()) id: number) {
+	public async findOne(@Param('id') id: string) {
 		return this.service.findOneById(id);
 	}
 
@@ -26,12 +27,12 @@ export class RestController<T extends BaseEntity> {
 	}
 
 	@Patch('/:id')
-	public async patch(@Param('id', new ParseIntPipe()) id: number, @Body() data: DeepPartial<T>): Promise<T> {
+	public async patch(@Param('id') id: string, @Body() data: DeepPartial<T>): Promise<T> {
 		return this.service.patch(id, data);
 	}
 
 	@Delete('/:id')
-	public async delete(@Param('id') id: number): Promise<DeleteResult> {
+	public async delete(@Param('id') id: string): Promise<T> {
 		return this.service.delete(id);
 	}
 }

@@ -1,0 +1,45 @@
+services:
+  - docker:dind
+
+stages:
+  - build
+  - deploy
+
+build-dev:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  environment: development
+  tags:
+    - docker
+  script:
+    - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN
+    - docker build -t threeleaf-backend:develop .
+    - docker tag threeleaf-backend:develop registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:develop
+    - docker push registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:develop
+    - export DOCKER_LOGIN=$(docker run -e AWS_ACCESS_KEY_ID=$AWS_KEY -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET -e AWS_DEFAULT_REGION=$AWS_REGION garland/aws-cli-docker:latest aws ecr get-login --no-include-email --region eu-west-1)
+    - $DOCKER_LOGIN
+    - docker tag threeleaf-backend:develop 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
+    - docker push 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
+  only:
+    - develop
+
+deploy-dev:
+  image: python:latest
+  stage: deploy
+  environment: development
+  tags:
+    - docker
+  dependencies:
+    - build-dev
+  script:
+    - pip install awscli
+    - curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
+    - echo "$(curl -s https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest.md5) /usr/local/bin/ecs-cli" | md5sum -c -
+    - chmod +x /usr/local/bin/ecs-cli
+    - ecs-cli configure --cluster threeleaf-backend --region $AWS_REGION --default-launch-type FARGATE --config-name threeleaf-backend
+    - ecs-cli configure profile --access-key $AWS_KEY --secret-key $AWS_SECRET --profile-name threeleaf-backend
+    - ecs-cli compose --project-name threeleaf-backend --ecs-params ./ecs/ecs-params.dev.yml service up --cluster-config threeleaf-backend --timeout 30 --region $AWS_REGION --force-deployment --target-group-arn $AWS_TARGET_GROUP_ARN --container-name threeleaf-backend --container-port 80
+  only:
+    - develop
