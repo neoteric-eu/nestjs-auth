@@ -66,15 +66,15 @@
     "@types/express": "^4.16.0",
     "@types/graphql": "^14.0.5",
     "@types/jsonwebtoken": "^8.3.0",
-    "@types/node": "^10.12.18",
+    "@types/node": "^10.12.21",
     "@types/nodemailer": "^4.6.5",
     "@types/redis": "^2.8.10",
     "@types/socket.io": "^2.1.2",
     "nodemon": "^1.18.9",
     "pre-commit": "^1.2.2",
-    "ts-node": "^7.0.1",
+    "ts-node": "^8.0.2",
     "tsconfig-paths": "^3.7.0",
     "tslint": "^5.12.1",
-    "typescript": "^3.2.2"
+    "typescript": "^3.3.1"
   }
 }

@@ -14,6 +14,7 @@ interface Config {
 	uuid: string;
 	isProduction: boolean;
 	salt: string;
+	passwordMinLength: number;
 	assetsPath: string;
 	mail: {
 		from: string
@@ -88,6 +89,7 @@ export const config: Config = {
 	uuid: process.env.APP_UUID,
 	isProduction: process.env.NODE_ENV === 'production',
 	salt: process.env.APP_SALT,
+	passwordMinLength: 7,
 	assetsPath: `${__dirname}/../assets`,
 	mail: {
 		from: process.env.APP_MAIL_FROM

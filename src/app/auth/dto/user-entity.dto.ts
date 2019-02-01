@@ -1,5 +1,5 @@
 import {ApiModelProperty} from '@nestjs/swagger';
-import {IsEmail, IsOptional, IsString, IsUrl, MinLength} from 'class-validator';
+import {config} from '../../../config';
 
 export class UserEntityDto {
 	@ApiModelProperty()
@@ -11,12 +11,18 @@ export class UserEntityDto {
 	@ApiModelProperty()
 	public email: string;
 
-	@ApiModelProperty()
+	@ApiModelProperty({
+		minLength: config.passwordMinLength
+	})
 	public password: string;
 
-	@ApiModelProperty()
-	public phone_num: string;
+	@ApiModelProperty({
+		required: false
+	})
+	public phone_num?: string;
 
-	@ApiModelProperty()
-	public profile_img: string;
+	@ApiModelProperty({
+		required: false
+	})
+	public profile_img?: string;
 }

@@ -60,15 +60,16 @@ export class AuthController {
 	}
 
 	@Post('register/verify')
-	@HttpCode(204)
+	@HttpCode(200)
 	@ApiImplicitBody({ required: true, type: VerifyTokenDto, name: 'VerifyTokenDto' })
-	@ApiResponse({ status: 204, description: 'NO CONTENT' })
-	public async registerVerify(@Body() body: VerifyTokenDto): Promise<void> {
+	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
+	public async registerVerify(@Body() body: VerifyTokenDto): Promise<JwtDto> {
 		this.logger.debug(`[registerVerify] Token ${body.verifyToken}`);
 		const token = await verifyToken(body.verifyToken, config.session.verify.secret);
-		await this.userService.patch(token.id, {is_verified: true});
+		const user = await this.userService.patch(token.id, {is_verified: true});
 		this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, token.id).subscribe();
 		this.logger.debug(`[registerVerify] Sent command register verify for user id ${token.id}`);
+		return createAuthToken(user);
 	}
 
 	@Post('register/verify/resend')

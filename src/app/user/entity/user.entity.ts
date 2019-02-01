@@ -3,6 +3,7 @@ import {ApiModelProperty} from '@nestjs/swagger';
 import {IsEmail, IsOptional, IsString, IsUrl, MinLength, Validate, ValidateIf} from 'class-validator';
 import {ExtendedEntity, passwordHash} from '../../_helpers';
 import {IsUserAlreadyExist} from '../user.validator';
+import {config} from '../../../config';
 
 @table(`user`)
 export class UserEntity extends ExtendedEntity {
@@ -32,6 +33,7 @@ export class UserEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
 	@IsString()
+	@IsOptional()
 	@attribute()
 	public phone_num: string;
 
@@ -42,7 +44,7 @@ export class UserEntity extends ExtendedEntity {
 	public profile_img: string;
 
 	@ApiModelProperty()
-	@MinLength(7)
+	@MinLength(config.passwordMinLength)
 	@IsOptional()
 	@attribute()
 	public password: string;
