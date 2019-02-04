@@ -20,4 +20,7 @@ export class HomeFavoriteEntity extends ExtendedEntity {
 	@IsString()
 	@attribute()
 	public homeFavoriteHomeId: string;
+
+	@attribute()
+	public fake = false;
 }

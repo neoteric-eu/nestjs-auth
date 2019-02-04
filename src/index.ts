@@ -1,4 +1,3 @@
-require('dotenv-safe').load();
 import exitHook from 'async-exit-hook';
 import { AppDispatcher, AppLogger } from './app';
 

@@ -1,4 +1,4 @@
-import {INestApplication, INestMicroservice} from '@nestjs/common';
+import {INestApplication, INestApplicationContext, INestMicroservice} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 import {useContainer} from 'class-validator';
@@ -24,6 +24,10 @@ export class AppDispatcher {
 
 	async shutdown(): Promise<void> {
 		await this.app.close();
+	}
+
+	public getContext(): Promise<INestApplicationContext> {
+		return NestFactory.createApplicationContext(AppModule);
 	}
 
 	private async createServer(): Promise<void> {
