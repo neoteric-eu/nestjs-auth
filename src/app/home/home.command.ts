@@ -9,7 +9,6 @@ import {UserService} from '../user/user.service';
 import {HomeMediaService} from '../home-media/home-media.service';
 import {DeepPartial} from '../_helpers/database';
 import {HomeMediaEntity} from '../home-media/entity';
-import {HomeFavoriteEntity} from '../home-favorite/entity';
 import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
 
 @Injectable()
@@ -21,7 +20,7 @@ export class HomeCommand {
 		private readonly homeService: HomeService,
 		private readonly homeMediaService: HomeMediaService,
 		private readonly homeFavoriteService: HomeFavoriteService,
-		private readonly userSerivce: UserService
+		private readonly userService: UserService
 	) {
 		faker.locale = 'en_US';
 	}
@@ -39,7 +38,7 @@ export class HomeCommand {
 		await this.homeMediaService.deleteAll({filter: {fake: {eq: true}}});
 
 		this.logger.debug(`[create] fetch random 20 faked users`);
-		const users = await this.userSerivce.findAll({filter: { provider: {eq: 'faker'}}, limit: 20});
+		const users = await this.userService.findAll({filter: { provider: {eq: 'faker'}}, limit: 20});
 		const usersIds = users.map(user => user.id);
 
 		const homes: HomeEntity[] = [];
@@ -81,9 +80,11 @@ export class HomeCommand {
 		this.logger.debug(`[create] create home media for homes`);
 
 		const homeFavs = [];
+		const homeMedias = [];
 
 		for (const home of savedHomes) {
-			await this.homeMediaService.bulkSave(this.generateHomeMedias(home.id));
+			const homeMedia = this.generateHomeMedias(home.id);
+			homeMedias.push(homeMedia);
 			if (faker.random.boolean()) {
 				homeFavs.push({
 					homeFavoriteHomeId: home.id,
@@ -92,6 +93,10 @@ export class HomeCommand {
 				});
 			}
 		}
+
+		this.logger.debug(`[create] saving home medias`);
+
+		await this.homeMediaService.bulkSave(homeMedias);
 
 		this.logger.debug(`[create] saving home favorites`);
 
