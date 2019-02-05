@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 cd $(dirname $0)
-docker-compose up -d
+docker run --rm --env-file ./.env threeleaf-backend:latest
