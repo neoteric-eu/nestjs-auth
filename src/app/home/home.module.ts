@@ -7,9 +7,10 @@ import {AttomDataApiService} from './attom-data-api.service';
 import {UserModule} from '../user/user.module';
 import {HomeMediaModule} from '../home-media/home-media.module';
 import {HomeFavoriteModule} from '../home-favorite/home-favorite.module';
+import {HomeCommand} from './home.command';
 
 @Module({
-	providers: [...homeProviders, HomeService, HomeResolver, AttomDataApiService],
+	providers: [...homeProviders, HomeService, HomeResolver, AttomDataApiService, HomeCommand],
 	imports: [HttpModule, DatabaseModule, UserModule, HomeFavoriteModule, HomeMediaModule],
 	exports: [HomeService]
 })
