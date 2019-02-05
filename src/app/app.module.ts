@@ -1,4 +1,5 @@
 import {Module} from '@nestjs/common';
+import {CommandModule} from 'nestjs-command';
 import {AuthModule} from './auth/auth.module';
 import {AppLogger} from './app.logger';
 import {DatabaseModule} from './database/database.module';
@@ -14,6 +15,7 @@ import {GqlConfigService} from './_helpers';
 
 @Module({
 	imports: [
+		CommandModule,
 		HealthCheckModule,
 		DatabaseModule,
 		AuthModule,

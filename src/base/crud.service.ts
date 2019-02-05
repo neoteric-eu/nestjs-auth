@@ -31,6 +31,10 @@ export class CrudService<T extends ExtendedEntity> {
 		return this.repository.save(entity);
 	}
 
+	public async bulkSave(data: DeepPartial<T[]>): Promise<T[]> {
+		return this.repository.bulkSave(data);
+	}
+
 	public async update(data: DeepPartial<T>): Promise<T> {
 		return this.create(data);
 	}

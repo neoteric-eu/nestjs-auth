@@ -83,6 +83,16 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 		return this.mapper.put<T>(model);
 	}
 
+	public async bulkSave(data: DeepPartial<T[]>): Promise<T[]> {
+		const items = data.map(item => this.create(item));
+		const result = this.mapper.batchPut(items);
+		const collected = [];
+		for await (const item of result) {
+			collected.push(item);
+		}
+		return collected;
+	}
+
 	public async delete(id: string): Promise<T> {
 		const model = plainToClass<T, object>(this.entity, {id});
 		return this.mapper.delete<T>(model);

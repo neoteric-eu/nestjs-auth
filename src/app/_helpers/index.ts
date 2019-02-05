@@ -9,6 +9,6 @@ export * from './graphql';
 
 export function passwordHash(password: string) {
 	return crypto.createHmac('sha256', config.salt)
-		.update(password)
+		.update(password, 'utf8')
 		.digest('hex');
 }
