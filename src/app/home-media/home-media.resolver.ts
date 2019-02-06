@@ -1,6 +1,8 @@
 import {UseGuards} from '@nestjs/common';
 import {Args, Mutation, Query, Resolver, Subscription} from '@nestjs/graphql';
+import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {PubSub} from 'graphql-subscriptions';
+import {MEDIA_CMD_DELETE} from '../media/media.constants';
 import {HomeMediaService} from './home-media.service';
 import {CreateHomeMediaInput, DeleteHomeMediaInput, HomeMedia} from '../graphql.schema';
 import {GraphqlGuard} from '../_helpers';
@@ -12,6 +14,10 @@ const pubSub = new PubSub();
 @Resolver('HomeMedia')
 @UseGuards(GraphqlGuard)
 export class HomeMediaResolver {
+
+	@Client({ transport: Transport.TCP })
+	private client: ClientProxy;
+
 	constructor(private readonly homeMediaService: HomeMediaService) {
 	}
 
@@ -31,6 +37,7 @@ export class HomeMediaResolver {
 	async delete(@CurrentUser() user: User, @Args('deleteHomeMediaInput') args: DeleteHomeMediaInput): Promise<HomeMedia> {
 		const deletedHomeMedia = await this.homeMediaService.delete(args.id);
 		pubSub.publish('homeMediaDeleted', {homeMediaDeleted: deletedHomeMedia});
+		this.client.send({cmd: MEDIA_CMD_DELETE}, deletedHomeMedia).subscribe();
 		return deletedHomeMedia;
 	}
 
