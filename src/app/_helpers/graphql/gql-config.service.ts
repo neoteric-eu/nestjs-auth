@@ -20,7 +20,8 @@ export class GqlConfigService implements GqlOptionsFactory {
 			introspection: true,
 			playground: true,
 			installSubscriptionHandlers: true,
-			tracing: true,
+			tracing: !config.isProduction,
+			debug: !config.isProduction,
 			definitions: {
 				path: join(process.cwd(), 'src/app/graphql.schema.ts'),
 				outputAs: 'class'
@@ -39,6 +40,10 @@ export class GqlConfigService implements GqlOptionsFactory {
 						}
 					});
 				}
+			},
+			formatError: error => {
+				delete error.extensions;
+				return error;
 			},
 			context: (context) => {
 				let req = context.req;

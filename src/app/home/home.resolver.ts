@@ -13,11 +13,15 @@ import {HomeEntity} from './entity';
 import {HomeMediaService} from '../home-media/home-media.service';
 import {HomeMediaEntity} from '../home-media/entity';
 import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
+import {AppLogger} from '../app.logger';
 
 const pubSub = new PubSub();
 
 @Resolver('Home')
 export class HomeResolver {
+
+	private logger = new AppLogger(HomeResolver.name);
+
 	constructor(private readonly homeService: HomeService,
 							private readonly attomDataService: AttomDataApiService,
 							private readonly userService: UserService,
