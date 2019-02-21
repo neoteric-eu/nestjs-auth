@@ -24,7 +24,11 @@ export class AttomDataApiService {
 				}
 			}).toPromise();
 		} catch (e) {
-			this.handleAttomError(e.response);
+			if (e.response.status === 403) {
+				this.handleAttomError(e.response.data.Response.status);
+			} else {
+				this.handleAttomError(e.response.data.status);
+			}
 		}
 	}
 
@@ -71,15 +75,15 @@ export class AttomDataApiService {
 		}
 	}
 
-	private handleAttomError(response) {
-		const status = response.data.status;
-
+	private handleAttomError(status) {
 		const statuscode = PropertyApi.STATUS_CODES['' + status.code];
 
 		if (!statuscode.condition) {
 			statuscode.condition = HomeErrorEnum.ATTOM_DEFAULT_API_ERROR;
 			this.logger.warn(`Missing condition for status ${status}, use default as ATTOM_API_ERROR ${statuscode.condition}`);
 		}
+
+		this.logger.warn(`[handleAttomError] ${statuscode.name}`);
 
 		throw new HttpException({
 			error: 'Home',

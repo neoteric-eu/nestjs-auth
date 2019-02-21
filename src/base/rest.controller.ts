@@ -1,5 +1,4 @@
-import { Body, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Req } from '@nestjs/common';
-import {Observable} from 'rxjs';
+import {Body, Delete, Get, Param, Patch, Post, Put, Req} from '@nestjs/common';
 import {CrudService} from './crud.service';
 import {DeepPartial, ExtendedEntity} from '../app/_helpers';
 

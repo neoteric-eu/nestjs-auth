@@ -8,7 +8,7 @@ import query from 'qs-middleware';
 import {config} from '../config';
 import {AppLogger} from './app.logger';
 import {AppModule} from './app.module';
-import {AnyExceptionFilter} from './_helpers/filters';
+import {HttpExceptionFilter} from './_helpers/filters';
 
 export class AppDispatcher {
 	private app: INestApplication;
@@ -17,7 +17,7 @@ export class AppDispatcher {
 
 	async dispatch(): Promise<void> {
 		await this.createServer();
-		this.createMicroServices();
+		this.createMicroservices();
 		await this.startMicroservices();
 		return this.startServer();
 	}
@@ -37,7 +37,7 @@ export class AppDispatcher {
 		useContainer(this.app, {fallbackOnErrors: true});
 		this.app.use(cors());
 		this.app.use(query());
-		this.app.useGlobalFilters(new AnyExceptionFilter());
+		this.app.useGlobalFilters(new HttpExceptionFilter());
 		if (config.isProduction) {
 			this.app.use(helmet());
 		}
@@ -53,7 +53,7 @@ export class AppDispatcher {
 		SwaggerModule.setup('/swagger', this.app, document);
 	}
 
-	private createMicroServices(): void {
+	private createMicroservices(): void {
 		this.microservice = this.app.connectMicroservice(config.microservice);
 	}
 

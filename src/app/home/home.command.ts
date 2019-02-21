@@ -75,7 +75,7 @@ export class HomeCommand {
 
 		this.logger.debug(`[create] create ${amount} random homes with json {"faker": true}`);
 
-		const savedHomes = await this.homeService.bulkSave(homes);
+		const savedHomes = await this.homeService.saveAll(homes);
 
 		this.logger.debug(`[create] create home media for homes`);
 
@@ -96,11 +96,11 @@ export class HomeCommand {
 
 		this.logger.debug(`[create] saving home medias`);
 
-		await this.homeMediaService.bulkSave(homeMedias);
+		await this.homeMediaService.saveAll(homeMedias);
 
 		this.logger.debug(`[create] saving home favorites`);
 
-		await this.homeFavoriteService.bulkSave(homeFavs);
+		await this.homeFavoriteService.saveAll(homeFavs);
 
 		this.logger.debug(`[create] done!`);
 	}
