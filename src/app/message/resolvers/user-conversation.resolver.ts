@@ -10,11 +10,11 @@ import {UserConversationService} from '../services/user-conversation.service';
 import {PubSub, withFilter} from 'graphql-subscriptions';
 import {SubscriptionsService} from '../services/subscriptions.service';
 
-const pubSub = new PubSub();
-
 
 @Resolver('UserConversation')
 export class UserConversationResolver {
+
+	private pubSub = new PubSub();
 
 	constructor(
 		private readonly conversationService: ConversationService,
@@ -39,7 +39,7 @@ export class UserConversationResolver {
 		await this.userConversationService
 			.create({userId: conversationInput.recipientId, conversationId: createdConversation.id});
 
-		pubSub.publish('newUserConversation', {newUserConversation: createdAuthorConversation});
+		await this.pubSub.publish('newUserConversation', {newUserConversation: createdAuthorConversation});
 
 		return createdAuthorConversation;
 	}
@@ -48,7 +48,7 @@ export class UserConversationResolver {
 	@UseGuards(GraphqlGuard)
 	newUserConversation() {
 		return {
-			subscribe: withFilter(() => pubSub.asyncIterator('newUserConversation'),
+			subscribe: withFilter(() => this.pubSub.asyncIterator('newUserConversation'),
 				(payload, variables, context) => this.subscriptionsService.newUserConversation(payload, variables, context))
 		};
 	}

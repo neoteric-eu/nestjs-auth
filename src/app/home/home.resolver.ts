@@ -1,7 +1,7 @@
 import {UnauthorizedException, UseGuards} from '@nestjs/common';
-import {Args, Mutation, Query, Resolver, Subscription, ResolveProperty, Parent} from '@nestjs/graphql';
+import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
-import {GetAVMDetailInput, Home, HomeFavorite, ModelHomeFilterInput} from '../graphql.schema';
+import {GetAVMDetailInput, Home, ModelHomeFilterInput} from '../graphql.schema';
 import {HomeService} from './home.service';
 import {CreateHomeDto, DeleteHomeDto, UpdateHomeDto} from './dto';
 import {AttomDataApiService} from './attom-data-api.service';
@@ -13,11 +13,14 @@ import {HomeEntity} from './entity';
 import {HomeMediaService} from '../home-media/home-media.service';
 import {HomeMediaEntity} from '../home-media/entity';
 import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
-
-const pubSub = new PubSub();
+import {AppLogger} from '../app.logger';
 
 @Resolver('Home')
 export class HomeResolver {
+
+	private pubSub = new PubSub();
+	private logger = new AppLogger(HomeResolver.name);
+
 	constructor(private readonly homeService: HomeService,
 							private readonly attomDataService: AttomDataApiService,
 							private readonly userService: UserService,
@@ -67,7 +70,7 @@ export class HomeResolver {
 	async create(@CurrentUser() user: User, @Args('createHomeInput') args: CreateHomeDto): Promise<HomeEntity> {
 		args.owner = user.id;
 		const createdHome = await this.homeService.create(args);
-		pubSub.publish('homeCreated', {homeCreated: createdHome});
+		await this.pubSub.publish('homeCreated', {homeCreated: createdHome});
 		return createdHome;
 	}
 
@@ -78,7 +81,7 @@ export class HomeResolver {
 		if (homeToDelete.owner === user.id) {
 			await this.homeFavoriteService.deleteAll({filter: {homeFavoriteHomeId: {eq: args.id}}});
 			const deletedHome = await this.homeService.delete(args.id);
-			pubSub.publish('homeDeleted', {homeDeleted: deletedHome});
+			await this.pubSub.publish('homeDeleted', {homeDeleted: deletedHome});
 			return deletedHome;
 		} else {
 			throw new UnauthorizedException();
@@ -92,7 +95,7 @@ export class HomeResolver {
 		if (homeToUpdate.owner === user.id) {
 			args.owner = user.id;
 			const updatedHome = await this.homeService.update(args);
-			pubSub.publish('homeUpdated', {homeUpdated: updatedHome});
+			await this.pubSub.publish('homeUpdated', {homeUpdated: updatedHome});
 			return updatedHome;
 		} else {
 			throw new UnauthorizedException();
@@ -102,21 +105,21 @@ export class HomeResolver {
 	@Subscription('homeCreated')
 	homeCreated() {
 		return {
-			subscribe: () => pubSub.asyncIterator('homeCreated')
+			subscribe: () => this.pubSub.asyncIterator('homeCreated')
 		};
 	}
 
 	@Subscription('homeDeleted')
 	homeDeleted() {
 		return {
-			subscribe: () => pubSub.asyncIterator('homeDeleted')
+			subscribe: () => this.pubSub.asyncIterator('homeDeleted')
 		};
 	}
 
 	@Subscription('homeUpdated')
 	homeUpdated() {
 		return {
-			subscribe: () => pubSub.asyncIterator('homeUpdated')
+			subscribe: () => this.pubSub.asyncIterator('homeUpdated')
 		};
 	}
 
@@ -137,7 +140,10 @@ export class HomeResolver {
 	@ResolveProperty('favorite')
 	@UseGuards(GraphqlGuard)
 	async getFavorite(@CurrentUser() user: User, @Parent() home: HomeEntity): Promise<Boolean> {
-		const homeFavorites = await this.homeFavoriteService.findAll({ filter: { homeFavoriteUserId: { eq: user.id }}});
-		return homeFavorites.some(homeFavorite => homeFavorite.homeFavoriteHomeId === home.id);
+		const homeFavorites = await this.homeFavoriteService.findAll({ filter: {
+			homeFavoriteUserId: { eq: user.id },
+			homeFavoriteHomeId: { eq: home.id }
+		}});
+		return !!homeFavorites.length;
 	}
 }

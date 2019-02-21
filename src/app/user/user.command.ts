@@ -48,6 +48,6 @@ export class UserCommand {
 		}
 
 		this.logger.debug(`[create] create ${amount} random ppl with provider "faker"`);
-		await this.userService.bulkSave(persons);
+		await this.userService.saveAll(persons);
 	}
 }

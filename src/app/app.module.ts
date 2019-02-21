@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {MiddlewareConsumer, Module, RequestMethod} from '@nestjs/common';
 import {CommandModule} from 'nestjs-command';
 import {AuthModule} from './auth/auth.module';
 import {AppLogger} from './app.logger';
@@ -11,12 +11,14 @@ import {MessageModule} from './message/message.module';
 import {HomeFavoriteModule} from './home-favorite/home-favorite.module';
 import {MediaModule} from './media/media.module';
 import {HomeMediaModule} from './home-media/home-media.module';
-import {GqlConfigService} from './_helpers';
+import {GqlConfigService, RequestContextMiddleware} from './_helpers';
+import {SecurityModule} from './security';
 
 @Module({
 	imports: [
 		CommandModule,
 		HealthCheckModule,
+		SecurityModule,
 		DatabaseModule,
 		AuthModule,
 		UserModule,
@@ -36,5 +38,11 @@ export class AppModule {
 
 	constructor() {
 		this.logger.log('Initialize constructor');
+	}
+
+	configure(consumer: MiddlewareConsumer) {
+		consumer
+			.apply(RequestContextMiddleware)
+			.forRoutes({path: '*', method: RequestMethod.ALL});
 	}
 }

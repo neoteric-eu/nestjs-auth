@@ -9,10 +9,10 @@ import {MessageService} from '../services/message.service';
 import {UserConversationService} from '../services/user-conversation.service';
 import {SubscriptionsService} from '../services/subscriptions.service';
 
-const pubSub = new PubSub();
-
 @Resolver('Message')
 export class MessageResolver {
+
+	private pubSub = new PubSub();
 
 	constructor(
 		private readonly messageService: MessageService,
@@ -23,8 +23,8 @@ export class MessageResolver {
 
 	@Query('allMessages')
 	@UseGuards(GraphqlGuard)
-	async getAllMessages(@Args('conversationId') conversationId: string, @Args('after') after: string, @Args('limit') limit: number) {
-		return this.messageService.findAll({filter: {conversationId: {eq: conversationId}}});
+	async getAllMessages(@Args('conversationId') conversationId: string, @Args('after') after: string, @Args('limit') limit?: number) {
+		return this.messageService.findAll({filter: {conversationId: {eq: conversationId}}, limit});
 	}
 
 	@Mutation('createMessage')
@@ -35,7 +35,7 @@ export class MessageResolver {
 			content,
 			conversationId
 		});
-		pubSub.publish('newMessage', {newMessage: createdMessage});
+		await this.pubSub.publish('newMessage', {newMessage: createdMessage});
 
 		return createdMessage;
 	}
@@ -43,7 +43,7 @@ export class MessageResolver {
 	@Subscription('newMessage')
 	newMessage() {
 		return {
-			subscribe: withFilter(() => pubSub.asyncIterator('newMessage'),
+			subscribe: withFilter(() => this.pubSub.asyncIterator('newMessage'),
 				(payload, variables, context) => this.subscriptionsService.newMessage(payload, variables, context))
 		};
 	}
