@@ -182,6 +182,11 @@ export class PropertyApi {
 		'212': {
 			name: 'Success without results. No data available for this address.',
 			message: 'The input address has been located with ZIP level precision, but a record is not available.'
+		},
+		'401': {
+			name: 'Usage limits are exceeded with AVMDetail',
+			message: 'Usage limits are exceeded, try again latter.',
+			condition: HomeErrorEnum.ATTOM_USAGE_EXCEED_LIMIT
 		}
 	}
 	;

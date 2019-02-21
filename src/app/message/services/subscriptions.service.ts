@@ -1,13 +1,18 @@
 import {Injectable} from '@nestjs/common';
 import {AppLogger} from '../../app.logger';
 import {UserConversationService} from './user-conversation.service';
+import {SecurityService} from '../../security/security.service';
+import {MESSAGE_VOTER_ACTION_RECEIVE} from '../message.constants';
 
 @Injectable()
 export class SubscriptionsService {
 
 	private logger = new AppLogger(SubscriptionsService.name);
 
-	constructor(private readonly userConversationService: UserConversationService) {
+	constructor(
+		private readonly userConversationService: UserConversationService,
+		private readonly securityService: SecurityService
+	) {
 	}
 
 	public async newUserConversation(payload, variables, context) {

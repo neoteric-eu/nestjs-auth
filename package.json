@@ -40,6 +40,7 @@
     "aws-sdk": "^2.387.0",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
+    "cls-hooked": "^4.2.2",
     "cors": "^2.8.5",
     "dotenv-safe": "^5.0.1",
     "faker": "^4.1.0",

@@ -8,6 +8,7 @@ import {AppLogger} from '../../app.logger';
 import {Repository, DeepPartial} from '../database';
 import {ExtendedEntity} from '../entity';
 import {graphqlFilterMapper} from './graphql-filter.mapper';
+import {DynamoException} from './dynamo.exception';
 
 export type Constructor<T> = new(...args: any[]) => T;
 
@@ -47,32 +48,44 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 	}
 
 	public async find(options: any): Promise<T[]> {
-		if (options.filter) {
-			options.filter = {
-				type: 'And',
-				conditions: graphqlFilterMapper(options.filter)
-			};
+		try {
+			if (options.filter) {
+				options.filter = {
+					type: 'And',
+					conditions: graphqlFilterMapper(options.filter)
+				};
+			}
+			const result = this.mapper.scan(this.entity, options);
+			const items = [];
+			for await(const item of result) {
+				items.push(item);
+			}
+			return items;
+		} catch (e) {
+			throw new DynamoException(e.message);
 		}
-		const result = this.mapper.scan(this.entity, options);
-		const items = [];
-		for await(const item of result) {
-			items.push(item);
-		}
-		return items;
 	}
 
 	public findOne(item: object): Promise<T> {
-		const result = this.mapper.scan(this.entity, {...item, limit: 1});
-		return asyncToObservable<T>(result).toPromise<T>();
+		try {
+			const result = this.mapper.scan(this.entity, {...item, limit: 1});
+			return asyncToObservable<T>(result).toPromise<T>();
+		} catch (e) {
+			throw new DynamoException(e.message);
+		}
 	}
 
 	public async findOneOrFail(id: string): Promise<T> {
-		const model = plainToClass<T, object>(this.entity, {id});
-		const result = await this.mapper.get(model);
-		if (!result) {
-			throw new NotFoundException({message: `Item doesn't exists`});
+		try {
+			const model = plainToClass<T, object>(this.entity, {id});
+			const result = await this.mapper.get(model);
+			if (!result) {
+				throw new NotFoundException({message: `Item doesn't exists`});
+			}
+			return result;
+		} catch (e) {
+			throw new DynamoException(e.message);
 		}
-		return result;
 	}
 
 	public create(data: DeepPartial<T>): T {
@@ -80,40 +93,56 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 	}
 
 	public async save(model: T): Promise<T> {
-		return this.mapper.put<T>(model);
+		try {
+			return this.mapper.put<T>(model);
+		} catch (e) {
+			throw new DynamoException(e.message);
+		}
 	}
 
 	public async bulkSave(data: DeepPartial<T[]>): Promise<T[]> {
-		const items = data.map(item => this.create(item));
-		const result = this.mapper.batchPut(items);
-		const collected = [];
-		for await (const item of result) {
-			collected.push(item);
+		try {
+			const items = data.map(item => this.create(item));
+			const result = this.mapper.batchPut(items);
+			const collected = [];
+			for await (const item of result) {
+				collected.push(item);
+			}
+			return collected;
+		} catch (e) {
+			throw new DynamoException(e.message);
 		}
-		return collected;
 	}
 
 	public async delete(id: string): Promise<T> {
-		const model = plainToClass<T, object>(this.entity, {id});
-		return this.mapper.delete<T>(model);
+		try {
+			const model = plainToClass<T, object>(this.entity, {id});
+			return this.mapper.delete<T>(model);
+		} catch (e) {
+			throw new DynamoException(e.message);
+		}
 	}
 
 	public async deleteAll(options: any): Promise<T[]> {
-		if (options.filter) {
-			options.filter = {
-				type: 'And',
-				conditions: graphqlFilterMapper(options.filter)
-			};
+		try {
+			if (options.filter) {
+				options.filter = {
+					type: 'And',
+					conditions: graphqlFilterMapper(options.filter)
+				};
+			}
+			const result = this.mapper.scan(this.entity, options) as any;
+			const items = [];
+			const deletedItems = [];
+			for await(const item of result) {
+				items.push(item);
+			}
+			for await (const deletedItem of this.mapper.batchDelete(items)) {
+				deletedItems.push(deletedItem);
+			}
+			return deletedItems;
+		} catch (e) {
+			throw new DynamoException(e.message);
 		}
-		const result = this.mapper.scan(this.entity, options) as any;
-		const items = [];
-		const deletedItems = [];
-		for await(const item of result) {
-			items.push(item);
-		}
-		for await (const deletedItem of this.mapper.batchDelete(items)) {
-			deletedItems.push(deletedItem);
-		}
-		return deletedItems;
 	}
 }
