@@ -66,7 +66,6 @@ export class HomeResolver {
 	}
 
 	@Query('getHome')
-	@UseGuards(GraphqlGuard)
 	async findOneById(@Args('id') id: string): Promise<HomeEntity> {
 		return await this.homeService.findOneById(id);
 	}
