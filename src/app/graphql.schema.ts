@@ -83,6 +83,7 @@ export class ModelFloatFilterInput {
 
 export class ModelHomeFilterInput {
     id?: ModelIDFilterInput;
+    owner?: ModelIDFilterInput;
     price?: ModelFloatFilterInput;
     price_adjustment?: ModelFloatFilterInput;
     descr?: ModelStringFilterInput;
@@ -108,16 +109,7 @@ export class ModelHomeFilterInput {
 }
 
 export class ModelIDFilterInput {
-    ne?: string;
     eq?: string;
-    le?: string;
-    lt?: string;
-    ge?: string;
-    gt?: string;
-    contains?: string;
-    notContains?: string;
-    between?: string[];
-    beginsWith?: string;
 }
 
 export class ModelIntFilterInput {
@@ -470,6 +462,8 @@ export abstract class IQuery {
     abstract getHomeMedia(homeId: string): HomeMedia[] | Promise<HomeMedia[]>;
 
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
+
+    abstract myHomes(): Home[] | Promise<Home[]>;
 
     abstract getHome(id: string): Home | Promise<Home>;
 

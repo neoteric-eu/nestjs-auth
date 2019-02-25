@@ -1,5 +1,6 @@
 type Query {
     listHomes(filter: ModelHomeFilterInput, limit: Int): [Home]
+    myHomes: [Home]
     getHome(id: ID!): Home
     getAVMDetail(getAVMDetailInput: GetAVMDetailInput): AVM
 }
@@ -473,16 +474,7 @@ input DeleteHomeInput {
 }
 
 input ModelIDFilterInput {
-    ne: ID
     eq: ID
-    le: ID
-    lt: ID
-    ge: ID
-    gt: ID
-    contains: ID
-    notContains: ID
-    between: [ID]
-    beginsWith: ID
 }
 
 input ModelBooleanFilterInput {
@@ -529,6 +521,7 @@ input ModelStringFilterInput {
 
 input ModelHomeFilterInput {
     id: ModelIDFilterInput
+    owner: ModelIDFilterInput,
     price: ModelFloatFilterInput
     price_adjustment: ModelFloatFilterInput
     descr: ModelStringFilterInput
