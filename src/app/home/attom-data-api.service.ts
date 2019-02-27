@@ -76,11 +76,16 @@ export class AttomDataApiService {
 	}
 
 	private handleAttomError(status) {
-		const statuscode = PropertyApi.STATUS_CODES['' + status.code];
+		let statuscode = PropertyApi.STATUS_CODES['' + status.code];
 
+		if (!statuscode) {
+			statuscode = {
+				message: 'Undefined error'
+			};
+		}
 		if (!statuscode.condition) {
 			statuscode.condition = HomeErrorEnum.ATTOM_DEFAULT_API_ERROR;
-			this.logger.warn(`Missing condition for status ${status}, use default as ATTOM_API_ERROR ${statuscode.condition}`);
+			this.logger.warn(`Missing condition for status ${status.code}, use default as ATTOM_API_ERROR ${statuscode.condition}`);
 		}
 
 		this.logger.warn(`[handleAttomError] ${statuscode.name}`);

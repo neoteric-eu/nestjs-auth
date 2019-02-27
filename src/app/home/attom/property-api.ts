@@ -170,6 +170,12 @@ export class PropertyApi {
 				See Search Filters and review Address format.',
 			condition: HomeErrorEnum.GEOCODE_FORMAT_ERROR
 		},
+		'209': {
+			name: 'Geocoder Multiple Properties Error.',
+			message: 'There was an error in the format of the request to the geocoding service. Check the input format and try again.\
+				See Search Filters and review Address format.',
+			condition: HomeErrorEnum.GEOCODE_FORMAT_ERROR
+		},
 		'210': {
 			name: 'Geocoder Search Results Address Not Identified.',
 			message: 'The input address could not be identified. Please try again.',

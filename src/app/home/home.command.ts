@@ -35,7 +35,7 @@ export class HomeCommand {
 		this.logger.debug(`[create] delete from home_media everything with mimetype "image/fake"`);
 		await this.homeMediaService.deleteAll({filter: {mimetype: {eq: 'image/fake'}}});
 		this.logger.debug(`[create] delete from home_favorites everything with fake`);
-		await this.homeMediaService.deleteAll({filter: {fake: {eq: true}}});
+		await this.homeFavoriteService.deleteAll({filter: {fake: {eq: true}}});
 
 		this.logger.debug(`[create] fetch random 20 faked users`);
 		const users = await this.userService.findAll({filter: { provider: {eq: 'faker'}}, limit: 20});

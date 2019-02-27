@@ -9,10 +9,29 @@ import {HomeMediaModule} from '../home-media/home-media.module';
 import {HomeFavoriteModule} from '../home-favorite/home-favorite.module';
 import {HomeCommand} from './home.command';
 import {HomeVoter} from './security/home.voter';
+import {HomeController} from './home.controller';
+
+const PROVIDERS = [
+	...homeProviders,
+	HomeService,
+	HomeResolver,
+	AttomDataApiService,
+	HomeVoter,
+	HomeCommand
+];
+
+const MODULES = [
+	HttpModule,
+	DatabaseModule,
+	UserModule,
+	HomeFavoriteModule,
+	HomeMediaModule
+];
 
 @Module({
-	providers: [...homeProviders, HomeService, HomeResolver, AttomDataApiService, HomeVoter, HomeCommand],
-	imports: [HttpModule, DatabaseModule, UserModule, HomeFavoriteModule, HomeMediaModule],
+	controllers: [HomeController],
+	providers: [...PROVIDERS],
+	imports: [...MODULES],
 	exports: [HomeService]
 })
 export class HomeModule {
