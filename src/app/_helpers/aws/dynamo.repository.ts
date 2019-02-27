@@ -110,6 +110,7 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 			}
 			return collected;
 		} catch (e) {
+			console.error(e);
 			throw new DynamoException(e.message);
 		}
 	}
