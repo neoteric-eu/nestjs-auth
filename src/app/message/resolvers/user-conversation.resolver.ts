@@ -1,7 +1,7 @@
 import {Resolver, ResolveProperty, Parent, Mutation, Args, Query, Subscription} from '@nestjs/graphql';
 import {ConversationService} from '../services/conversation.service';
 import {UserService} from '../../user/user.service';
-import {UserConversationEntity} from '../entity';
+import {ConversationEntity, UserConversationEntity} from '../entity';
 import {Conversation, CreateConversationInput} from '../../graphql.schema';
 import {UserEntity as User} from '../../user/entity';
 import {UseGuards} from '@nestjs/common';
@@ -63,7 +63,7 @@ export class UserConversationResolver {
 	}
 
 	@ResolveProperty('conversation')
-	async getConversation(@Parent() userConversation: UserConversationEntity): Promise<Conversation> {
+	async getConversation(@Parent() userConversation: UserConversationEntity): Promise<ConversationEntity> {
 		try {
 			return this.conversationService.findOneById(userConversation.conversationId);
 		} catch (e) {

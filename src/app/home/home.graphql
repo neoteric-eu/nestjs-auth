@@ -402,7 +402,7 @@ type Home {
     zip: String
     country: String
     beds: Int
-    baths: Int
+    baths: Float
     lot_size: Float
     sqft: Int
     lat: Float
@@ -429,7 +429,7 @@ input CreateHomeInput {
     zip: String
     country: String
     beds: Int
-    baths: Int
+    baths: Float
     lot_size: Float
     sqft: Int
     lat: Float
@@ -456,7 +456,7 @@ input UpdateHomeInput {
     zip: String
     country: String
     beds: Int
-    baths: Int
+    baths: Float
     lot_size: Float
     sqft: Int
     lat: Float
@@ -533,7 +533,7 @@ input ModelHomeFilterInput {
     zip: ModelStringFilterInput
     country: ModelStringFilterInput
     beds: ModelIntFilterInput
-    baths: ModelIntFilterInput
+    baths: ModelFloatFilterInput
     lot_size: ModelFloatFilterInput
     sqft: ModelIntFilterInput
     lat: ModelFloatFilterInput

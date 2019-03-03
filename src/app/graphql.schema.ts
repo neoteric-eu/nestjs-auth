@@ -1,6 +1,6 @@
 /* tslint:disable */
 export class CreateConversationInput {
-    name: string;
+    homeId: string;
     type: string;
     recipientId: string;
 }
@@ -95,7 +95,7 @@ export class ModelHomeFilterInput {
     zip?: ModelStringFilterInput;
     country?: ModelStringFilterInput;
     beds?: ModelIntFilterInput;
-    baths?: ModelIntFilterInput;
+    baths?: ModelFloatFilterInput;
     lot_size?: ModelFloatFilterInput;
     sqft?: ModelIntFilterInput;
     lat?: ModelFloatFilterInput;
@@ -180,7 +180,7 @@ export class AVM {
 
 export class Conversation {
     id: string;
-    name: string;
+    home?: Home;
     type?: string;
     messages?: Message[];
     createdAt?: string;

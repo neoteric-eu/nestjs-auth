@@ -15,14 +15,14 @@ type Subscription {
 
 type Conversation {
     id: ID!
-    name: String!
+    home: Home
     type: String
     messages: [Message]
     createdAt: String
 }
 
 input CreateConversationInput {
-    name: String!,
+    homeId: ID!,
     type: String!,
     recipientId: String!
 }

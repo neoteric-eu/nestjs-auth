@@ -17,7 +17,7 @@ export class ConversationEntity extends ExtendedEntity {
 	@ApiModelProperty()
 	@IsString()
 	@attribute()
-	public name: string;
+	public homeId: string;
 
 	@ApiModelProperty()
 	@IsString()
