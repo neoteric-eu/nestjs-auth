@@ -1,6 +1,6 @@
 ## The builder
 
-FROM node:11-alpine as builder
+FROM node:10-alpine as builder
 
 WORKDIR /usr/src/app
 
@@ -18,7 +18,7 @@ RUN npm run build
 
 ## The cleaner
 
-FROM node:11-alpine as cleaner
+FROM node:10-alpine as cleaner
 
 WORKDIR /usr/src/app
 
@@ -29,7 +29,7 @@ RUN npm prune --production
 
 ## Output image
 
-FROM node:11-alpine
+FROM node:10-alpine
 
 LABEL maintainer="Przemysław Czekaj <pczekaj@neoteric.eu>"
 
