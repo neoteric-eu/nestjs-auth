@@ -1,5 +1,6 @@
 import {HttpModule, Module} from '@nestjs/common';
 import {DatabaseModule} from '../database/database.module';
+import {HomeModule} from '../home/home.module';
 import {UserModule} from '../user/user.module';
 import {messageProviders} from './message.providers';
 import {ConversationResolver} from './resolvers/conversation.resolver';
@@ -24,7 +25,7 @@ import {MessageVoter} from './security/message.voter';
 		SubscriptionsService,
 		MessageVoter
 	],
-	imports: [HttpModule, DatabaseModule, UserModule],
+	imports: [HttpModule, DatabaseModule, UserModule, HomeModule],
 	exports: [MessageService, ConversationService, UserConversationService, SubscriptionsService]
 })
 export class MessageModule {
