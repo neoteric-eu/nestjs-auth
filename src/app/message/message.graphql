@@ -9,7 +9,7 @@ type Mutation {
 }
 
 type Subscription {
-    newMessage(conversationId: ID!): Message
+    newMessage: Message
     newUserConversation: UserConversation
 }
 
