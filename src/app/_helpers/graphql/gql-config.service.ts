@@ -1,6 +1,7 @@
 import {join} from 'path';
 import {Injectable} from '@nestjs/common';
 import {GqlModuleOptions, GqlOptionsFactory} from '@nestjs/graphql';
+import auth_hdr from 'passport-jwt/lib/auth_header';
 import {config} from '../../../config';
 import {verifyToken} from '../../auth/jwt';
 import {TokenDto} from '../../auth/dto/token.dto';
@@ -56,7 +57,7 @@ export class GqlConfigService implements GqlOptionsFactory {
 	}
 
 	private async validateToken(authToken: string): Promise<TokenDto> {
-		const jwtToken = authToken.split('bearer ')[1];
+		const jwtToken = auth_hdr.parse(authToken).value;
 		this.logger.debug(`[validateToken] token ${jwtToken}`);
 		return verifyToken(jwtToken, config.session.secret);
 	}
