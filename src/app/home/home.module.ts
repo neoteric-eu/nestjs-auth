@@ -10,14 +10,18 @@ import {HomeFavoriteModule} from '../home-favorite/home-favorite.module';
 import {HomeCommand} from './home.command';
 import {HomeVoter} from './security/home.voter';
 import {HomeController} from './home.controller';
+import {HomePipe} from './pipe/home.pipe';
+import {HomePdfService} from './home-pdf.service';
 
 const PROVIDERS = [
 	...homeProviders,
 	HomeService,
+	HomePdfService,
 	HomeResolver,
 	AttomDataApiService,
 	HomeVoter,
-	HomeCommand
+	HomeCommand,
+	HomePipe
 ];
 
 const MODULES = [

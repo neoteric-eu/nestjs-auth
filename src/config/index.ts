@@ -66,6 +66,9 @@ interface Config {
 			}
 		};
 	};
+	api2pdf: {
+		apiKey: string
+	};
 	port: number;
 	host: string;
 	microservice: MicroserviceOptions;
@@ -140,6 +143,9 @@ export const config: Config = {
 				secret: process.env.APP_AWS_PINPOINT_SMTP_SECRET
 			}
 		}
+	},
+	api2pdf: {
+		apiKey: process.env.APP_API2PDF_SECRET
 	},
 	port: parseInt(process.env.APP_PORT, 10),
 	host: process.env.APP_HOST,

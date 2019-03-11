@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+	<!--
+
+        __      __
+       /\ \    / /\
+      /  \ \  / /  \
+     / /\ \ \/ / /\ \
+    / ____ \  / ____ \
+   /_/    \_\/_/    \_\
+
+
+   -->
+
+
+	<style media="all" type="text/css">
+
+		@import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&subset=latin-ext');
+
+		body {
+			background: #fff;
+			background-image: url("https://ava.house/webroot/brochure/img/page-bg.png");
+			background-position-y: 0px;
+			background-size: cover;
+			margin: 0px;
+			padding: 0px;
+			font-family: 'Lato', sans-serif;
+			font-weight: 400;
+			font-style: normal;
+		}
+
+		@page {
+			size: 8.5in 11in;
+			margin: 0;
+			padding: 0;
+
+		}
+
+		IMG {
+			width: 100%;
+		}
+
+		#main-photo-block {
+			position: absolute;
+			top: 0;
+			z-index: 1;
+			width: 100%;
+		}
+
+		#price-block {
+			position: absolute;
+			display: inline;
+			top: 33.3%;
+			/*background-image: url("img/house_01.jpg");       Main Image (1390px x 774px crop)      */
+			background-position-y: bottom;
+			background-size: cover;
+			background-color: #560507b5;
+			background-blend-mode: multiply;
+			width: 100%;
+			height: 9.8%;
+			text-align: right;
+			padding-right: 100px;
+			color: #fff;
+			text-transform: uppercase;
+			z-index: 100;
+			padding: 0px;
+			-webkit-clip-path: polygon(38% 0%, 100% 1%, 100% 100%, 33% 100%)
+		}
+
+
+		#price-label {
+			display: inline-block;
+			font-size: 20px;
+			vertical-align: middle;
+			padding-right: 15px;
+			font-weight: 600;
+		}
+
+		#price-dollar-sign {
+			display: inline-block;
+			font-size: 30px;
+			vertical-align: middle;
+			transform: translate(0px, -14px);
+		}
+
+		#price {
+			display: inline-block;
+			font-size: 77px;
+			padding-right: 4%;
+			vertical-align: middle;
+			line-height: 100px;
+			font-weight: 800;
+			letter-spacing: -1px;
+			width: 320px;
+			display: inline-block;
+			text-align: left;
+		}
+
+		#secondary-images {
+			width: 100%;
+			position: absolute;
+			top: 45%;
+			height: 15%;
+			background: none;
+		}
+
+		.property-image {
+			width: 30%;
+			display: inline-block;
+			padding-left: 2.2%;
+		}
+
+		#property-data {
+			width: 30%;
+			position: absolute;
+			/* background: red; */
+			top: 65.5%;
+			right: 2.05%;
+			color: #606161;
+			font-size: 17px;
+			font-weight: 700;
+		}
+
+		#location {
+			margin-bottom: 26%;
+		}
+
+		#square-feet {
+			margin-bottom: 27%;
+		}
+
+	</style>
+
+
+</head>
+<body>
+
+<!-- 		Main Photo     -->
+
+<div id="main-photo-block">
+	<img src="{{media.main}}" alt="house_01"/> <!-- Main Image  (1390px x 774px crop)  -->
+</div>
+
+<!-- 		Listing Price -->
+
+<div id="price-block">
+	<div id="price-label">Listed At:</div> <!-- Not Dynamic -->
+	<div id="price-dollar-sign">$</div> <!-- Not Dynamic -->
+	<div id="price" class="fill">{{home.price}}</div> <!-- House Price -->
+</div>
+
+<div id="secondary-images">
+	<div class="property-image"><img src="{{media.first}}" alt="{{home.descr}}"/></div>
+	<!-- Secondary Image 1  (1200px x 800px crop) -->
+	<div class="property-image"><img src="{{media.second}}" alt="{{home.descr}}"/></div>
+	<!-- Secondary Image 2  (1200px x 800px crop) -->
+	<div class="property-image"><img src="{{media.third}}" alt="{{home.descr}}"/></div>
+	<!-- Secondary Image 3  (1200px x 800px crop) -->
+</div>
+
+<div id="property-data">
+	<div id="location" class="efill">{{home.address_1}}<br>{{home.address_2}}</div> <!-- Home Address -->
+	<div id="square-feet">{{home.sqft}} sq. ft.</div> <!-- Home Square Footage. "sq. ft." is not dynamic -->
+	<div id="beds">{{home.beds}}} Beds</div> <!-- Number of Rooms in House -->
+	<div id="baths">{{home.baths}} Baths</div> <!-- Number of Bathrooms in House -->
+</div>
+
+</body>
+</html>

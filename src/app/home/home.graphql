@@ -417,7 +417,6 @@ type Home {
 }
 
 input CreateHomeInput {
-    owner: String
     price: Float
     price_adjustment: Float
     descr: String
@@ -444,7 +443,6 @@ input CreateHomeInput {
 
 input UpdateHomeInput {
     id: ID!
-    owner: String
     price: Float
     price_adjustment: Float
     descr: String

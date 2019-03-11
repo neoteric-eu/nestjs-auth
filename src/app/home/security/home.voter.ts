@@ -36,10 +36,6 @@ export class HomeVoter extends Voter {
 	protected async voteOnAttribute(attribute: string, subject: HomeEntity | HomeEntity[], context): Promise<boolean> {
 		const user = context.getUser();
 
-		if (!(user instanceof UserEntity) && attribute !== RestVoterActionEnum.READ_ALL) {
-			return false;
-		}
-
 		switch (attribute) {
 			case RestVoterActionEnum.READ_ALL:
 				return this.canReadAll(subject as HomeEntity[], user);
@@ -47,6 +43,8 @@ export class HomeVoter extends Voter {
 				return this.canRead(subject as HomeEntity, user);
 			case RestVoterActionEnum.CREATE:
 				return this.canCreate(subject as HomeEntity, user);
+			case RestVoterActionEnum.UPDATE:
+				return this.canUpdate(subject as HomeEntity, user);
 			case RestVoterActionEnum.DELETE:
 				return this.canDelete(subject as HomeEntity, user);
 		}
@@ -60,13 +58,18 @@ export class HomeVoter extends Voter {
 	}
 
 	private async canRead(home: HomeEntity, user: UserEntity): Promise<boolean> {
-		this.logger.debug(`[canRead] can user ${user.id} read home ${home.id} where owner is ${home.owner}`);
-		return home.owner === user.id;
+		this.logger.debug(`[canRead] any user can read home ${home.id}`);
+		return true;
 	}
 
 	private canCreate(home: HomeEntity, user: UserEntity) {
 		this.logger.debug('[canCreate] everybody can create homes');
 		return true;
+	}
+
+	private canUpdate(home: HomeEntity, user: UserEntity) {
+		this.logger.debug('[canUpdate] only owner of the house can update his home');
+		return home.owner === user.id;
 	}
 
 	private canDelete(home: HomeEntity, user: UserEntity) {
