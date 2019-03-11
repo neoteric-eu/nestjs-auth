@@ -11,7 +11,6 @@ export class CreateHomeFavoriteInput {
 }
 
 export class CreateHomeInput {
-    owner?: string;
     price?: number;
     price_adjustment?: number;
     descr?: string;
@@ -139,7 +138,6 @@ export class ModelStringFilterInput {
 
 export class UpdateHomeInput {
     id: string;
-    owner?: string;
     price?: number;
     price_adjustment?: number;
     descr?: string;
