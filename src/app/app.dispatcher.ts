@@ -8,7 +8,7 @@ import query from 'qs-middleware';
 import {config} from '../config';
 import {AppLogger} from './app.logger';
 import {AppModule} from './app.module';
-import {HttpExceptionFilter} from './_helpers/filters';
+import {HttpExceptionFilter, TwigExceptionFilter} from './_helpers/filters';
 
 export class AppDispatcher {
 	private app: INestApplication;
@@ -38,6 +38,7 @@ export class AppDispatcher {
 		this.app.use(cors());
 		this.app.use(query());
 		this.app.useGlobalFilters(new HttpExceptionFilter());
+		this.app.useGlobalFilters(new TwigExceptionFilter());
 		if (config.isProduction) {
 			this.app.use(helmet());
 		}

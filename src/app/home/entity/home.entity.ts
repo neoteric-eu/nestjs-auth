@@ -132,4 +132,12 @@ export class HomeEntity extends ExtendedEntity {
 	@IsNumber()
 	@attribute()
 	public buyers_agent_type: number;
+
+	@ApiModelProperty()
+	@attribute()
+	public createdAt: string;
+
+	@ApiModelProperty()
+	@attribute()
+	public updatedAt: string;
 }

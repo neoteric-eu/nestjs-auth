@@ -1,4 +1,4 @@
-import {UnauthorizedException, UseGuards} from '@nestjs/common';
+import {UseGuards} from '@nestjs/common';
 import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
 import {GetAVMDetailInput, Home, ModelHomeFilterInput} from '../graphql.schema';
@@ -14,10 +14,15 @@ import {HomeMediaService} from '../home-media/home-media.service';
 import {HomeMediaEntity} from '../home-media/entity';
 import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
 import {AppLogger} from '../app.logger';
+import {Client, ClientProxy, Transport} from '@nestjs/microservices';
+import {USER_CMD_REGISTER} from '../user';
+import {HOME_CMD_DELETE} from './home.constants';
 
 @Resolver('Home')
 export class HomeResolver {
 
+	@Client({ transport: Transport.TCP })
+	private client: ClientProxy;
 	private pubSub = new PubSub();
 	private logger = new AppLogger(HomeResolver.name);
 
@@ -73,8 +78,10 @@ export class HomeResolver {
 	@Mutation('createHome')
 	@UseGuards(GraphqlGuard)
 	async create(@CurrentUser() user: User, @Args('createHomeInput') args: CreateHomeDto): Promise<HomeEntity> {
-		args.owner = user.id;
-		const createdHome = await this.homeService.create(args);
+		const createdHome = await this.homeService.create({
+			owner: user.id,
+			...args
+		});
 		await this.pubSub.publish('homeCreated', {homeCreated: createdHome});
 		return createdHome;
 	}
@@ -82,29 +89,18 @@ export class HomeResolver {
 	@Mutation('deleteHome')
 	@UseGuards(GraphqlGuard)
 	async delete(@CurrentUser() user: User, @Args('deleteHomeInput') args: DeleteHomeDto): Promise<HomeEntity> {
-		const homeToDelete: HomeEntity = await this.homeService.findOneById(args.id);
-		if (homeToDelete.owner === user.id) {
-			await this.homeFavoriteService.deleteAll({filter: {homeFavoriteHomeId: {eq: args.id}}});
-			const deletedHome = await this.homeService.delete(args.id);
-			await this.pubSub.publish('homeDeleted', {homeDeleted: deletedHome});
-			return deletedHome;
-		} else {
-			throw new UnauthorizedException();
-		}
+		const deletedHome = await this.homeService.delete(args.id);
+		this.client.send({cmd: HOME_CMD_DELETE}, deletedHome).subscribe();
+		await this.pubSub.publish('homeDeleted', {homeDeleted: deletedHome});
+		return deletedHome;
 	}
 
 	@Mutation('updateHome')
 	@UseGuards(GraphqlGuard)
-	async update(@CurrentUser() user: User, @Args('updateHomeInput') args: UpdateHomeDto): Promise<HomeEntity> {
-		const homeToUpdate: HomeEntity = await this.homeService.findOneById(args.id);
-		if (homeToUpdate.owner === user.id) {
-			args.owner = user.id;
-			const updatedHome = await this.homeService.update(args);
-			await this.pubSub.publish('homeUpdated', {homeUpdated: updatedHome});
-			return updatedHome;
-		} else {
-			throw new UnauthorizedException();
-		}
+	async update(@Args('updateHomeInput') args: UpdateHomeDto): Promise<HomeEntity> {
+		const updatedHome = await this.homeService.update(args);
+		await this.pubSub.publish('homeUpdated', {homeUpdated: updatedHome});
+		return updatedHome;
 	}
 
 	@Subscription('homeCreated')
