@@ -168,14 +168,18 @@
 			<div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 600px; padding: 0;">
 
 				<!-- START CENTERED WHITE CONTAINER -->
-				<span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">We're trying our darndest to make sure that you are a real person, please click on this link to help us eliminate those spammer bots.</span>
+				<span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">
+					We're trying our darndest to make sure that you are a real person, please click on this link to help us eliminate those spammer bots.
+				</span>
 
 				<!-- START HEADER -->
 				<div class="header" style="margin-bottom: 24px; margin-top: 0; width: 100%;">
 					<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; min-width: 100%;" width="100%">
 						<tr>
 							<td class="align-center" style="font-family: Helvetica, sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
-								<a href="http://www.ava.house" target="_blank" style="color: #ED494D; text-decoration: underline;"><img src="https://s3.amazonaws.com/bigtuna/ava/ava_logo.png" width="70" height="41" alt="Logo" align="center" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
+								<a href="http://www.ava.house" target="_blank" style="color: #ED494D; text-decoration: underline;">
+									<img src="https://s3.amazonaws.com/bigtuna/ava/ava_logo.png" width="70" height="41" alt="Logo" align="center" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;">
+								</a>
 							</td>
 						</tr>
 					</table>
@@ -220,7 +224,17 @@
 														<tbody>
 														<tr>
 															<td style="font-family: Helvetica, sans-serif; font-size: 14px; vertical-align: top; background-color: #ED494D; border-radius: 4px; text-align: center;" valign="top" bgcolor="#ED494D" align="center">
-																<a href="{{ token }}" target="_blank" style="display: inline-block; color: #ffffff; background-color: #ED494D; border: solid 2px #ED494D; border-radius: 4px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 24px; text-transform: capitalize; border-color: #ED494D;">Verify your account</a>
+																<a href="{{ config.mobile.schema }}://{{ config.mobile.host }}/activate?token={{ token }}" target="_blank" style="display: inline-block; color: #ffffff; background-color: #ED494D; border: solid 2px #ED494D; border-radius: 4px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 24px; text-transform: capitalize; border-color: #ED494D;">
+																	Verify your account
+																</a>
+															</td>
+															<td>&nbsp;</td>
+															<td>
+																Or copy
+															</td>
+															<td>&nbsp;</td>
+															<td style="font-family: Helvetica, sans-serif; font-size: 14px; vertical-align: middle; border-radius: 4px; text-align: center;" valign="middle" align="center">
+																	{{ token }}
 															</td>
 														</tr>
 														</tbody>
