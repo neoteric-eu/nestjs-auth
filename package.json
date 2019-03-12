@@ -1,6 +1,6 @@
 {
   "name": "ava",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "AVA - The new agent in town",
   "main": "dist/index.js",
   "repository": "git@github.com:neoteric-eu/nestjs-auth.git",
