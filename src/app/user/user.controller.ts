@@ -2,6 +2,7 @@ import {equals} from '@aws/dynamodb-expressions';
 import {ApiResponse, ApiUseTags} from '@nestjs/swagger';
 import {Controller, HttpCode, Post} from '@nestjs/common';
 import {MessagePattern} from '@nestjs/microservices';
+import voucherCodes from 'voucher-code-generator';
 import {UserService} from './user.service';
 import {UserEntity} from './entity';
 import {mail, renderTemplate} from '../_helpers/mail';
@@ -31,7 +32,9 @@ export class UserController {
 	public async onUserRegister(user: UserEntity): Promise<void> {
 		try {
 			this.logger.debug(`[onUserRegister] Send registration email for user ${user.email}`);
-			const token = createToken(user.id, config.session.verify.timeout, config.session.verify.secret);
+			const token = voucherCodes.generate({pattern: '###-###'});
+			user.activationCode = token;
+			await this.service.update(user);
 			await mail({
 				subject: `Verify ${user.first_name} to ${config.name.toUpperCase()}`,
 				to: user.email,
@@ -44,9 +47,8 @@ export class UserController {
 	}
 
 	@MessagePattern({ cmd: USER_CMD_REGISTER_VERIFY })
-	public async onUserRegisterVerify(id: string): Promise<void> {
+	public async onUserRegisterVerify(user: UserEntity): Promise<void> {
 		try {
-			const user = await this.service.findOneById(id);
 			this.logger.debug(`[onUserRegisterVerify] Send welcome email for user ${user.email}`);
 			await mail({
 				subject: `Welcome ${user.first_name} to ${config.name.toUpperCase()}`,

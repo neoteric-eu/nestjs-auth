@@ -665,7 +665,7 @@ export abstract class ISubscription {
 
     abstract homeDeleted(): Home | Promise<Home>;
 
-    abstract newMessage(conversationId: string): Message | Promise<Message>;
+    abstract newMessage(): Message | Promise<Message>;
 
     abstract newUserConversation(): UserConversation | Promise<UserConversation>;
 

@@ -1,14 +1,16 @@
 import {equals} from '@aws/dynamodb-expressions';
-import {Body, Controller, HttpCode, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, HttpCode, HttpException, HttpStatus, Post, UseGuards} from '@nestjs/common';
 import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiImplicitBody, ApiResponse, ApiUseTags} from '@nestjs/swagger';
 import {config} from '../../config';
+import {RestException} from '../_helpers';
 import {DeepPartial} from '../_helpers/database';
 import {Profile} from '../_helpers/decorators';
 import {AppLogger} from '../app.logger';
 import {USER_CMD_PASSWORD_NEW, USER_CMD_PASSWORD_RESET, USER_CMD_REGISTER, USER_CMD_REGISTER_VERIFY} from '../user';
 import {UserEntity} from '../user/entity';
+import {UserErrorEnum} from '../user/user-error.enum';
 import {UserService} from '../user/user.service';
 import {AuthService} from './auth.service';
 import {CredentialsDto} from './dto/credentials.dto';
@@ -65,10 +67,18 @@ export class AuthController {
 	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
 	public async registerVerify(@Body() body: VerifyTokenDto): Promise<JwtDto> {
 		this.logger.debug(`[registerVerify] Token ${body.verifyToken}`);
-		const token = await verifyToken(body.verifyToken, config.session.verify.secret);
-		const user = await this.userService.patch(token.id, {is_verified: true});
-		this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, token.id).subscribe();
-		this.logger.debug(`[registerVerify] Sent command register verify for user id ${token.id}`);
+		const user = await this.userService.findByEmail(body.email);
+		if (user.activationCode !== body.verifyToken) {
+			throw new RestException({
+				error: 'Auth',
+				message: `Wrong verification token`,
+				condition: UserErrorEnum.NOT_VERIFIED
+			}, HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		user.is_verified = true;
+		await this.userService.update(user);
+		this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user).subscribe();
+		this.logger.debug(`[registerVerify] Sent command register verify for user id ${user.id}`);
 		return createAuthToken(user);
 	}
 
@@ -137,7 +147,7 @@ export class AuthController {
 				provider: profile.provider,
 				is_verified: true
 			});
-			this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user.id).subscribe();
+			this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user).subscribe();
 		}
 		return createAuthToken(user);
 	}
