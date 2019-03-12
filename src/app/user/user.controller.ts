@@ -32,7 +32,10 @@ export class UserController {
 	public async onUserRegister(user: UserEntity): Promise<void> {
 		try {
 			this.logger.debug(`[onUserRegister] Send registration email for user ${user.email}`);
-			const token = voucherCodes.generate({pattern: '###-###'});
+			const token = voucherCodes.generate({
+				pattern: '###-###',
+				charset: voucherCodes.charset('numbers')
+			});
 			user.activationCode = token;
 			await this.service.update(user);
 			await mail({
