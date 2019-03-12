@@ -16,6 +16,10 @@ interface Config {
 	salt: string;
 	passwordMinLength: number;
 	assetsPath: string;
+	mobile: {
+		schema: string;
+		host: string;
+	};
 	mail: {
 		from: string
 	};
@@ -94,6 +98,10 @@ export const config: Config = {
 	salt: process.env.APP_SALT,
 	passwordMinLength: 7,
 	assetsPath: `${__dirname}/../assets`,
+	mobile: {
+		schema: 'https',
+		host: 'mobile.ava.home'
+	},
 	mail: {
 		from: process.env.APP_MAIL_FROM
 	},
