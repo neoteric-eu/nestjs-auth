@@ -18,9 +18,10 @@ export class SubscriptionsService {
 
 	public async newMessage(payload, variables, context) {
 		const user = context.req.user;
+		const conversationId = payload.newMessage.conversationId;
 		const conversations = await this.userConversationService.findAll({filter: {userId: {eq: user.id}}});
-		const found = conversations.some(conversation => conversation.conversationId === variables.conversationId);
-		this.logger.debug(`[newMessage] Do we found this conversation for this user? ${found}`);
+		const found = conversations.some(conversation => conversation.conversationId === conversationId);
+		this.logger.debug(`[newMessage] Do we found this conversation for this user ${user.id}? ${found}`);
 		return found;
 	}
 }
