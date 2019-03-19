@@ -29,10 +29,16 @@ export class MessageResolver {
 
 	@Mutation('createMessage')
 	@UseGuards(GraphqlGuard)
-	async createMessage(@CurrentUser() user: User, @Args('conversationId') conversationId: string, @Args('content') content: string) {
+	async createMessage(
+		@CurrentUser() user: User,
+		@Args('conversationId') conversationId: string,
+		@Args('content') content: string,
+		@Args('type') type: string
+	) {
 		const createdMessage = await this.messageService.create({
 			authorId: user.id,
 			content,
+			type,
 			conversationId
 		});
 		await this.pubSub.publish('newMessage', {newMessage: createdMessage});

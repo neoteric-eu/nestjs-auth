@@ -233,6 +233,7 @@ export class Message {
     author?: User;
     content: string;
     conversationId: string;
+    type?: string;
     isSent?: boolean;
     isRead?: boolean;
     createdAt?: string;
@@ -255,7 +256,7 @@ export abstract class IMutation {
 
     abstract createConversation(conversationInput?: CreateConversationInput): UserConversation | Promise<UserConversation>;
 
-    abstract createMessage(conversationId: string, content?: string): Message | Promise<Message>;
+    abstract createMessage(conversationId: string, content?: string, type?: string): Message | Promise<Message>;
 
     abstract updateUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
 

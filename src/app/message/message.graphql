@@ -5,7 +5,7 @@ type Query {
 
 type Mutation {
     createConversation(conversationInput: CreateConversationInput): UserConversation
-    createMessage(conversationId: ID!, content: String): Message
+    createMessage(conversationId: ID!, content: String, type: String): Message
 }
 
 type Subscription {
@@ -37,6 +37,7 @@ type Message {
     author: User
     content: String!
     conversationId: ID!
+    type: String
     isSent: Boolean
     isRead: Boolean
     createdAt: String
