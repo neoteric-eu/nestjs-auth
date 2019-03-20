@@ -26,7 +26,7 @@ export class UserConversationResolver {
 	@Query('allConversations')
 	@UseGuards(GraphqlGuard)
 	async getAllConversations(@CurrentUser() user: User) {
-		return this.userConversationService.findAll({filter: {userId: {eq: user.id}}});
+		return this.userConversationService.findAll({where: {userId: user.id}});
 	}
 
 	@Mutation('createConversation')

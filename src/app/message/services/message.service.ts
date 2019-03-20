@@ -1,10 +1,10 @@
-import { CrudService } from '../../../base';
-import { Injectable, Inject } from '@nestjs/common';
+import {CrudService} from '../../../base';
+import {Inject, Injectable} from '@nestjs/common';
 import {DateTime} from 'luxon';
-import { Repository } from '../../_helpers/database/repository.interface';
-import { MESSAGE_TOKEN } from '../message.constants';
-import { MessageEntity } from '../entity/message.entity';
+import {MESSAGE_TOKEN} from '../message.constants';
+import {MessageEntity} from '../entity';
 import {DeepPartial} from '../../_helpers/database';
+import {Repository} from 'typeorm';
 
 @Injectable()
 export class MessageService extends CrudService<MessageEntity> {

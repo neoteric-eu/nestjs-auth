@@ -1,17 +1,17 @@
-import {attribute, hashKey, table} from '@aws/dynamodb-data-mapper-annotations';
 import {ApiModelProperty} from '@nestjs/swagger';
 import {IsString} from 'class-validator';
 import {ExtendedEntity} from '../../_helpers';
+import {Column, Entity, PrimaryColumn} from 'typeorm';
 
-@table(`user_email`)
+@Entity()
 export class UserEmailEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
-	@hashKey()
+	@PrimaryColumn()
 	public id: string; // user email
 
 	@ApiModelProperty()
 	@IsString()
-	@attribute()
+	@Column()
 	public user_id: string;
 }

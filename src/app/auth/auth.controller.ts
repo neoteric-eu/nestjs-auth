@@ -136,7 +136,7 @@ export class AuthController {
 	@ApiResponse({ status: 200, description: 'OK', type: JwtDto })
 	public async fbSignIn(@Body() fbToken: FacebookTokenDto, @Profile() profile: FacebookProfile): Promise<JwtDto> {
 		this.logger.debug(`[fbSignIn] Facebook socialId ${profile.id}`);
-		let user = await this.userService.findOne({filter: {...equals(profile.id), subject: 'socialId'}});
+		let user = await this.userService.findOne({socialId: profile.id});
 		if (!user) {
 			this.logger.debug(`[fbSignIn] User with this id doesn't exists before, social register`);
 			user = await this.userService.socialRegister({

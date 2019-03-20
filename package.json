@@ -55,6 +55,7 @@
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "luxon": "^1.10.0",
+    "mongodb": "^3.1.13",
     "multer-s3": "^2.9.0",
     "nestjs-command": "0.0.4",
     "nodemailer": "^5.1.1",
@@ -68,6 +69,7 @@
     "rxjs-compat": "^6.3.3",
     "tslib": "^1.9.3",
     "twing": "^2.1.2",
+    "typeorm": "^0.2.15",
     "voucher-code-generator": "^1.1.1",
     "winston": "^2.4.4"
   },

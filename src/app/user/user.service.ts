@@ -1,7 +1,8 @@
-import {HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
+import {HttpException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import {DateTime} from 'luxon';
+import {Repository, DeepPartial} from 'typeorm';
 import {CrudService} from '../../base';
-import {Repository, DeepPartial, passwordHash, RestException} from '../_helpers';
+import {passwordHash, RestException} from '../_helpers';
 import {AppLogger} from '../app.logger';
 import {CredentialsDto} from '../auth/dto/credentials.dto';
 import {UserEmailEntity, UserEntity} from './entity';
@@ -22,13 +23,13 @@ export class UserService extends CrudService<UserEntity> {
 	}
 
 	public async findByEmail(email: string): Promise<UserEntity> {
-		this.logger.debug(`[findByEmail] Looking in users_email for ${email}`);
-		const userEmail = await this.userEmailRepository.findOneOrFail(email);
-		this.logger.debug(`[findByEmail] Found in user_email an email ${email}`);
-
-		this.logger.debug(`[findByEmail] Looking in users for ${userEmail.user_id}`);
-		const user = await this.repository.findOneOrFail(userEmail.user_id);
-		this.logger.debug(`[findByEmail] Found in users an user with id ${user.id}`);
+		this.logger.debug(`[findByEmail] Looking in users for ${email}`);
+		const user = await this.findOne({email});
+		if (user) {
+			this.logger.debug(`[findByEmail] Found in users an user with id ${user.id}`);
+		} else {
+			this.logger.debug(`[findByEmail] Not found in users an user with email ${email}`);
+		}
 		return user;
 	}
 
@@ -36,7 +37,7 @@ export class UserService extends CrudService<UserEntity> {
 		const user = await this.findByEmail(credentials.email);
 
 		if (user.password !== passwordHash(credentials.password)) {
-			throw new NotFoundException(`Item doesn't exists`);
+			throw new NotFoundException(`User doesn't exists`);
 		}
 
 		if (!user.is_verified) {

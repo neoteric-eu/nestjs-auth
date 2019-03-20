@@ -1,10 +1,9 @@
-import { CrudService } from '../../../base';
-import { Injectable, Inject } from '@nestjs/common';
-import { DateTime } from 'luxon';
-import { Repository } from '../../_helpers/database';
-import { CONVERSATION_TOKEN } from '../message.constants';
-import { ConversationEntity } from '../entity';
-import { DeepPartial } from '../../_helpers/database';
+import {CrudService} from '../../../base';
+import {Inject, Injectable} from '@nestjs/common';
+import {DateTime} from 'luxon';
+import {DeepPartial, Repository} from 'typeorm';
+import {CONVERSATION_TOKEN} from '../message.constants';
+import {ConversationEntity} from '../entity';
 
 @Injectable()
 export class ConversationService extends CrudService<ConversationEntity> {

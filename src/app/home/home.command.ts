@@ -37,8 +37,8 @@ export class HomeCommand {
 		this.logger.debug(`[create] delete from home_favorites everything with fake`);
 		await this.homeFavoriteService.deleteAll({filter: {fake: {eq: true}}});
 
-		this.logger.debug(`[create] fetch random 20 faked users`);
-		const users = await this.userService.findAll({filter: { provider: {eq: 'faker'}}, limit: 20});
+		this.logger.debug(`[create] fetch faked users`);
+		const users = await this.userService.findAll({where: {provider: 'faker'}});
 		const usersIds = users.map(user => user.id);
 
 		const homes: HomeEntity[] = [];

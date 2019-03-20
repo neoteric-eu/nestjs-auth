@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@nestjs/common';
 import {CrudService} from '../../base';
-import {Repository} from '../_helpers/database';
+import {Repository} from 'typeorm';
 import {UserSubscriptionEntity} from './entity/user-subscription.entity';
 import {USER_SUBSCRIPTION_TOKEN} from './user.constants';
 

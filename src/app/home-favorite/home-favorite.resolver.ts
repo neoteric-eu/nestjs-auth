@@ -18,7 +18,7 @@ export class HomeFavoriteResolver {
 
 	@Query('getHomeFavorites')
 	async findAll(@CurrentUser() user: User): Promise<HomeFavorite[]> {
-		return this.homeFavoriteService.findAll({filter: {homeFavoriteUserId: {eq: user.id}}});
+		return this.homeFavoriteService.findAll({where : {homeFavoriteUserId: user.id}});
 	}
 
 	@Query('getHomeFavorite')
@@ -30,14 +30,14 @@ export class HomeFavoriteResolver {
 	async create(@CurrentUser() user: User, @Args('createHomeFavoriteInput') args: CreateHomeFavoriteDto): Promise<HomeFavorite> {
 		args.homeFavoriteUserId = user.id;
 		const createdHomeFavorite = await this.homeFavoriteService.create(args);
-		this.pubSub.publish('homeFavoriteCreated', {homeCreatedFavorite: createdHomeFavorite});
+		await this.pubSub.publish('homeFavoriteCreated', {homeCreatedFavorite: createdHomeFavorite});
 		return createdHomeFavorite;
 	}
 
 	@Mutation('deleteHomeFavorite')
 	async delete(@CurrentUser() user: User, @Args('deleteHomeFavoriteInput') args: DeleteHomeFavoriteDto): Promise<HomeFavorite> {
 		const deletedHomeFavorite = await this.homeFavoriteService.delete(args.id);
-		this.pubSub.publish('homeFavoriteDeleted', {homeFavoriteDeleted: deletedHomeFavorite});
+		await this.pubSub.publish('homeFavoriteDeleted', {homeFavoriteDeleted: deletedHomeFavorite});
 		return deletedHomeFavorite;
 	}
 

@@ -3,8 +3,9 @@ import {validate, ValidatorOptions} from 'class-validator';
 import {SecurityService} from '../app/security/security.service';
 import {RestVoterActionEnum} from '../app/security/voter';
 import {DateTime} from 'luxon';
+import {DeepPartial, FindConditions, FindManyOptions, FindOneOptions, Repository} from 'typeorm';
 import {config} from '../config';
-import {DeepPartial, ExtendedEntity, Repository} from '../app/_helpers';
+import {ExtendedEntity} from '../app/_helpers';
 
 export class CrudService<T extends ExtendedEntity> {
 	protected repository: Repository<T>;
@@ -16,8 +17,8 @@ export class CrudService<T extends ExtendedEntity> {
 		}
 	}
 
-	public async findAll(conditions?): Promise<T[]> {
-		const entities = await this.repository.find(conditions);
+	public async findAll(options?: FindManyOptions<T>): Promise<T[]> {
+		const entities = await this.repository.find(options);
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.READ_ALL, entities);
 		return entities;
 	}
@@ -28,8 +29,8 @@ export class CrudService<T extends ExtendedEntity> {
 		return entity;
 	}
 
-	public async findOne(conditions?: any): Promise<T> {
-		const entity = await this.repository.findOne(conditions);
+	public async findOne(conditions?: FindConditions<T>, options?: FindOneOptions<T>): Promise<T> {
+		const entity = await this.repository.findOne(conditions, options);
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.READ, entity);
 		return entity;
 	}
@@ -40,11 +41,11 @@ export class CrudService<T extends ExtendedEntity> {
 		entity.updatedAt = DateTime.utc().toString();
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.CREATE, entity);
 		await this.validate(entity);
-		return this.repository.save(entity);
+		return entity.save();
 	}
 
-	public async saveAll(data: DeepPartial<T[]>): Promise<T[]> {
-		return this.repository.bulkSave(data);
+	public async saveAll(data: DeepPartial<T>[]): Promise<T[]> {
+		return this.repository.save(data);
 	}
 
 	public async update(data: DeepPartial<T>): Promise<T> {
@@ -63,17 +64,18 @@ export class CrudService<T extends ExtendedEntity> {
 		entity.updatedAt = DateTime.utc().toString();
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.UPDATE, entity);
 		await this.validate(entity);
-		return this.repository.save(entity);
+		return entity.save();
 	}
 
 	public async delete(id: string): Promise<T> {
 		const entity: T = await this.findOneById(id);
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.UPDATE, entity);
-		return this.repository.delete(id);
+		await this.repository.delete(id);
+		return entity;
 	}
 
-	public deleteAll(conditions?): Promise<T[]> {
-		return this.repository.deleteAll(conditions);
+	public deleteAll(conditions?): Promise<any> {
+		return this.repository.delete(conditions);
 	}
 
 	protected async validate(entity: T, options?: ValidatorOptions) {

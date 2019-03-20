@@ -24,7 +24,7 @@ export class MessageResolver {
 	@Query('allMessages')
 	@UseGuards(GraphqlGuard)
 	async getAllMessages(@Args('conversationId') conversationId: string, @Args('after') after: string, @Args('limit') limit?: number) {
-		return this.messageService.findAll({filter: {conversationId: {eq: conversationId}}, limit});
+		return this.messageService.findAll({where: {conversationId}, take : limit});
 	}
 
 	@Mutation('createMessage')

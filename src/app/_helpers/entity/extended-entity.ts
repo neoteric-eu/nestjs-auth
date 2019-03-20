@@ -1,14 +1,14 @@
-import {attribute} from '@aws/dynamodb-data-mapper-annotations';
 import {ApiModelProperty} from '@nestjs/swagger';
+import {BaseEntity, Column} from 'typeorm';
 
-export class ExtendedEntity {
+export class ExtendedEntity extends BaseEntity {
 	public id?: string;
 
 	@ApiModelProperty()
-	@attribute()
+	@Column()
 	public createdAt: string;
 
 	@ApiModelProperty()
-	@attribute()
+	@Column()
 	public updatedAt: string;
 }

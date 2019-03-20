@@ -6,7 +6,7 @@ import {DateTime} from 'luxon';
 import {CrudService} from '../../base';
 import {HomeEntity} from './entity';
 import {HOME_TOKEN} from './home.constants';
-import {Repository} from '../_helpers';
+import {Repository} from 'typeorm';
 import {config} from '../../config';
 import {AppLogger} from '../app.logger';
 import {AttomDataApiService} from './attom-data-api.service';
@@ -60,7 +60,7 @@ export class HomeService extends CrudService<HomeEntity> {
 
 			this.logger.debug(`[importAddresses] Find 20 faked users`);
 
-			const users = await this.userService.findAll({filter: {provider: {eq: 'faker'}}, limit: 20});
+			const users = await this.userService.findAll({where: {provider: 'faker'}, take: 20});
 			const usersIds = users.map(user => user.id);
 
 			this.logger.debug(`[importAddresses] Gathering sheet info`);

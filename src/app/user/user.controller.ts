@@ -67,7 +67,7 @@ export class UserController {
 	@MessagePattern({ cmd: USER_CMD_PASSWORD_RESET })
 	public async onUserPasswordRest({ email }: {email: string}): Promise<void> {
 		try {
-			const user = await this.service.findOne({filter: {...equals(email), subject: 'email'}});
+			const user = await this.service.findOne({email});
 			this.logger.debug(`[onUserRegister] Send password reset instruction email for user ${user.email}`);
 			const token = createToken(user.id, config.session.password_reset.timeout, config.session.password_reset.secret);
 			await mail({

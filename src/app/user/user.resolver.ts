@@ -7,11 +7,11 @@ import {GraphqlGuard} from '../_helpers/graphql';
 import {UserEntity} from './entity';
 import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
 
-const pubSub = new PubSub();
-
 @Resolver('User')
 @UseGuards(GraphqlGuard)
 export class UserResolver {
+	private pubSub = new PubSub();
+
 	constructor(private readonly userService: UserService) {
 	}
 
@@ -24,28 +24,28 @@ export class UserResolver {
 	@Mutation('deleteUser')
 	async delete(@Args('deleteUserInput') args: DeleteUserDto): Promise<UserEntity> {
 		const deletedUser = await this.userService.delete(args.id);
-		pubSub.publish('userDeleted', {userDeleted: deletedUser});
+		await this.pubSub.publish('userDeleted', {userDeleted: deletedUser});
 		return deletedUser;
 	}
 
 	@Mutation('updateUser')
 	async update(@CurrentUser() user: UserEntity, @Args('updateUserInput') args: UpdateUserDto): Promise<UserEntity> {
 		const updatedUser = await this.userService.patch(user.id, args);
-		pubSub.publish('userUpdated', {userUpdated: updatedUser});
+		await this.pubSub.publish('userUpdated', {userUpdated: updatedUser});
 		return updatedUser;
 	}
 
 	@Subscription('userCreated')
 	userCreated() {
 		return {
-			subscribe: () => pubSub.asyncIterator('userCreated')
+			subscribe: () => this.pubSub.asyncIterator('userCreated')
 		};
 	}
 
 	@Subscription('userDeleted')
 	userDeleted() {
 		return {
-			subscribe: () => pubSub.asyncIterator('userDeleted')
+			subscribe: () => this.pubSub.asyncIterator('userDeleted')
 		};
 	}
 }

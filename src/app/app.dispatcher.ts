@@ -34,7 +34,7 @@ export class AppDispatcher {
 		this.app = await NestFactory.create(AppModule, {
 			logger: new AppLogger('Nest')
 		});
-		useContainer(this.app, {fallbackOnErrors: true});
+		useContainer(this.app.select(AppModule), {fallbackOnErrors: true});
 		this.app.use(cors());
 		this.app.use(query());
 		this.app.useGlobalFilters(new HttpExceptionFilter());
