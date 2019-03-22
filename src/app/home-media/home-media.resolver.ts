@@ -24,7 +24,7 @@ export class HomeMediaResolver {
 
 	@Query('getHomeMedia')
 	async findAll(@Args('homeId') homeId: string): Promise<HomeMedia[]> {
-		return this.homeMediaService.findAll({where: {homeId}});
+		return this.homeMediaService.findAll({where: {homeId: {eq: homeId}}});
 	}
 
 	@Mutation('createHomeMedia')

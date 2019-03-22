@@ -1,13 +1,13 @@
 import {ApiModelProperty} from '@nestjs/swagger';
 import {IsNumber, IsString} from 'class-validator';
 import {ExtendedEntity} from '../../_helpers/entity';
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, ObjectIdColumn} from 'typeorm';
 
 @Entity()
 export class HomeMediaEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
-	@PrimaryGeneratedColumn()
+	@ObjectIdColumn()
 	id: string;
 
 	@ApiModelProperty()

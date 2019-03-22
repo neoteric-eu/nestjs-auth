@@ -3,34 +3,44 @@ import {validate, ValidatorOptions} from 'class-validator';
 import {SecurityService} from '../app/security/security.service';
 import {RestVoterActionEnum} from '../app/security/voter';
 import {DateTime} from 'luxon';
-import {DeepPartial, FindConditions, FindManyOptions, FindOneOptions, Repository} from 'typeorm';
+import {DeepPartial, FindManyOptions, FindOneOptions, MongoRepository, ObjectLiteral} from 'typeorm';
 import {config} from '../config';
-import {ExtendedEntity} from '../app/_helpers';
+import {ExtendedEntity, typeormFilterMapper} from '../app/_helpers';
 
 export class CrudService<T extends ExtendedEntity> {
-	protected repository: Repository<T>;
+	protected repository: MongoRepository<T>;
 	@Inject(forwardRef(() => SecurityService)) private readonly securityService: SecurityService;
 
-	constructor(repository?: Repository<T>) {
+	constructor(repository?: MongoRepository<T>) {
 		if (repository) {
 			this.repository = repository;
 		}
 	}
 
 	public async findAll(options?: FindManyOptions<T>): Promise<T[]> {
+		if (options.where) {
+			options.where = typeormFilterMapper(options);
+		}
 		const entities = await this.repository.find(options);
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.READ_ALL, entities);
 		return entities;
 	}
 
 	public async findOneById(id: string): Promise<T> {
-		const entity = await this.repository.findOneOrFail(id);
-		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.READ, entity);
-		return entity;
+		try {
+			const entity = await this.repository.findOneOrFail(id);
+			await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.READ, entity);
+			return entity;
+		} catch (e) {
+			throw new HttpException({
+				error: 'Database',
+				message: 'Item not found'
+			}, HttpStatus.NOT_FOUND);
+		}
 	}
 
-	public async findOne(conditions?: FindConditions<T>, options?: FindOneOptions<T>): Promise<T> {
-		const entity = await this.repository.findOne(conditions, options);
+	public async findOne(options?: FindOneOptions<T>): Promise<T> {
+		const entity = await this.repository.findOne(options);
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.READ, entity);
 		return entity;
 	}
@@ -40,7 +50,9 @@ export class CrudService<T extends ExtendedEntity> {
 		entity.createdAt = DateTime.utc().toString();
 		entity.updatedAt = DateTime.utc().toString();
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.CREATE, entity);
-		await this.validate(entity);
+		await this.validate(entity, {
+			groups: ['create']
+		});
 		return entity.save();
 	}
 
@@ -59,11 +71,13 @@ export class CrudService<T extends ExtendedEntity> {
 		if (!createdAt) {
 			createdAt = DateTime.utc().toString();
 		}
-		Object.assign(entity, data);
+		this.repository.merge(entity, data);
 		entity.createdAt = createdAt;
 		entity.updatedAt = DateTime.utc().toString();
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.UPDATE, entity);
-		await this.validate(entity);
+		await this.validate(entity, {
+			groups: ['update']
+		});
 		return entity.save();
 	}
 
@@ -74,8 +88,8 @@ export class CrudService<T extends ExtendedEntity> {
 		return entity;
 	}
 
-	public deleteAll(conditions?): Promise<any> {
-		return this.repository.delete(conditions);
+	public deleteAll(conditions?: ObjectLiteral): Promise<any> {
+		return this.repository.deleteMany(conditions);
 	}
 
 	protected async validate(entity: T, options?: ValidatorOptions) {

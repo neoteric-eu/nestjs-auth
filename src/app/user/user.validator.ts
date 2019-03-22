@@ -8,6 +8,9 @@ export class IsUserAlreadyExist implements ValidatorConstraintInterface {
 	constructor(protected readonly userService: UserService) {}
 
 	public async validate(email: string) {
+		if (!this.userService) {
+			return true;
+		}
 		const user = await this.userService.findByEmail(email);
 		return !user;
 	}

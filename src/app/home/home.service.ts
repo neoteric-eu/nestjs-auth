@@ -6,7 +6,7 @@ import {DateTime} from 'luxon';
 import {CrudService} from '../../base';
 import {HomeEntity} from './entity';
 import {HOME_TOKEN} from './home.constants';
-import {Repository} from 'typeorm';
+import {MongoRepository, Repository} from 'typeorm';
 import {config} from '../../config';
 import {AppLogger} from '../app.logger';
 import {AttomDataApiService} from './attom-data-api.service';
@@ -24,7 +24,7 @@ export class HomeService extends CrudService<HomeEntity> {
 	private logger = new AppLogger(HomeService.name);
 
 	constructor(
-		@Inject(HOME_TOKEN) protected readonly repository: Repository<HomeEntity>,
+		@Inject(HOME_TOKEN) protected readonly repository: MongoRepository<HomeEntity>,
 		private readonly httpService: HttpService,
 		private readonly userService: UserService,
 		private readonly homeMediaService: HomeMediaService,
@@ -33,7 +33,7 @@ export class HomeService extends CrudService<HomeEntity> {
 		super();
 	}
 
-	public async callApi2pdf({home, media}: {home: HomeEntity, media: ConvertTemplateDto}): Promise<any> {
+	public async callApi2pdf({home, media}: { home: HomeEntity, media: ConvertTemplateDto }): Promise<any> {
 		const template = renderTemplate(`/media/templates/${media.template}`, {home, media});
 		const response = await this.httpService.post(`https://v2018.api2pdf.com/chrome/html`, {
 			html: template
@@ -42,7 +42,7 @@ export class HomeService extends CrudService<HomeEntity> {
 				Authorization: config.api2pdf.apiKey
 			}
 		}).toPromise();
-		const { data } = await this.downloadPdf(response.data.pdf);
+		const {data} = await this.downloadPdf(response.data.pdf);
 		const params = await this.uploadToS3(data);
 		return {
 			bucket: params.Bucket,
@@ -54,13 +54,13 @@ export class HomeService extends CrudService<HomeEntity> {
 		return new Promise(async (resolve, reject) => {
 
 			this.logger.debug(`[importAddresses] delete from home everything with json "faker"`);
-			await this.deleteAll({filter: {json: {eq: '{"faker": true}'}}});
+			await this.deleteAll({where: {json: {eq: '{"faker": true}'}}});
 			this.logger.debug(`[importAddresses] delete from home_media everything with mimetype "image/fake"`);
-			await this.homeMediaService.deleteAll({filter: {mimetype: {eq: 'image/fake'}}});
+			await this.homeMediaService.deleteAll({where: {mimetype: {eq: 'image/fake'}}});
 
 			this.logger.debug(`[importAddresses] Find 20 faked users`);
 
-			const users = await this.userService.findAll({where: {provider: 'faker'}, take: 20});
+			const users = await this.userService.findAll({where: {provider: {eq: 'faker'}}, take: 20});
 			const usersIds = users.map(user => user.id);
 
 			this.logger.debug(`[importAddresses] Gathering sheet info`);
@@ -120,7 +120,7 @@ export class HomeService extends CrudService<HomeEntity> {
 
 	private async downloadPdf(pdfUrl: string) {
 		this.logger.debug(`[downloadPdf] Path for pdf is: ${pdfUrl}`);
-		return await this.httpService.get(pdfUrl, { responseType: 'arraybuffer' }).toPromise();
+		return await this.httpService.get(pdfUrl, {responseType: 'arraybuffer'}).toPromise();
 	}
 
 	private async uploadToS3(buff: Buffer): Promise<any> {

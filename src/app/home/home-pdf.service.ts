@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@nestjs/common';
-import {Repository} from 'typeorm';
+import {MongoRepository, Repository} from 'typeorm';
 import {CrudService} from '../../base';
 import {HomePdfEntity} from './entity';
 import {HOME_PDF_TOKEN} from './home.constants';
@@ -11,7 +11,7 @@ export class HomePdfService extends CrudService<HomePdfEntity> {
 	private logger = new AppLogger(HomePdfService.name);
 
 	constructor(
-		@Inject(HOME_PDF_TOKEN) protected readonly repository: Repository<HomePdfEntity>
+		@Inject(HOME_PDF_TOKEN) protected readonly repository: MongoRepository<HomePdfEntity>
 	) {
 		super();
 	}

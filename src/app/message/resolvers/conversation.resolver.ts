@@ -16,7 +16,7 @@ export class ConversationResolver {
 	@ResolveProperty('messages')
 	async getMessage(@Parent() conversation: ConversationEntity): Promise<any> {
 		try {
-			return this.messageService.findAll({where: {conversationId: conversation.id}});
+			return this.messageService.findAll({where: {conversationId: {eq: conversation.id}}});
 		} catch (e) {
 			return this.messageService.create({});
 		}

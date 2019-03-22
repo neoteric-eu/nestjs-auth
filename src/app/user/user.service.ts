@@ -1,6 +1,6 @@
 import {HttpException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import {DateTime} from 'luxon';
-import {Repository, DeepPartial} from 'typeorm';
+import {Repository, DeepPartial, MongoRepository} from 'typeorm';
 import {CrudService} from '../../base';
 import {passwordHash, RestException} from '../_helpers';
 import {AppLogger} from '../app.logger';
@@ -16,7 +16,7 @@ export class UserService extends CrudService<UserEntity> {
 
 	constructor(
 		public readonly subscription: UserSubscriptionService,
-		@Inject(USER_TOKEN) protected readonly repository: Repository<UserEntity>,
+		@Inject(USER_TOKEN) protected readonly repository: MongoRepository<UserEntity>,
 		@Inject(USER_EMAIL_TOKEN) protected readonly userEmailRepository: Repository<UserEmailEntity>
 	) {
 		super();
@@ -24,7 +24,7 @@ export class UserService extends CrudService<UserEntity> {
 
 	public async findByEmail(email: string): Promise<UserEntity> {
 		this.logger.debug(`[findByEmail] Looking in users for ${email}`);
-		const user = await this.findOne({email});
+		const user = await this.findOne({where: {email}});
 		if (user) {
 			this.logger.debug(`[findByEmail] Found in users an user with id ${user.id}`);
 		} else {
@@ -35,6 +35,13 @@ export class UserService extends CrudService<UserEntity> {
 
 	public async login(credentials: CredentialsDto): Promise<UserEntity> {
 		const user = await this.findByEmail(credentials.email);
+
+		if (!user) {
+			throw new HttpException({
+				error: 'User',
+				message: `User not found`
+			}, HttpStatus.NOT_FOUND);
+		}
 
 		if (user.password !== passwordHash(credentials.password)) {
 			throw new NotFoundException(`User doesn't exists`);
@@ -59,13 +66,9 @@ export class UserService extends CrudService<UserEntity> {
 			entity.createdAt = DateTime.utc().toString();
 		}
 		entity.updatedAt = DateTime.utc().toString();
-		const user = await this.repository.save(entity);
-		const userEmail = this.userEmailRepository.create({id: user.email, user_id: user.id});
-		await Promise.all([
-			this.userEmailRepository.save(userEmail),
-			this.subscription.create({id: user.id, email: true})
-		]);
-		return user;
+		return entity.save();
+		// await this.subscription.create({id: user.id, email: true});
+		// return user;
 	}
 
 	public async updatePassword(data: DeepPartial<UserEntity>): Promise<UserEntity> {

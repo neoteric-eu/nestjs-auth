@@ -20,6 +20,6 @@ export class HomeFavoriteController {
 	@MessagePattern({ cmd: HOME_CMD_DELETE })
 	public async onHomeDelete(home: HomeEntity): Promise<void> {
 		this.logger.debug(`[onHomeDelete] delete all favorites for home ${home.id}`);
-		await this.homeFavoriteService.deleteAll({filter: {homeFavoriteHomeId: {eq: home.id}}});
+		await this.homeFavoriteService.deleteAll({homeFavoriteHomeId: home.id});
 	}
 }

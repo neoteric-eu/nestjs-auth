@@ -111,6 +111,7 @@ export const config: Config = {
 		type: 'mongodb',
 		url: process.env.APP_DATABASE_SECRET_URL,
 		// synchronize: true,
+		logging: 'all',
 		useNewUrlParser: true,
 		entities: [
 			__dirname + '/../**/entity/*.entity{.ts,.js}'

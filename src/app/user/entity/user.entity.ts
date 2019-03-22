@@ -3,13 +3,13 @@ import {IsEmail, IsOptional, IsString, IsUrl, MinLength, Validate, ValidateIf} f
 import {ExtendedEntity, passwordHash} from '../../_helpers';
 import {IsUserAlreadyExist} from '../user.validator';
 import {config} from '../../../config';
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, ObjectIdColumn} from 'typeorm';
 
 @Entity()
 export class UserEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
-	@PrimaryGeneratedColumn()
+	@ObjectIdColumn()
 	public id: string;
 
 	@ApiModelProperty()
@@ -65,14 +65,6 @@ export class UserEntity extends ExtendedEntity {
 
 	@Column()
 	public activationCode: string;
-
-	@ApiModelProperty()
-	@Column()
-	public createdAt: string;
-
-	@ApiModelProperty()
-	@Column()
-	public updatedAt: string;
 
 	hashPassword() {
 		this.password = passwordHash(this.password);

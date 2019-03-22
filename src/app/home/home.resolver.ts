@@ -67,7 +67,7 @@ export class HomeResolver {
 	@Query('myHomes')
 	@UseGuards(GraphqlGuard)
 	async findAllMyHomes(@CurrentUser() user: User): Promise<HomeEntity[]> {
-		return this.homeService.findAll({where: {owner: user.id}});
+		return this.homeService.findAll({where: {owner: {eq: user.id}}});
 	}
 
 	@Query('getHome')
@@ -135,7 +135,7 @@ export class HomeResolver {
 
 	@ResolveProperty('media')
 	async getMedia(@Parent() home: HomeEntity): Promise<HomeMediaEntity[]> {
-		return this.homeMediaService.findAll({where: {homeId: home.id}});
+		return this.homeMediaService.findAll({where: {homeId: {eq: home.id}}});
 	}
 
 	@ResolveProperty('favorite')
@@ -143,8 +143,8 @@ export class HomeResolver {
 	async getFavorite(@CurrentUser() user: User, @Parent() home: HomeEntity): Promise<Boolean> {
 		const homeFavorites = await this.homeFavoriteService.findAll({
 			where: {
-				homeFavoriteUserId: user.id,
-				homeFavoriteHomeId: home.id
+				homeFavoriteUserId: {eq: user.id},
+				homeFavoriteHomeId: {eq: home.id}
 			}
 		});
 		return !!homeFavorites.length;
