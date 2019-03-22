@@ -31,7 +31,7 @@ export class MessageResolver {
 				}
 			},
 			skip: after,
-			take : limit,
+			take: limit,
 			order: {
 				createdAt: 'DESC'
 			}

@@ -1,6 +1,6 @@
 type Query {
     allConversations: [UserConversation]
-    allMessages(conversationId: ID!, after: String, limit: Int): [Message]
+    allMessages(conversationId: ID!, after: Int, limit: Int): [Message]
 }
 
 type Mutation {
