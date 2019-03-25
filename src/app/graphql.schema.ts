@@ -470,7 +470,7 @@ export abstract class IQuery {
 
     abstract allConversations(): UserConversation[] | Promise<UserConversation[]>;
 
-    abstract allMessages(conversationId: string, after?: string, limit?: number): Message[] | Promise<Message[]>;
+    abstract allMessages(conversationId: string, after?: number, limit?: number): Message[] | Promise<Message[]>;
 
     abstract me(): User | Promise<User>;
 

@@ -154,7 +154,6 @@ export class HomeService extends CrudService<HomeEntity> {
 
 			const property: Property = res.data.property.pop();
 			const home: any = {
-				id: faker.random.uuid(),
 				owner: faker.random.arrayElement(usersIds),
 				json: '{"faker": true}',
 				price: Number(faker.finance.amount(100000, 1000000)),
@@ -166,12 +165,12 @@ export class HomeService extends CrudService<HomeEntity> {
 				state: get(property, 'address.countrySubd', faker.address.state()),
 				zip: get(property, 'address.postal1', faker.address.zipCode()),
 				country: get(property, 'address.country', 'US'),
-				beds: get(property, 'building.rooms.beds', faker.random.number({max: 10, min: 1})),
+				beds: Number(get(property, 'building.rooms.beds', faker.random.number({max: 10, min: 1}))),
 				baths: get(property, 'building.rooms.bathstotal', faker.random.number({max: 10, min: 1})),
 				lot_size: get(property, 'lot.lotsize2', faker.random.number(20)),
 				sqft: get(property, 'building.size.bldgsize', faker.random.number({max: 1350, min: 50})),
-				lat: get(property, 'location.latitude', faker.address.latitude()),
-				lng: get(property, 'location.longitude', faker.address.longitude()),
+				lat: Number(get(property, 'location.latitude', faker.address.latitude())),
+				lng: Number(get(property, 'location.longitude', faker.address.longitude())),
 				pool: faker.random.boolean(),
 				fav_count: faker.random.number(10),
 				showing_count: faker.random.number({max: 100000, min: 100}),
