@@ -1,13 +1,16 @@
-import {Between, Equal, FindManyOptions, LessThan, LessThanOrEqual, Like, MoreThan, MoreThanOrEqual, Not} from 'typeorm';
+import {FindManyOptions} from 'typeorm';
+
+const arrayToObject = (arr) => Object.assign({}, ...arr.map(item => ({...item})));
 
 export function typeormFilterMapper(options: FindManyOptions) {
 	const filters = options.where;
 	const where = {};
 	Object.keys(filters).forEach(filterName => {
-		const filter = filters[filterName];
-		return Object.keys(filter).forEach(key => {
-			where[filterName] = mapToTypeOrm(key, filter);
+		const operators = filters[filterName];
+		const filter = Object.keys(operators).map(key => {
+			return mapToTypeOrm(key, operators);
 		});
+		where[filterName] = arrayToObject(filter);
 	});
 
 	return where;
