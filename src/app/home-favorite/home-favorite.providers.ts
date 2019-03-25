@@ -1,17 +1,12 @@
-import AWS from 'aws-sdk';
-import { DB_CON_TOKEN } from '../database/database.constants';
-import { HomeFavoriteEntity } from './entity';
+import {DB_CON_TOKEN} from '../database/database.constants';
+import {HomeFavoriteEntity} from './entity';
 import {HOME_FAVORITE_TOKEN} from './home-favorite.constants';
-import { DynamoRepository } from '../_helpers/';
+import {Connection} from 'typeorm';
 
 export const homeFavoriteProviders = [
 	{
 		provide: HOME_FAVORITE_TOKEN,
-		useFactory: async (dynamoDB: AWS.DynamoDB) => {
-			const repository = new DynamoRepository(dynamoDB, HomeFavoriteEntity);
-			await repository.setup();
-			return repository;
-		},
+		useFactory: (connection: Connection) => connection.getRepository(HomeFavoriteEntity),
 		inject: [DB_CON_TOKEN]
 	}
 ];

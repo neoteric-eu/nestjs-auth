@@ -1,4 +1,3 @@
-import {equals} from '@aws/dynamodb-expressions';
 import {ValidatorConstraint, ValidatorConstraintInterface} from 'class-validator';
 import {UserService} from './user.service';
 import {Injectable} from '@nestjs/common';
@@ -8,8 +7,11 @@ import {Injectable} from '@nestjs/common';
 export class IsUserAlreadyExist implements ValidatorConstraintInterface {
 	constructor(protected readonly userService: UserService) {}
 
-	public async validate(text: string) {
-		const user = await this.userService.findOne(({filter: {...equals(text), subject: 'email'}}));
+	public async validate(email: string) {
+		if (!this.userService) {
+			return true;
+		}
+		const user = await this.userService.findByEmail(email);
 		return !user;
 	}
 }

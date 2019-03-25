@@ -202,3 +202,13 @@ ecs-cli compose --project-name threeleaf-backend service down --cluster-config t
 ```bsh
 ecs-cli down --force --cluster-config threeleaf-backend
 ```
+
+### DocumentDB port mapping
+
+```bash
+ssh -i ~/.ssh/vpc-proxy.pem -L 27017:docdb-2019-03-20-12-30-07.cdujgfmlylru.us-east-2.docdb.amazonaws.com:27017 ubuntu@ec2-18-223-212-127.us-east-2.compute.amazonaws.com -N
+```
+
+```bash
+mongo --sslAllowInvalidHostnames --ssl --sslCAFile ./ecs/rds-combined-ca-bundle.pem --username caesar --password
+``` 

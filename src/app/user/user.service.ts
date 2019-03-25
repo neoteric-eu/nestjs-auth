@@ -1,7 +1,8 @@
-import {HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
+import {HttpException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import {DateTime} from 'luxon';
+import {Repository, DeepPartial, MongoRepository} from 'typeorm';
 import {CrudService} from '../../base';
-import {Repository, DeepPartial, passwordHash, RestException} from '../_helpers';
+import {passwordHash, RestException} from '../_helpers';
 import {AppLogger} from '../app.logger';
 import {CredentialsDto} from '../auth/dto/credentials.dto';
 import {UserEmailEntity, UserEntity} from './entity';
@@ -15,28 +16,35 @@ export class UserService extends CrudService<UserEntity> {
 
 	constructor(
 		public readonly subscription: UserSubscriptionService,
-		@Inject(USER_TOKEN) protected readonly repository: Repository<UserEntity>,
+		@Inject(USER_TOKEN) protected readonly repository: MongoRepository<UserEntity>,
 		@Inject(USER_EMAIL_TOKEN) protected readonly userEmailRepository: Repository<UserEmailEntity>
 	) {
 		super();
 	}
 
 	public async findByEmail(email: string): Promise<UserEntity> {
-		this.logger.debug(`[findByEmail] Looking in users_email for ${email}`);
-		const userEmail = await this.userEmailRepository.findOneOrFail(email);
-		this.logger.debug(`[findByEmail] Found in user_email an email ${email}`);
-
-		this.logger.debug(`[findByEmail] Looking in users for ${userEmail.user_id}`);
-		const user = await this.repository.findOneOrFail(userEmail.user_id);
-		this.logger.debug(`[findByEmail] Found in users an user with id ${user.id}`);
+		this.logger.debug(`[findByEmail] Looking in users for ${email}`);
+		const user = await this.findOne({where: {email}});
+		if (user) {
+			this.logger.debug(`[findByEmail] Found in users an user with id ${user.id}`);
+		} else {
+			this.logger.debug(`[findByEmail] Not found in users an user with email ${email}`);
+		}
 		return user;
 	}
 
 	public async login(credentials: CredentialsDto): Promise<UserEntity> {
 		const user = await this.findByEmail(credentials.email);
 
+		if (!user) {
+			throw new HttpException({
+				error: 'User',
+				message: `User not found`
+			}, HttpStatus.NOT_FOUND);
+		}
+
 		if (user.password !== passwordHash(credentials.password)) {
-			throw new NotFoundException(`Item doesn't exists`);
+			throw new NotFoundException(`User doesn't exists`);
 		}
 
 		if (!user.is_verified) {
@@ -58,13 +66,9 @@ export class UserService extends CrudService<UserEntity> {
 			entity.createdAt = DateTime.utc().toString();
 		}
 		entity.updatedAt = DateTime.utc().toString();
-		const user = await this.repository.save(entity);
-		const userEmail = this.userEmailRepository.create({id: user.email, user_id: user.id});
-		await Promise.all([
-			this.userEmailRepository.save(userEmail),
-			this.subscription.create({id: user.id, email: true})
-		]);
-		return user;
+		return entity.save();
+		// await this.subscription.create({id: user.id, email: true});
+		// return user;
 	}
 
 	public async updatePassword(data: DeepPartial<UserEntity>): Promise<UserEntity> {

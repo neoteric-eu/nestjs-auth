@@ -52,7 +52,7 @@ export class MessageVoter extends Voter {
 
 	private async canReadAll(messages: MessageEntity[], user: UserEntity): Promise<boolean> {
 		const message = messages[0];
-		const userConversations = await this.userConversationService.findAll({filter: {userId: {eq: user.id}}});
+		const userConversations = await this.userConversationService.findAll({where: {userId: {eq: user.id}}});
 		return userConversations.some(userConversation => message.conversationId === userConversation.conversationId);
 	}
 

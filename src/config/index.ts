@@ -1,5 +1,6 @@
 import {readFileSync} from 'fs';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import {MicroserviceOptions, Transport} from '@nestjs/microservices';
+import {ConnectionOptions} from 'typeorm';
 
 const appPackage = readFileSync(`${__dirname}/../../package.json`, {
 	encoding: 'utf8'
@@ -23,6 +24,7 @@ interface Config {
 	mail: {
 		from: string
 	};
+	database: ConnectionOptions;
 	session: {
 		domain: string;
 		secret: string;
@@ -104,6 +106,16 @@ export const config: Config = {
 	},
 	mail: {
 		from: process.env.APP_MAIL_FROM
+	},
+	database: {
+		type: 'mongodb',
+		url: process.env.APP_DATABASE_SECRET_URL,
+		// synchronize: true,
+		logging: 'all',
+		useNewUrlParser: true,
+		entities: [
+			__dirname + '/../**/entity/*.entity{.ts,.js}'
+		]
 	},
 	session: {
 		domain: process.env.APP_SESSION_DOMAIN,

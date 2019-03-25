@@ -1,10 +1,11 @@
-import { config } from '../../config';
-import { DB_CON_TOKEN } from './database.constants';
+import {config} from '../../config';
+import {AWS_CON_TOKEN, DB_CON_TOKEN} from './database.constants';
 import AWS from 'aws-sdk';
+import {createConnection} from 'typeorm';
 
 export const databaseProviders = [
 	{
-		provide: DB_CON_TOKEN,
+		provide: AWS_CON_TOKEN,
 		useFactory: async () => {
 			AWS.config.update({
 				accessKeyId: config.aws.api_key,
@@ -13,5 +14,9 @@ export const databaseProviders = [
 			});
 			return new AWS.DynamoDB();
 		}
+	},
+	{
+		provide: DB_CON_TOKEN,
+		useFactory: async () => createConnection(config.database)
 	}
 ];

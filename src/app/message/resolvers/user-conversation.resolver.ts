@@ -26,7 +26,7 @@ export class UserConversationResolver {
 	@Query('allConversations')
 	@UseGuards(GraphqlGuard)
 	async getAllConversations(@CurrentUser() user: User) {
-		return this.userConversationService.findAll({filter: {userId: {eq: user.id}}});
+		return this.userConversationService.findAll({where: {userId: {eq: user.id.toString()}}});
 	}
 
 	@Mutation('createConversation')
@@ -35,9 +35,9 @@ export class UserConversationResolver {
 		const createdConversation = await this.conversationService.create(conversationInput);
 
 		const createdAuthorConversation = await this.userConversationService
-			.create({userId: user.id, conversationId: createdConversation.id});
+			.create({userId: user.id.toString(), conversationId: createdConversation.id.toString()});
 		await this.userConversationService
-			.create({userId: conversationInput.recipientId, conversationId: createdConversation.id});
+			.create({userId: conversationInput.recipientId.toString(), conversationId: createdConversation.id.toString()});
 
 		await this.pubSub.publish('newUserConversation', {newUserConversation: createdAuthorConversation});
 
