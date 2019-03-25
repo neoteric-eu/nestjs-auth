@@ -61,13 +61,13 @@ export class HomeResolver {
 
 	@Query('listHomes')
 	async findAll(@Args('filter') filter?: ModelHomeFilterInput, @Args('limit') limit?: number): Promise<HomeEntity[]> {
-		return this.homeService.findAll({filter, limit});
+		return this.homeService.findAll({where: filter, take: limit});
 	}
 
 	@Query('myHomes')
 	@UseGuards(GraphqlGuard)
 	async findAllMyHomes(@CurrentUser() user: User): Promise<HomeEntity[]> {
-		return this.homeService.findAll({filter: {owner: {eq: user.id}}});
+		return this.homeService.findAll({where: {owner: {eq: user.id}}});
 	}
 
 	@Query('getHome')
@@ -135,14 +135,14 @@ export class HomeResolver {
 
 	@ResolveProperty('media')
 	async getMedia(@Parent() home: HomeEntity): Promise<HomeMediaEntity[]> {
-		return this.homeMediaService.findAll({filter: {homeId: {eq: home.id}}});
+		return this.homeMediaService.findAll({where: {homeId: {eq: home.id}}});
 	}
 
 	@ResolveProperty('favorite')
 	@UseGuards(GraphqlGuard)
 	async getFavorite(@CurrentUser() user: User, @Parent() home: HomeEntity): Promise<Boolean> {
 		const homeFavorites = await this.homeFavoriteService.findAll({
-			filter: {
+			where: {
 				homeFavoriteUserId: {eq: user.id},
 				homeFavoriteHomeId: {eq: home.id}
 			}

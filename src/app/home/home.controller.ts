@@ -49,7 +49,7 @@ export class HomeController {
 		const shasum = crypto.createHash('sha1');
 		shasum.update(hash);
 		const sha1 = shasum.digest('hex');
-		let homePdf = await this.homePdfService.findOne({homeId: {eq: home.id}, sha1: {eq: sha1}});
+		let homePdf = await this.homePdfService.findOne({where: {homeId: home.id, sha1: sha1}});
 		if (!homePdf) {
 			const pdfParams = await this.homeService.callApi2pdf({home, media: convert});
 			homePdf = await this.homePdfService.create({

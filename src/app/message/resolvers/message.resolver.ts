@@ -23,8 +23,19 @@ export class MessageResolver {
 
 	@Query('allMessages')
 	@UseGuards(GraphqlGuard)
-	async getAllMessages(@Args('conversationId') conversationId: string, @Args('after') after: string, @Args('limit') limit?: number) {
-		return this.messageService.findAll({filter: {conversationId: {eq: conversationId}}, limit});
+	async getAllMessages(@Args('conversationId') conversationId: string, @Args('after') after: number, @Args('limit') limit?: number) {
+		return this.messageService.findAll({
+			where: {
+				conversationId: {
+					eq: conversationId
+				}
+			},
+			skip: after,
+			take: limit,
+			order: {
+				createdAt: 'DESC'
+			}
+		});
 	}
 
 	@Mutation('createMessage')
@@ -36,7 +47,7 @@ export class MessageResolver {
 		@Args('type') type: string
 	) {
 		const createdMessage = await this.messageService.create({
-			authorId: user.id,
+			authorId: user.id.toString(),
 			content,
 			type,
 			conversationId

@@ -1,6 +1,6 @@
 import {equals} from '@aws/dynamodb-expressions';
 import {ApiResponse, ApiUseTags} from '@nestjs/swagger';
-import {Controller, HttpCode, Post} from '@nestjs/common';
+import {Controller, Get, HttpCode, Post} from '@nestjs/common';
 import {MessagePattern} from '@nestjs/microservices';
 import voucherCodes from 'voucher-code-generator';
 import {UserService} from './user.service';
@@ -11,13 +11,17 @@ import {config} from '../../config';
 import {AppLogger} from '../app.logger';
 import {createToken} from '../auth/jwt';
 import {User} from '../_helpers/decorators';
+import {UserCommand} from './user.command';
 
 @Controller('user')
 @ApiUseTags('user')
 export class UserController {
 	private logger = new AppLogger(UserController.name);
 
-	constructor(protected service: UserService) {
+	constructor(
+		protected service: UserService,
+		private userCmd: UserCommand
+	) {
 
 	}
 
@@ -28,6 +32,11 @@ export class UserController {
 		await this.service.subscription.patch(user.id, {email: false});
 	}
 
+	@Get('import')
+	public async importUsers(): Promise<any> {
+		return this.userCmd.create(20);
+	}
+
 	@MessagePattern({ cmd: USER_CMD_REGISTER })
 	public async onUserRegister(user: UserEntity): Promise<void> {
 		try {
@@ -35,9 +44,8 @@ export class UserController {
 			const token = voucherCodes.generate({
 				pattern: '###-###',
 				charset: voucherCodes.charset('numbers')
-			});
-			user.activationCode = token;
-			await this.service.update(user);
+			}).pop();
+			user = await this.service.patch(user.id, {activationCode: token});
 			await mail({
 				subject: `Verify ${user.first_name} to ${config.name.toUpperCase()}`,
 				to: user.email,
@@ -67,7 +75,7 @@ export class UserController {
 	@MessagePattern({ cmd: USER_CMD_PASSWORD_RESET })
 	public async onUserPasswordRest({ email }: {email: string}): Promise<void> {
 		try {
-			const user = await this.service.findOne({filter: {...equals(email), subject: 'email'}});
+			const user = await this.service.findOne({where: {email}});
 			this.logger.debug(`[onUserRegister] Send password reset instruction email for user ${user.email}`);
 			const token = createToken(user.id, config.session.password_reset.timeout, config.session.password_reset.secret);
 			await mail({
@@ -77,7 +85,7 @@ export class UserController {
 			});
 			this.logger.debug('[onUserRegister] Password reset email sent');
 		} catch (err) {
-			this.logger.error(`[onUserRegister] Mail not sent, because ${err.message}`, err.stack);
+			this.logger.error(`[onUserRegister] Mail not sent, because ${JSON.stringify(err.message)}`, err.stack);
 		}
 	}
 

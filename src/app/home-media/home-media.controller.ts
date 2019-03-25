@@ -21,7 +21,7 @@ export class HomeMediaController {
 	@MessagePattern({ cmd: HOME_CMD_DELETE })
 	public async onMediaDelete(home: HomeEntity): Promise<void> {
 		this.logger.debug(`[onMediaDelete] delete all medias for home ${home.id}`);
-		const deletedHomeMedias = await this.homeMediaService.deleteAll({filter: {homeFavoriteHomeId: {eq: home.id}}});
+		const deletedHomeMedias = await this.homeMediaService.deleteAll({homeId: home.id});
 
 		for (const homeMedia of deletedHomeMedias) {
 			this.client.send({cmd: MEDIA_CMD_DELETE}, homeMedia).subscribe();

@@ -1,23 +1,15 @@
-import {attribute, hashKey, table} from '@aws/dynamodb-data-mapper-annotations';
 import {ApiModelProperty} from '@nestjs/swagger';
 import {ExtendedEntity} from '../../_helpers';
+import {Column, Entity, ObjectIdColumn} from 'typeorm';
 
-@table(`social`)
+@Entity()
 export class SocialEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
-	@hashKey()
+	@ObjectIdColumn()
 	public id: string;
 
 	@ApiModelProperty()
-	@attribute()
+	@Column()
 	public userId: string;
-
-	@ApiModelProperty()
-	@attribute()
-	public cratedAt: string;
-
-	@ApiModelProperty()
-	@attribute()
-	public updatedAt: string;
 }

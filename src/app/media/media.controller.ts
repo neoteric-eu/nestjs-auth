@@ -1,4 +1,4 @@
-import {Controller, FileInterceptor, Post, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
+import {Controller, FileInterceptor, Inject, Post, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
 import {MessagePattern} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiUseTags} from '@nestjs/swagger';
@@ -7,6 +7,7 @@ import {config} from '../../config';
 import {AppLogger} from '../app.logger';
 import {HomeMediaEntity} from '../home-media/entity';
 import {MEDIA_CMD_DELETE} from './media.constants';
+import {AWS_CON_TOKEN} from '../database/database.constants';
 
 @ApiUseTags('media')
 @ApiBearerAuth()
@@ -15,6 +16,8 @@ import {MEDIA_CMD_DELETE} from './media.constants';
 export class MediaController {
 
 	private logger = new AppLogger(MediaController.name);
+
+	constructor(@Inject(AWS_CON_TOKEN) private readonly awsConnection) {}
 
 	@Post('upload')
 	@UseInterceptors(FileInterceptor('media'))

@@ -1,6 +1,7 @@
 import {Body, Delete, Get, Param, Patch, Post, Put, Req} from '@nestjs/common';
+import {DeepPartial} from 'typeorm';
 import {CrudService} from './crud.service';
-import {DeepPartial, ExtendedEntity} from '../app/_helpers';
+import {ExtendedEntity} from '../app/_helpers';
 
 export class RestController<T extends ExtendedEntity> {
 	protected service: CrudService<T>;
