@@ -62,6 +62,6 @@ export class HomeFavoriteVoter extends Voter {
 
 	private async canDelete(homeFavorite: HomeFavoriteEntity, user: UserEntity): Promise<boolean> {
 		this.logger.debug('[canDelete] only owner of the house can delete their favorites');
-		return homeFavorite.homeFavoriteUserId === user.id;
+		return homeFavorite.homeFavoriteUserId === user.id.toString();
 	}
 }

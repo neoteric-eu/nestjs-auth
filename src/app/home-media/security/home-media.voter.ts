@@ -63,12 +63,12 @@ export class HomeMediaVoter extends Voter {
 	private async canCreate(homeMedia: HomeMediaEntity, user: UserEntity): Promise<boolean> {
 		this.logger.debug('[canCreate] only owner of the house can create home media');
 		const home = await this.homeService.findOneById(homeMedia.homeId);
-		return home.owner === user.id;
+		return home.owner === user.id.toString();
 	}
 
 	private async canDelete(homeMedia: HomeMediaEntity, user: UserEntity): Promise<boolean> {
 		this.logger.debug('[canDelete] only owner of the house can delete home media');
 		const home = await this.homeService.findOneById(homeMedia.homeId);
-		return home.owner === user.id;
+		return home.owner === user.id.toString();
 	}
 }

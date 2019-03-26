@@ -16,7 +16,7 @@ export class ConversationResolver {
 	@ResolveProperty('messages')
 	async getMessage(@Parent() conversation: ConversationEntity): Promise<any> {
 		try {
-			return this.messageService.findAll({where: {conversationId: {eq: conversation.id}}});
+			return this.messageService.findAll({where: {conversationId: {eq: conversation.id.toString()}}});
 		} catch (e) {
 			return this.messageService.create({});
 		}
@@ -25,7 +25,7 @@ export class ConversationResolver {
 	@ResolveProperty('home')
 	async getOwner(@Parent() conversation: ConversationEntity): Promise<HomeEntity> {
 		try {
-			return this.homeService.findOneById(conversation.homeId);
+			return this.homeService.findOneById(conversation.homeId.toString());
 		} catch (e) {
 			return this.homeService.create({});
 		}

@@ -61,7 +61,7 @@ export class HomeService extends CrudService<HomeEntity> {
 			this.logger.debug(`[importAddresses] Find 20 faked users`);
 
 			const users = await this.userService.findAll({where: {provider: {eq: 'faker'}}, take: 20});
-			const usersIds = users.map(user => user.id);
+			const usersIds = users.map(user => user.id.toString());
 
 			this.logger.debug(`[importAddresses] Gathering sheet info`);
 
@@ -105,7 +105,6 @@ export class HomeService extends CrudService<HomeEntity> {
 				this.logger.debug(`[importAddresses] saving home & home medias`);
 
 				Promise.all([
-					this.saveAll(homes),
 					this.homeMediaService.saveAll(medias)
 				]).then(() => {
 					this.logger.debug(`[importAddresses] done!`);
@@ -179,6 +178,8 @@ export class HomeService extends CrudService<HomeEntity> {
 				updatedAt: DateTime.utc().toString()
 			};
 
+			const savedHomes = await this.saveAll([home]);
+
 			const medias = [];
 
 			for (let i = 2; i < 6; ++i) {
@@ -187,7 +188,7 @@ export class HomeService extends CrudService<HomeEntity> {
 				}
 
 				medias.push({
-					homeId: home.id,
+					homeId: savedHomes[0].id.toString(),
 					originalname: faker.system.commonFileName('jpeg'),
 					mimetype: 'image/fake',
 					size: faker.random.number({min: 86400, max: 259200}),

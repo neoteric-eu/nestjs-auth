@@ -69,11 +69,11 @@ export class HomeVoter extends Voter {
 
 	private canUpdate(home: HomeEntity, user: UserEntity) {
 		this.logger.debug('[canUpdate] only owner of the house can update his home');
-		return home.owner === user.id;
+		return home.owner === user.id.toString();
 	}
 
 	private canDelete(home: HomeEntity, user: UserEntity) {
 		this.logger.debug('[canDelete] only owner of the house can delete his home');
-		return home.owner === user.id;
+		return home.owner === user.id.toString();
 	}
 }

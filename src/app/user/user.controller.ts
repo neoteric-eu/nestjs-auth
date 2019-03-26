@@ -29,7 +29,7 @@ export class UserController {
 	@HttpCode(204)
 	@ApiResponse({ status: 204, description: 'NO CONTENT' })
 	public async unsubscribeEmail(@User() user: UserEntity): Promise<void> {
-		await this.service.subscription.patch(user.id, {email: false});
+		await this.service.subscription.patch(user.id.toString(), {email: false});
 	}
 
 	@Get('import')
@@ -45,7 +45,7 @@ export class UserController {
 				pattern: '###-###',
 				charset: voucherCodes.charset('numbers')
 			}).pop();
-			user = await this.service.patch(user.id, {activationCode: token});
+			user = await this.service.patch(user.id.toString(), {activationCode: token});
 			await mail({
 				subject: `Verify ${user.first_name} to ${config.name.toUpperCase()}`,
 				to: user.email,
@@ -77,7 +77,7 @@ export class UserController {
 		try {
 			const user = await this.service.findOne({where: {email}});
 			this.logger.debug(`[onUserRegister] Send password reset instruction email for user ${user.email}`);
-			const token = createToken(user.id, config.session.password_reset.timeout, config.session.password_reset.secret);
+			const token = createToken(user.id.toString(), config.session.password_reset.timeout, config.session.password_reset.secret);
 			await mail({
 				subject: `Reset your password`,
 				to: user.email,
