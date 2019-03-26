@@ -390,6 +390,8 @@ type SchoolDistrictSummary {
 type Home {
     id: ID!
     owner: User
+    status: String
+    schedule: String
     media: [HomeMedia]
     price: Float
     price_adjustment: Float
@@ -417,6 +419,8 @@ type Home {
 }
 
 input CreateHomeInput {
+    status: String
+    schedule: String
     price: Float
     price_adjustment: Float
     descr: String
@@ -443,6 +447,8 @@ input CreateHomeInput {
 
 input UpdateHomeInput {
     id: ID!
+    status: String
+    schedule: String
     price: Float
     price_adjustment: Float
     descr: String
@@ -520,6 +526,8 @@ input ModelStringFilterInput {
 input ModelHomeFilterInput {
     id: ModelIDFilterInput
     owner: ModelIDFilterInput,
+    status: ModelStringFilterInput
+    schedule: ModelStringFilterInput
     price: ModelFloatFilterInput
     price_adjustment: ModelFloatFilterInput
     descr: ModelStringFilterInput

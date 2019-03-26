@@ -24,4 +24,8 @@ export class SubscriptionsService {
 		this.logger.debug(`[newMessage] Do we found this conversation for this user ${user.id}? ${found}`);
 		return found;
 	}
+
+	public async messageUpdated(payload, variables, context) {
+
+	}
 }

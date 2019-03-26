@@ -57,11 +57,27 @@ export class MessageResolver {
 		return createdMessage;
 	}
 
+	@Mutation('markAsRead')
+	@UseGuards(GraphqlGuard)
+	async markAsRead(@Args('messageId') messageId: string): Promise<MessageEntity> {
+		const message = this.messageService.patch(messageId, {isRead: true});
+		await this.pubSub.publish('messageUpdated', {messageUpdated: message});
+		return message;
+	}
+
 	@Subscription('newMessage')
 	newMessage() {
 		return {
 			subscribe: withFilter(() => this.pubSub.asyncIterator('newMessage'),
 				(payload, variables, context) => this.subscriptionsService.newMessage(payload, variables, context))
+		};
+	}
+
+	@Subscription('messageUpdated')
+	messageUpdated() {
+		return {
+			subscribe: withFilter(() => this.pubSub.asyncIterator('messageUpdated'),
+				(payload, variables, context) => this.subscriptionsService.messageUpdated(payload, variables, context))
 		};
 	}
 

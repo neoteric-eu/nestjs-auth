@@ -1,5 +1,5 @@
 import {ApiModelProperty} from '@nestjs/swagger';
-import {IsBoolean, IsNumber, IsString} from 'class-validator';
+import {IsBoolean, IsNumber, IsOptional, IsString} from 'class-validator';
 import {ExtendedEntity} from '../../_helpers';
 import {Column, Entity, ObjectIdColumn} from 'typeorm';
 
@@ -14,6 +14,18 @@ export class HomeEntity extends ExtendedEntity {
 	@IsString()
 	@Column()
 	public owner: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public status: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public schedule: string;
 
 	@ApiModelProperty()
 	@IsNumber()
