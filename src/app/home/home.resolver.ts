@@ -67,7 +67,7 @@ export class HomeResolver {
 	@Query('myHomes')
 	@UseGuards(GraphqlGuard)
 	async findAllMyHomes(@CurrentUser() user: User): Promise<HomeEntity[]> {
-		return this.homeService.findAll({where: {owner: {eq: user.id}}});
+		return this.homeService.findAll({where: {owner: {eq: user.id.toString()}}});
 	}
 
 	@Query('getHome')
@@ -79,7 +79,7 @@ export class HomeResolver {
 	@UseGuards(GraphqlGuard)
 	async create(@CurrentUser() user: User, @Args('createHomeInput') args: CreateHomeDto): Promise<HomeEntity> {
 		const createdHome = await this.homeService.create({
-			owner: user.id,
+			owner: user.id.toString(),
 			...args
 		});
 		await this.pubSub.publish('homeCreated', {homeCreated: createdHome});
@@ -90,7 +90,9 @@ export class HomeResolver {
 	@UseGuards(GraphqlGuard)
 	async delete(@CurrentUser() user: User, @Args('deleteHomeInput') args: DeleteHomeDto): Promise<HomeEntity> {
 		const deletedHome = await this.homeService.delete(args.id);
-		this.client.send({cmd: HOME_CMD_DELETE}, deletedHome).subscribe();
+		this.client.send({cmd: HOME_CMD_DELETE}, deletedHome).subscribe(() => {}, error => {
+			this.logger.error(error, '');
+		});
 		await this.pubSub.publish('homeDeleted', {homeDeleted: deletedHome});
 		return deletedHome;
 	}
@@ -135,7 +137,7 @@ export class HomeResolver {
 
 	@ResolveProperty('media')
 	async getMedia(@Parent() home: HomeEntity): Promise<HomeMediaEntity[]> {
-		return this.homeMediaService.findAll({where: {homeId: {eq: home.id}}});
+		return this.homeMediaService.findAll({where: {homeId: {eq: home.id.toString()}}});
 	}
 
 	@ResolveProperty('favorite')
@@ -143,8 +145,8 @@ export class HomeResolver {
 	async getFavorite(@CurrentUser() user: User, @Parent() home: HomeEntity): Promise<Boolean> {
 		const homeFavorites = await this.homeFavoriteService.findAll({
 			where: {
-				homeFavoriteUserId: {eq: user.id},
-				homeFavoriteHomeId: {eq: home.id}
+				homeFavoriteUserId: {eq: user.id.toString()},
+				homeFavoriteHomeId: {eq: home.id.toString()}
 			}
 		});
 		return !!homeFavorites.length;

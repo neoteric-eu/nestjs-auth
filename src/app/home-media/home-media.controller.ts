@@ -21,10 +21,13 @@ export class HomeMediaController {
 	@MessagePattern({ cmd: HOME_CMD_DELETE })
 	public async onMediaDelete(home: HomeEntity): Promise<void> {
 		this.logger.debug(`[onMediaDelete] delete all medias for home ${home.id}`);
-		const deletedHomeMedias = await this.homeMediaService.deleteAll({homeId: home.id});
+		const homeMedias = await this.homeMediaService.findAll({where: {homeId: home.id.toString()}});
+		await this.homeMediaService.deleteAll({homeId: home.id.toString()});
 
-		for (const homeMedia of deletedHomeMedias) {
-			this.client.send({cmd: MEDIA_CMD_DELETE}, homeMedia).subscribe();
+		for (const homeMedia of homeMedias) {
+			this.client.send({cmd: MEDIA_CMD_DELETE}, homeMedia).subscribe(() => {}, error => {
+				this.logger.error(error, '');
+			});
 		}
 	}
 }

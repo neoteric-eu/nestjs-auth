@@ -57,7 +57,9 @@ export class AuthController {
 	public async register(@Body() data: DeepPartial<UserEntity>): Promise<void> {
 		const user = await this.userService.create(data);
 		this.logger.debug(`[register] User ${data.email} register`);
-		this.client.send({cmd: USER_CMD_REGISTER}, user).subscribe();
+		this.client.send({cmd: USER_CMD_REGISTER}, user).subscribe(() => {}, error => {
+			this.logger.error(error, '');
+		});
 		this.logger.debug(`[register] Send registration email for email ${data.email}`);
 	}
 
@@ -77,7 +79,9 @@ export class AuthController {
 		}
 		user.is_verified = true;
 		await this.userService.update(user);
-		this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user).subscribe();
+		this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user).subscribe(() => {}, error => {
+			this.logger.error(error, '');
+		});
 		this.logger.debug(`[registerVerify] Sent command register verify for user id ${user.id}`);
 		return createAuthToken(user);
 	}
@@ -93,7 +97,9 @@ export class AuthController {
 			if (user.is_verified) {
 				throw new Error(`User ${user.email} already verified`);
 			}
-			this.client.send({cmd: USER_CMD_REGISTER}, user).subscribe();
+			this.client.send({cmd: USER_CMD_REGISTER}, user).subscribe(() => {}, error => {
+				this.logger.error(error, '');
+			});
 			this.logger.debug(`[registerVerify] Sent command registry verify for email ${body.email}`);
 		} catch (err) {
 			this.logger.error(`[registerVerifyResend] ${err.message}`, err.stack);
@@ -106,7 +112,9 @@ export class AuthController {
 	@ApiResponse({ status: 204, description: 'NO CONTENT' })
 	public passwordReset(@Body() data: DeepPartial<UserEntity>): void {
 		this.logger.debug(`[passwordReset] User ${data.email} starts password reset`);
-		this.client.send({cmd: USER_CMD_PASSWORD_RESET}, {email: data.email}).subscribe();
+		this.client.send({cmd: USER_CMD_PASSWORD_RESET}, {email: data.email}).subscribe(() => {}, error => {
+			this.logger.error(error, '');
+		});
 	}
 
 	@Post('password/new')
@@ -118,7 +126,9 @@ export class AuthController {
 		const token = await verifyToken(body.resetToken, config.session.password_reset.secret);
 		const user = await this.userService.updatePassword({id: token.id, password: body.password});
 		this.logger.debug(`[passwordNew] Send change password email for user ${user.email}`);
-		this.client.send({cmd: USER_CMD_PASSWORD_NEW}, user).subscribe();
+		this.client.send({cmd: USER_CMD_PASSWORD_NEW}, user).subscribe(() => {}, error => {
+			this.logger.error(error, '');
+		});
 	}
 
 	@Post('refresh')
@@ -147,7 +157,9 @@ export class AuthController {
 				provider: profile.provider,
 				is_verified: true
 			});
-			this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user).subscribe();
+			this.client.send({cmd: USER_CMD_REGISTER_VERIFY}, user).subscribe(() => {}, error => {
+				this.logger.error(error, '');
+			});
 		}
 		return createAuthToken(user);
 	}

@@ -39,7 +39,7 @@ export class HomeCommand {
 
 		this.logger.debug(`[create] fetch faked users`);
 		const users = await this.userService.findAll({where: {provider: {eq: 'faker'}}});
-		const usersIds = users.map(user => user.id);
+		const usersIds = users.map(user => user.id.toString());
 
 		const homes: HomeEntity[] = [];
 		for (let i = 0; i < amount; i++) {
@@ -83,11 +83,11 @@ export class HomeCommand {
 		const homeMedias = [];
 
 		for (const home of savedHomes) {
-			const homeMedia = this.generateHomeMedias(home.id);
+			const homeMedia = this.generateHomeMedias(home.id.toString());
 			homeMedias.push(homeMedia);
 			if (faker.random.boolean()) {
 				homeFavs.push({
-					homeFavoriteHomeId: home.id,
+					homeFavoriteHomeId: home.id.toString(),
 					homeFavoriteUserId: faker.random.arrayElement(usersIds),
 					fake: true
 				});

@@ -1,4 +1,4 @@
-import {Body, Controller, HttpCode, Param, Post} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, Param, Post, Query} from '@nestjs/common';
 import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {ApiImplicitParam, ApiResponse, ApiUseTags} from '@nestjs/swagger';
 import {DateTime} from 'luxon';
@@ -49,11 +49,11 @@ export class HomeController {
 		const shasum = crypto.createHash('sha1');
 		shasum.update(hash);
 		const sha1 = shasum.digest('hex');
-		let homePdf = await this.homePdfService.findOne({where: {homeId: home.id, sha1: sha1}});
+		let homePdf = await this.homePdfService.findOne({where: {homeId: home.id.toString(), sha1: sha1}});
 		if (!homePdf) {
 			const pdfParams = await this.homeService.callApi2pdf({home, media: convert});
 			homePdf = await this.homePdfService.create({
-				homeId: home.id,
+				homeId: home.id.toString(),
 				sha1: sha1,
 				bucket: pdfParams.bucket,
 				key: pdfParams.key
