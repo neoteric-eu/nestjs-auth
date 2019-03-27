@@ -6,9 +6,9 @@ export class ExtendedEntity extends BaseEntity {
 
 	@ApiModelProperty()
 	@Column()
-	public createdAt: string;
+	public createdAt: Date;
 
 	@ApiModelProperty()
 	@Column()
-	public updatedAt: string;
+	public updatedAt: Date;
 }

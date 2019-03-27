@@ -11,6 +11,8 @@ export class CreateHomeFavoriteInput {
 }
 
 export class CreateHomeInput {
+    status?: string;
+    schedule?: string;
     price?: number;
     price_adjustment?: number;
     descr?: string;
@@ -83,6 +85,8 @@ export class ModelFloatFilterInput {
 export class ModelHomeFilterInput {
     id?: ModelIDFilterInput;
     owner?: ModelIDFilterInput;
+    status?: ModelStringFilterInput;
+    schedule?: ModelStringFilterInput;
     price?: ModelFloatFilterInput;
     price_adjustment?: ModelFloatFilterInput;
     descr?: ModelStringFilterInput;
@@ -138,6 +142,8 @@ export class ModelStringFilterInput {
 
 export class UpdateHomeInput {
     id: string;
+    status?: string;
+    schedule?: string;
     price?: number;
     price_adjustment?: number;
     descr?: string;
@@ -187,6 +193,8 @@ export class Conversation {
 export class Home {
     id: string;
     owner?: User;
+    status?: string;
+    schedule?: string;
     media?: HomeMedia[];
     price?: number;
     price_adjustment?: number;
@@ -236,7 +244,8 @@ export class Message {
     type?: string;
     isSent?: boolean;
     isRead?: boolean;
-    createdAt?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export abstract class IMutation {
@@ -257,6 +266,8 @@ export abstract class IMutation {
     abstract createConversation(conversationInput?: CreateConversationInput): UserConversation | Promise<UserConversation>;
 
     abstract createMessage(conversationId: string, content?: string, type?: string): Message | Promise<Message>;
+
+    abstract markAsRead(messageId: string): boolean | Promise<boolean>;
 
     abstract updateUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
 
@@ -670,6 +681,8 @@ export abstract class ISubscription {
 
     abstract newUserConversation(): UserConversation | Promise<UserConversation>;
 
+    abstract messageUpdated(): Message | Promise<Message>;
+
     abstract userCreated(): User | Promise<User>;
 
     abstract userDeleted(): User | Promise<User>;
@@ -693,3 +706,5 @@ export class UserConversation {
     conversation?: Conversation;
     user?: User;
 }
+
+export type Date = any;

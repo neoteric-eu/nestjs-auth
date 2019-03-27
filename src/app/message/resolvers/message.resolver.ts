@@ -23,11 +23,19 @@ export class MessageResolver {
 
 	@Query('allMessages')
 	@UseGuards(GraphqlGuard)
-	async getAllMessages(@Args('conversationId') conversationId: string, @Args('after') after: number, @Args('limit') limit?: number) {
+	async getAllMessages(
+		@CurrentUser() user: User,
+		@Args('conversationId') conversationId: string,
+		@Args('after') after: number,
+		@Args('limit') limit?: number
+	) {
 		return this.messageService.findAll({
 			where: {
 				conversationId: {
 					eq: conversationId
+				},
+				deletedFor: {
+					nin: [user.id.toString()]
 				}
 			},
 			skip: after,

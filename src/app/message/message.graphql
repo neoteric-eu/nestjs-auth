@@ -1,3 +1,5 @@
+scalar Date
+
 type Query {
     allConversations: [UserConversation]
     allMessages(conversationId: ID!, after: Int, limit: Int): [Message]
@@ -20,7 +22,7 @@ type Conversation {
     home: Home
     type: String
     messages: [Message]
-    createdAt: String
+    createdAt: Date
 }
 
 input CreateConversationInput {
@@ -42,5 +44,6 @@ type Message {
     type: String
     isSent: Boolean
     isRead: Boolean
-    createdAt: String
+    createdAt: Date
+    updatedAt: Date
 }
