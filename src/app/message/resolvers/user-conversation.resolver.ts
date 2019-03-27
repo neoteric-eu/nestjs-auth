@@ -1,8 +1,8 @@
-import {Resolver, ResolveProperty, Parent, Mutation, Args, Query, Subscription} from '@nestjs/graphql';
+import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
 import {ConversationService} from '../services/conversation.service';
 import {UserService} from '../../user/user.service';
 import {ConversationEntity, UserConversationEntity} from '../entity';
-import {Conversation, CreateConversationInput} from '../../graphql.schema';
+import {CreateConversationInput} from '../../graphql.schema';
 import {UserEntity as User} from '../../user/entity';
 import {UseGuards} from '@nestjs/common';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
