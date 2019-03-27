@@ -69,11 +69,11 @@ export class CrudService<T extends ExtendedEntity> {
 		const entity: T = await this.findOneById(id);
 		let createdAt = entity.createdAt;
 		if (!createdAt) {
-			createdAt = DateTime.utc().toString();
+			createdAt = DateTime.utc();
 		}
 		this.repository.merge(entity, data);
 		entity.createdAt = createdAt;
-		entity.updatedAt = DateTime.utc().toString();
+		entity.updatedAt = DateTime.utc();
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.UPDATE, entity);
 		await this.validate(entity, {
 			groups: ['update']

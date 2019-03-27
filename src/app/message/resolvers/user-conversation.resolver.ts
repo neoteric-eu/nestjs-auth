@@ -1,24 +1,31 @@
-import {Resolver, ResolveProperty, Parent, Mutation, Args, Query, Subscription} from '@nestjs/graphql';
-import {ConversationService} from '../services/conversation.service';
-import {UserService} from '../../user/user.service';
-import {ConversationEntity, UserConversationEntity} from '../entity';
-import {Conversation, CreateConversationInput} from '../../graphql.schema';
-import {UserEntity as User} from '../../user/entity';
 import {UseGuards} from '@nestjs/common';
-import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
-import {UserConversationService} from '../services/user-conversation.service';
+import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
+import {MessagePattern} from '@nestjs/microservices';
 import {PubSub, withFilter} from 'graphql-subscriptions';
+import {DateTime} from 'luxon';
+import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
+import {AppLogger} from '../../app.logger';
+import {CreateConversationInput} from '../../graphql.schema';
+import {UserEntity as User} from '../../user/entity';
+import {UserService} from '../../user/user.service';
+import {ConversationEntity, MessageEntity, UserConversationEntity} from '../entity';
+import {MESSAGE_CMD_NEW} from '../message.constants';
+import {ConversationService} from '../services/conversation.service';
+import {MessageService} from '../services/message.service';
 import {SubscriptionsService} from '../services/subscriptions.service';
+import {UserConversationService} from '../services/user-conversation.service';
 
 
 @Resolver('UserConversation')
 export class UserConversationResolver {
 
 	private pubSub = new PubSub();
+	private logger = new AppLogger(UserConversationResolver.name);
 
 	constructor(
 		private readonly conversationService: ConversationService,
 		private readonly userConversationService: UserConversationService,
+		private readonly messageService: MessageService,
 		private readonly userService: UserService,
 		private readonly subscriptionsService: SubscriptionsService) {
 	}
@@ -53,6 +60,15 @@ export class UserConversationResolver {
 		};
 	}
 
+	@Subscription('userConversationUpdated')
+	@UseGuards(GraphqlGuard)
+	userConversationUpdated() {
+		return {
+			subscribe: withFilter(() => this.pubSub.asyncIterator('userConversationUpdated'),
+				(payload, variables, context) => this.subscriptionsService.userConversationUpdated(payload, variables, context))
+		};
+	}
+
 	@ResolveProperty('user')
 	async getUser(@Parent() userConversation: UserConversationEntity): Promise<User> {
 		try {
@@ -68,6 +84,40 @@ export class UserConversationResolver {
 			return this.conversationService.findOneById(userConversation.conversationId);
 		} catch (e) {
 			return this.conversationService.create({});
+		}
+	}
+
+	@ResolveProperty('message')
+	async getMessage(@Parent() userConversation: UserConversationEntity): Promise<MessageEntity> {
+		return this.messageService.findOne({
+			where: {
+				conversationId: {
+					eq: userConversation.conversationId
+				}
+			},
+			order: {
+				createdAt: 'DESC'
+			}
+		});
+	}
+
+	@MessagePattern({cmd: MESSAGE_CMD_NEW})
+	public async onMessageNew(message: MessageEntity): Promise<void> {
+		this.logger.debug(`[onMessageNew] new message ${message.id}`);
+		const userConversations = await this.userConversationService.findAll({
+			where: {
+				conversationId: {
+					eq: message.conversationId
+				},
+				userId: {
+					ne: message.authorId
+				}
+			}
+		});
+		for (const userConversation of userConversations) {
+			userConversation.updatedAt = DateTime.utc();
+			await userConversation.save();
+			await this.pubSub.publish('userConversationUpdated', {userConversationUpdated: userConversation});
 		}
 	}
 }

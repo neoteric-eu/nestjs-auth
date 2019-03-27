@@ -1,18 +1,25 @@
-import {Resolver, Args, Mutation, Query, ResolveProperty, Parent, Subscription} from '@nestjs/graphql';
-import {PubSub, withFilter} from 'graphql-subscriptions';
-import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
-import {UserEntity as User} from '../../user/entity';
 import {UseGuards} from '@nestjs/common';
-import {MessageEntity} from '../entity';
+import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
+import {Client, ClientProxy, Transport} from '@nestjs/microservices';
+import {PubSub, withFilter} from 'graphql-subscriptions';
+import {DateTime} from 'luxon';
+import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
+import {AppLogger} from '../../app.logger';
+import {UserEntity as User} from '../../user/entity';
 import {UserService} from '../../user/user.service';
+import {MessageEntity} from '../entity';
+import {MESSAGE_CMD_NEW} from '../message.constants';
 import {MessageService} from '../services/message.service';
-import {UserConversationService} from '../services/user-conversation.service';
 import {SubscriptionsService} from '../services/subscriptions.service';
+import {UserConversationService} from '../services/user-conversation.service';
 
 @Resolver('Message')
 export class MessageResolver {
 
+	@Client({ transport: Transport.TCP })
+	private client: ClientProxy;
 	private pubSub = new PubSub();
+	private logger = new AppLogger(MessageResolver.name);
 
 	constructor(
 		private readonly messageService: MessageService,
@@ -60,7 +67,12 @@ export class MessageResolver {
 			type,
 			conversationId
 		});
+
 		await this.pubSub.publish('newMessage', {newMessage: createdMessage});
+
+		this.client.send({cmd: MESSAGE_CMD_NEW}, createdMessage).subscribe(() => {}, error => {
+			this.logger.error(error, '');
+		});
 
 		return createdMessage;
 	}

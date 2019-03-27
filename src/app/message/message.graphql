@@ -15,6 +15,7 @@ type Subscription {
     newMessage: Message
     newUserConversation: UserConversation
     messageUpdated: Message
+    userConversationUpdated: UserConversation
 }
 
 type Conversation {
@@ -34,6 +35,9 @@ input CreateConversationInput {
 type UserConversation {
     conversation: Conversation
     user: User
+    message: Message
+    createdAt: Date
+    updatedAt: Date
 }
 
 type Message {
