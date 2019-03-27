@@ -26,6 +26,15 @@ export class SubscriptionsService {
 	}
 
 	public async messageUpdated(payload, variables, context) {
-
+		const conversationId = payload.messageUpdated.conversationId;
+		const userId = context.req.user.id.toString();
+		const conversations = await this.userConversationService.findAll({
+			where: {
+				userId: {
+					eq: userId
+				}
+			}
+		});
+		return conversations.some(conversation => conversation.conversationId === conversationId);
 	}
 }
