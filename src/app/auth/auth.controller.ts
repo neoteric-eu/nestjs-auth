@@ -1,5 +1,4 @@
-import {equals} from '@aws/dynamodb-expressions';
-import {Body, Controller, HttpCode, HttpException, HttpStatus, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, HttpCode, HttpStatus, Post, UseGuards} from '@nestjs/common';
 import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiImplicitBody, ApiResponse, ApiUseTags} from '@nestjs/swagger';
