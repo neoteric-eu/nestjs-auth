@@ -258,6 +258,10 @@ export abstract class IMutation {
 
     abstract createMessage(conversationId: string, content?: string, type?: string): Message | Promise<Message>;
 
+    abstract startTyping(conversationId: string): boolean | Promise<boolean>;
+
+    abstract stopTyping(conversationId: string): boolean | Promise<boolean>;
+
     abstract updateUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
 
     abstract deleteUser(deleteUserInput?: DeleteUserInput): User | Promise<User>;
@@ -669,6 +673,10 @@ export abstract class ISubscription {
     abstract newMessage(): Message | Promise<Message>;
 
     abstract newUserConversation(): UserConversation | Promise<UserConversation>;
+
+    abstract startTyping(): UserConversation | Promise<UserConversation>;
+
+    abstract stopTyping(): UserConversation | Promise<UserConversation>;
 
     abstract userCreated(): User | Promise<User>;
 
