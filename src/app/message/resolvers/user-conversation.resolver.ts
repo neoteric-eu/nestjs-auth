@@ -1,15 +1,11 @@
 import {UseGuards} from '@nestjs/common';
 import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
-import {MessagePattern} from '@nestjs/microservices';
 import {PubSub, withFilter} from 'graphql-subscriptions';
-import {DateTime} from 'luxon';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
-import {AppLogger} from '../../app.logger';
 import {CreateConversationInput} from '../../graphql.schema';
 import {UserEntity as User} from '../../user/entity';
 import {UserService} from '../../user/user.service';
 import {ConversationEntity, MessageEntity, UserConversationEntity} from '../entity';
-import {MESSAGE_CMD_NEW} from '../message.constants';
 import {ConversationService} from '../services/conversation.service';
 import {MessageService} from '../services/message.service';
 import {SubscriptionsService} from '../services/subscriptions.service';
@@ -20,14 +16,15 @@ import {UserConversationService} from '../services/user-conversation.service';
 export class UserConversationResolver {
 
 	private pubSub = new PubSub();
-	private logger = new AppLogger(UserConversationResolver.name);
 
 	constructor(
 		private readonly conversationService: ConversationService,
 		private readonly userConversationService: UserConversationService,
 		private readonly messageService: MessageService,
 		private readonly userService: UserService,
-		private readonly subscriptionsService: SubscriptionsService) {
+		private readonly subscriptionsService: SubscriptionsService
+	) {
+		this.messageService.pubSub = this.pubSub;
 	}
 
 	@Query('allConversations')
@@ -99,25 +96,5 @@ export class UserConversationResolver {
 				createdAt: 'DESC'
 			}
 		});
-	}
-
-	@MessagePattern({cmd: MESSAGE_CMD_NEW})
-	public async onMessageNew(message: MessageEntity): Promise<void> {
-		this.logger.debug(`[onMessageNew] new message ${message.id}`);
-		const userConversations = await this.userConversationService.findAll({
-			where: {
-				conversationId: {
-					eq: message.conversationId
-				},
-				userId: {
-					ne: message.authorId
-				}
-			}
-		});
-		for (const userConversation of userConversations) {
-			userConversation.updatedAt = DateTime.utc();
-			await userConversation.save();
-			await this.pubSub.publish('userConversationUpdated', {userConversationUpdated: userConversation});
-		}
 	}
 }

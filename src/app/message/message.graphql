@@ -24,6 +24,7 @@ type Conversation {
     type: String
     messages: [Message]
     createdAt: Date
+    updatedAt: Date
 }
 
 input CreateConversationInput {

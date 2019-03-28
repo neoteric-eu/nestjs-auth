@@ -187,7 +187,8 @@ export class Conversation {
     home?: Home;
     type?: string;
     messages?: Message[];
-    createdAt?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export class Home {
@@ -219,6 +220,8 @@ export class Home {
     buyers_agent_amt?: number;
     buyers_agent_type?: number;
     favorite?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export class HomeFavorite {
@@ -683,6 +686,8 @@ export abstract class ISubscription {
 
     abstract messageUpdated(): Message | Promise<Message>;
 
+    abstract userConversationUpdated(): UserConversation | Promise<UserConversation>;
+
     abstract userCreated(): User | Promise<User>;
 
     abstract userDeleted(): User | Promise<User>;
@@ -698,13 +703,16 @@ export class User {
     password?: string;
     provider?: string;
     socialId?: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export class UserConversation {
     conversation?: Conversation;
     user?: User;
+    message?: Message;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export type Date = any;

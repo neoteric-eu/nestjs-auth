@@ -11,9 +11,11 @@ import {MessageService} from './services/message.service';
 import {SubscriptionsService} from './services/subscriptions.service';
 import {UserConversationService} from './services/user-conversation.service';
 import {MessageVoter} from './security/message.voter';
+import {MessageController} from './message.controller';
 
 
 @Module({
+	controllers: [MessageController],
 	providers: [
 		...messageProviders,
 		MessageService,

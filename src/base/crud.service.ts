@@ -40,6 +40,9 @@ export class CrudService<T extends ExtendedEntity> {
 	}
 
 	public async findOne(options?: FindOneOptions<T>): Promise<T> {
+		if (options.where) {
+			options.where = typeormFilterMapper(options);
+		}
 		const entity = await this.repository.findOne(options);
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.READ, entity);
 		return entity;

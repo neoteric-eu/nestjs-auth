@@ -11,25 +11,25 @@ export class SubscriptionsService {
 	}
 
 	public async newUserConversation(payload, variables, context) {
-		const found = this.haveConversationForUser(payload.newUserConversation.conversationId, context.req.user);
+		const found = await this.haveConversationForUser(payload.newUserConversation.conversationId, context.req.user);
 		this.logger.debug(`[newUserConversation] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
 		return found;
 	}
 
 	public async newMessage(payload, variables, context) {
-		const found = this.haveConversationForUser(payload.newMessage.conversationId, context.req.user);
+		const found = await this.haveConversationForUser(payload.newMessage.conversationId, context.req.user);
 		this.logger.debug(`[newMessage] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
 		return found;
 	}
 
 	public async messageUpdated(payload, variables, context) {
-		const found = this.haveConversationForUser(payload.messageUpdated.conversationId, context.req.user);
+		const found = await this.haveConversationForUser(payload.messageUpdated.conversationId, context.req.user);
 		this.logger.debug(`[messageUpdated] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
 		return found;
 	}
 
-	public userConversationUpdated(payload, variables, context) {
-		const found = this.haveConversationForUser(payload.userConversationUpdated.conversationId, context.req.user);
+	public async userConversationUpdated(payload, variables, context) {
+		const found = await this.haveConversationForUser(payload.userConversationUpdated.conversationId, context.req.user);
 		this.logger.debug(`[userConversationUpdated] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
 		return found;
 	}
