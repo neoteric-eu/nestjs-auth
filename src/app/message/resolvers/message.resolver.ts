@@ -84,17 +84,10 @@ export class MessageResolver {
 		return message;
 	}
 
-	@Subscription('newMessage')
-	newMessage() {
-		return {
-			subscribe: withFilter(() => this.pubSub.asyncIterator('newMessage'),
-				(payload, variables, context) => this.subscriptionsService.newMessage(payload, variables, context))
-		};
-
 	@Mutation('startTyping')
 	@UseGuards(GraphqlGuard)
 	async startTyping(@CurrentUser() user: User, @Args('conversationId') conversationId: string): Promise<boolean> {
-			this.logger.debug(`[startTyping] for conversation ${conversationId}`);
+		this.logger.debug(`[startTyping] for conversation ${conversationId}`);
 		const userConversation = await this.userConversationService.findOne({where: {conversationId: {eq: conversationId}}});
 		this.logger.debug(`[startTyping] publishing subscription`);
 		await this.pubSub.publish('startTyping', {startTyping: userConversation});
@@ -121,34 +114,34 @@ export class MessageResolver {
 
 	@ResolveProperty('author')
 	async getAuthor(@Parent() message: MessageEntity): Promise<User> {
-			try {
-				return this.userService.findOneById(message.authorId);
-	} catch (e) {
+		try {
+			return this.userService.findOneById(message.authorId);
+		} catch (e) {
 			return this.userService.create({});
 		}
 	}
 
 	@Subscription('newMessage')
-		newMessage() {
-			return {
-				subscribe: withFilter(() => this.pubSub.asyncIterator('newMessage'),
-					(payload, variables, context) => this.subscriptionsService.newMessage(payload, variables, context))
-			};
-		}
+	newMessage() {
+		return {
+			subscribe: withFilter(() => this.pubSub.asyncIterator('newMessage'),
+				(payload, variables, context) => this.subscriptionsService.newMessage(payload, variables, context))
+		};
+	}
 
 	@Subscription('startTyping')
-		onStartTyping() {
-			return {
-				subscribe: withFilter(() => this.pubSub.asyncIterator('startTyping'),
-					(payload, variables, context) => this.subscriptionsService.startTyping(payload, variables, context))
-			};
-		}
+	onStartTyping() {
+		return {
+			subscribe: withFilter(() => this.pubSub.asyncIterator('startTyping'),
+				(payload, variables, context) => this.subscriptionsService.startTyping(payload, variables, context))
+		};
+	}
 
 	@Subscription('stopTyping')
-		onStopTyping() {
-			return {
-				subscribe: withFilter(() => this.pubSub.asyncIterator('stopTyping'),
-					(payload, variables, context) => this.subscriptionsService.stopTyping(payload, variables, context))
-			};
-		}
+	onStopTyping() {
+		return {
+			subscribe: withFilter(() => this.pubSub.asyncIterator('stopTyping'),
+				(payload, variables, context) => this.subscriptionsService.stopTyping(payload, variables, context))
+		};
 	}
+}

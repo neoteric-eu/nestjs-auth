@@ -34,18 +34,6 @@ export class SubscriptionsService {
 		return found;
 	}
 
-	private async haveConversationForUser(conversationId, user): Promise<boolean> {
-		const userId = user.id.toString();
-		const conversations = await this.userConversationService.findAll({
-			where: {
-				userId: {
-					eq: userId
-				}
-			}
-		});
-		return conversations.some(conversation => conversation.conversationId === conversationId);
-	}
-
 	public async startTyping(payload, varibles, context) {
 		this.logger.debug(`[startTyping]`);
 		try {
@@ -68,6 +56,18 @@ export class SubscriptionsService {
 			this.logger.error(e.message, e.stack);
 			return false;
 		}
+	}
+
+	private async haveConversationForUser(conversationId, user): Promise<boolean> {
+		const userId = user.id.toString();
+		const conversations = await this.userConversationService.findAll({
+			where: {
+				userId: {
+					eq: userId
+				}
+			}
+		});
+		return conversations.some(conversation => conversation.conversationId === conversationId);
 	}
 
 	private async typingLifecycle(userId, conversationId): Promise<boolean> {
