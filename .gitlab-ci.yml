@@ -12,6 +12,7 @@ build-dev:
     - docker:dind
   environment: development
   tags:
+    - 8gb
     - docker
   script:
     - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN
@@ -30,6 +31,7 @@ deploy-dev:
   stage: deploy
   environment: development
   tags:
+    - 8gb
     - docker
   dependencies:
     - build-dev
