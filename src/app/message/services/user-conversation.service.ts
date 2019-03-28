@@ -1,7 +1,6 @@
 import {CrudService} from '../../../base';
 import {Inject, Injectable} from '@nestjs/common';
-import {DateTime} from 'luxon';
-import {MongoRepository, Repository} from 'typeorm';
+import {MongoRepository} from 'typeorm';
 import {USER_CONVERSATION_TOKEN} from '../message.constants';
 import {UserConversationEntity} from '../entity';
 

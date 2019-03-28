@@ -6,11 +6,15 @@ type Query {
 type Mutation {
     createConversation(conversationInput: CreateConversationInput): UserConversation
     createMessage(conversationId: ID!, content: String, type: String): Message
+    startTyping(conversationId: ID!): Boolean
+    stopTyping(conversationId: ID!): Boolean
 }
 
 type Subscription {
     newMessage: Message
     newUserConversation: UserConversation
+    startTyping: UserConversation
+    stopTyping: UserConversation
 }
 
 type Conversation {
