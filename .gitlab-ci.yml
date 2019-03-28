@@ -13,8 +13,6 @@ build-dev:
   environment: development
   tags:
     - docker
-    - hetzner
-    - neoteric
   script:
     - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN
     - docker build -t threeleaf-backend:develop .
@@ -33,8 +31,6 @@ deploy-dev:
   environment: development
   tags:
     - docker
-    - hetzner
-    - neoteric
   dependencies:
     - build-dev
   script:
