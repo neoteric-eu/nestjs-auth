@@ -7,6 +7,8 @@ import {MongoRepository} from 'typeorm';
 @Injectable()
 export class MessageService extends CrudService<MessageEntity> {
 
+	public pubSub;
+
 	constructor(@Inject(MESSAGE_TOKEN) protected readonly repository: MongoRepository<MessageEntity>) {
 		super();
 	}

@@ -50,8 +50,8 @@ export class CrudService<T extends ExtendedEntity> {
 
 	public async create(data: DeepPartial<T>): Promise<T> {
 		const entity: T = this.repository.create(data);
-		entity.createdAt = DateTime.utc().toString();
-		entity.updatedAt = DateTime.utc().toString();
+		entity.createdAt = DateTime.utc();
+		entity.updatedAt = DateTime.utc();
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.CREATE, entity);
 		await this.validate(entity, {
 			groups: ['create']
@@ -72,11 +72,11 @@ export class CrudService<T extends ExtendedEntity> {
 		const entity: T = await this.findOneById(id);
 		let createdAt = entity.createdAt;
 		if (!createdAt) {
-			createdAt = DateTime.utc().toString();
+			createdAt = DateTime.utc();
 		}
 		this.repository.merge(entity, data);
 		entity.createdAt = createdAt;
-		entity.updatedAt = DateTime.utc().toString();
+		entity.updatedAt = DateTime.utc();
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.UPDATE, entity);
 		await this.validate(entity, {
 			groups: ['update']

@@ -1,48 +1,59 @@
+scalar Date
+
 type Query {
-    allConversations: [UserConversation]
-    allMessages(conversationId: ID!, after: Int, limit: Int): [Message]
+	allConversations: [UserConversation]
+	allMessages(conversationId: ID!, after: Int, limit: Int): [Message]
 }
 
 type Mutation {
-    createConversation(conversationInput: CreateConversationInput): UserConversation
-    createMessage(conversationId: ID!, content: String, type: String): Message
-    startTyping(conversationId: ID!): Boolean
-    stopTyping(conversationId: ID!): Boolean
+	createConversation(conversationInput: CreateConversationInput): UserConversation
+	createMessage(conversationId: ID!, content: String, type: String): Message
+	markAsRead(messageId: ID!): Boolean
+	startTyping(conversationId: ID!): Boolean
+	stopTyping(conversationId: ID!): Boolean
 }
 
 type Subscription {
-    newMessage: Message
-    newUserConversation: UserConversation
-    startTyping: UserConversation
-    stopTyping: UserConversation
+	newMessage: Message
+	newUserConversation: UserConversation
+	messageUpdated: Message
+	userConversationUpdated: UserConversation
+	startTyping: UserConversation
+	stopTyping: UserConversation
+
 }
 
 type Conversation {
-    id: ID!
-    home: Home
-    type: String
-    messages: [Message]
-    createdAt: String
+	id: ID!
+	home: Home
+	type: String
+	messages: [Message]
+	createdAt: Date
+	updatedAt: Date
 }
 
 input CreateConversationInput {
-    homeId: ID!,
-    type: String!,
-    recipientId: String!
+	homeId: ID!,
+		type: String!,
+		recipientId: String!
 }
 
 type UserConversation {
-    conversation: Conversation
-    user: User
+	conversation: Conversation
+	user: User
+	message: Message
+	createdAt: Date
+	updatedAt: Date
 }
 
 type Message {
-    id: ID!
-    author: User
-    content: String!
-    conversationId: ID!
-    type: String
-    isSent: Boolean
-    isRead: Boolean
-    createdAt: String
+	id: ID!
+	author: User
+	content: String!
+	conversationId: ID!
+	type: String
+	isSent: Boolean
+	isRead: Boolean
+	createdAt: Date
+	updatedAt: Date
 }
