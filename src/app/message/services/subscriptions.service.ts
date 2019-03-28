@@ -11,17 +11,26 @@ export class SubscriptionsService {
 	}
 
 	public async newUserConversation(payload, variables, context) {
-		const user = context.req.user;
-		const conversations = await this.userConversationService.findAll({where: {userId: {eq: user.id.toString()}}});
-		return conversations.some(conversation => conversation.conversationId === payload.newUserConversation.conversationId);
+		const found = await this.haveConversationForUser(payload.newUserConversation.conversationId, context.req.user);
+		this.logger.debug(`[newUserConversation] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
+		return found;
 	}
 
 	public async newMessage(payload, variables, context) {
-		const user = context.req.user;
-		const conversationId = payload.newMessage.conversationId;
-		const conversations = await this.userConversationService.findAll({where: {userId: {eq: user.id.toString()}}});
-		const found = conversations.some(conversation => conversation.conversationId === conversationId);
-		this.logger.debug(`[newMessage] Do we found this conversation for this user ${user.id}? ${found}`);
+		const found = await this.haveConversationForUser(payload.newMessage.conversationId, context.req.user);
+		this.logger.debug(`[newMessage] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
+		return found;
+	}
+
+	public async messageUpdated(payload, variables, context) {
+		const found = await this.haveConversationForUser(payload.messageUpdated.conversationId, context.req.user);
+		this.logger.debug(`[messageUpdated] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
+		return found;
+	}
+
+	public async userConversationUpdated(payload, variables, context) {
+		const found = await this.haveConversationForUser(payload.userConversationUpdated.conversationId, context.req.user);
+		this.logger.debug(`[userConversationUpdated] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
 		return found;
 	}
 
@@ -47,6 +56,18 @@ export class SubscriptionsService {
 			this.logger.error(e.message, e.stack);
 			return false;
 		}
+	}
+
+	private async haveConversationForUser(conversationId, user): Promise<boolean> {
+		const userId = user.id.toString();
+		const conversations = await this.userConversationService.findAll({
+			where: {
+				userId: {
+					eq: userId
+				}
+			}
+		});
+		return conversations.some(conversation => conversation.conversationId === conversationId);
 	}
 
 	private async typingLifecycle(userId, conversationId): Promise<boolean> {

@@ -1,18 +1,22 @@
-import {Resolver, Args, Mutation, Query, ResolveProperty, Parent, Subscription} from '@nestjs/graphql';
+import {UseGuards} from '@nestjs/common';
+import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
+import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {PubSub, withFilter} from 'graphql-subscriptions';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
 import {UserEntity as User} from '../../user/entity';
-import {UseGuards} from '@nestjs/common';
-import {MessageEntity} from '../entity';
 import {UserService} from '../../user/user.service';
+import {MessageEntity} from '../entity';
+import {MESSAGE_CMD_NEW} from '../message.constants';
 import {MessageService} from '../services/message.service';
-import {UserConversationService} from '../services/user-conversation.service';
 import {SubscriptionsService} from '../services/subscriptions.service';
+import {UserConversationService} from '../services/user-conversation.service';
 import {AppLogger} from '../../app.logger';
 
 @Resolver('Message')
 export class MessageResolver {
 
+	@Client({ transport: Transport.TCP })
+	private client: ClientProxy;
 	private pubSub = new PubSub();
 	private logger = new AppLogger(MessageResolver.name);
 
@@ -25,11 +29,19 @@ export class MessageResolver {
 
 	@Query('allMessages')
 	@UseGuards(GraphqlGuard)
-	async getAllMessages(@Args('conversationId') conversationId: string, @Args('after') after: number, @Args('limit') limit?: number) {
+	async getAllMessages(
+		@CurrentUser() user: User,
+		@Args('conversationId') conversationId: string,
+		@Args('after') after: number,
+		@Args('limit') limit?: number
+	) {
 		return this.messageService.findAll({
 			where: {
 				conversationId: {
 					eq: conversationId
+				},
+				deletedFor: {
+					nin: [user.id.toString()]
 				}
 			},
 			skip: after,
@@ -54,9 +66,22 @@ export class MessageResolver {
 			type,
 			conversationId
 		});
+
 		await this.pubSub.publish('newMessage', {newMessage: createdMessage});
 
+		this.client.send({cmd: MESSAGE_CMD_NEW}, createdMessage).subscribe(() => {}, error => {
+			this.logger.error(error, '');
+		});
+
 		return createdMessage;
+	}
+
+	@Mutation('markAsRead')
+	@UseGuards(GraphqlGuard)
+	async markAsRead(@Args('messageId') messageId: string): Promise<MessageEntity> {
+		const message = this.messageService.patch(messageId, {isRead: true});
+		await this.pubSub.publish('messageUpdated', {messageUpdated: message});
+		return message;
 	}
 
 	@Mutation('startTyping')
@@ -77,6 +102,14 @@ export class MessageResolver {
 		this.logger.debug(`[stopTyping] publishing subscription`);
 		await this.pubSub.publish('stopTyping', {stopTyping: userConversation});
 		return true;
+	}
+
+	@Subscription('messageUpdated')
+	messageUpdated() {
+		return {
+			subscribe: withFilter(() => this.pubSub.asyncIterator('messageUpdated'),
+				(payload, variables, context) => this.subscriptionsService.messageUpdated(payload, variables, context))
+		};
 	}
 
 	@ResolveProperty('author')

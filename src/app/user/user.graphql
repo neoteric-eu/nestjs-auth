@@ -22,8 +22,8 @@ type User {
     password: String
     provider: String
     socialId: String
-    createdAt: String
-    updatedAt: String
+    createdAt: Date
+    updatedAt: Date
 }
 
 input UpdateUserInput {

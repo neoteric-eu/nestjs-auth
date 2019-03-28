@@ -39,4 +39,9 @@ export class MessageEntity extends ExtendedEntity {
 	@IsBoolean()
 	@Column()
 	public isRead = false;
+
+	@Column({
+		array: true
+	})
+	public deletedFor: string[];
 }

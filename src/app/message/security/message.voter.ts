@@ -1,11 +1,9 @@
 import {Injectable} from '@nestjs/common';
-import {RestVoterActionEnum, Voter, VoterRegistry} from '../../security';
-import {MessageEntity} from '../entity';
-import {UserEntity} from '../../user/entity';
-import {MESSAGE_VOTER_ACTION_RECEIVE} from '../message.constants';
-import {UserConversationService} from '../services/user-conversation.service';
-import {ConversationService} from '../services/conversation.service';
 import {AppLogger} from '../../app.logger';
+import {RestVoterActionEnum, Voter} from '../../security';
+import {UserEntity} from '../../user/entity';
+import {MessageEntity} from '../entity';
+import {UserConversationService} from '../services/user-conversation.service';
 
 @Injectable()
 export class MessageVoter extends Voter {
@@ -14,7 +12,8 @@ export class MessageVoter extends Voter {
 
 	private readonly attributes = [
 		RestVoterActionEnum.READ_ALL,
-		RestVoterActionEnum.CREATE
+		RestVoterActionEnum.CREATE,
+		RestVoterActionEnum.UPDATE
 	];
 
 	constructor(private readonly userConversationService: UserConversationService) {
@@ -45,6 +44,8 @@ export class MessageVoter extends Voter {
 				return this.canReadAll(subject as MessageEntity[], user);
 			case RestVoterActionEnum.CREATE:
 				return this.canCreate(subject as MessageEntity, user);
+			case RestVoterActionEnum.UPDATE:
+				return this.canUpdate(subject as MessageEntity, user);
 		}
 
 		return Promise.resolve(false);
@@ -56,7 +57,19 @@ export class MessageVoter extends Voter {
 		return userConversations.some(userConversation => message.conversationId === userConversation.conversationId);
 	}
 
-	private canCreate(message: MessageEntity, user: UserEntity) {
-		return true;
+	private async canCreate(message: MessageEntity, user: UserEntity): Promise<boolean> {
+		this.logger.debug(`[canCreate[ everyone can create message but only in their conversations`);
+		const userConversation = await this.userConversationService.findOne({
+			where: {
+				userId: {eq: user.id.toString()},
+				conversationId: {eq: message.conversationId}
+			}
+		});
+		return !!userConversation;
+	}
+
+	private async canUpdate(message: MessageEntity, user: UserEntity): Promise<boolean> {
+		this.logger.debug(`[canUpdate[ only owner of message can update it`);
+		return message.authorId === user.id.toString();
 	}
 }

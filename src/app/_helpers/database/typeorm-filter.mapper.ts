@@ -30,6 +30,10 @@ function mapToTypeOrm(key, filter) {
 			return {'$gte': filter[key]};
 		case 'gt':
 			return {'$gt': filter[key]};
+		case 'in':
+			return {'$in': filter[key]};
+		case 'nin':
+			return {'$nin': filter[key]};
 		case 'contains':
 			return {'$regex': new RegExp(filter[key], 'gi')};
 		case 'beginsWith':
