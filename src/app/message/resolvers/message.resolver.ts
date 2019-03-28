@@ -2,9 +2,7 @@ import {UseGuards} from '@nestjs/common';
 import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
 import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {PubSub, withFilter} from 'graphql-subscriptions';
-import {DateTime} from 'luxon';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
-import {AppLogger} from '../../app.logger';
 import {UserEntity as User} from '../../user/entity';
 import {UserService} from '../../user/user.service';
 import {MessageEntity} from '../entity';
@@ -12,6 +10,7 @@ import {MESSAGE_CMD_NEW} from '../message.constants';
 import {MessageService} from '../services/message.service';
 import {SubscriptionsService} from '../services/subscriptions.service';
 import {UserConversationService} from '../services/user-conversation.service';
+import {AppLogger} from '../../app.logger';
 
 @Resolver('Message')
 export class MessageResolver {
@@ -91,6 +90,25 @@ export class MessageResolver {
 			subscribe: withFilter(() => this.pubSub.asyncIterator('newMessage'),
 				(payload, variables, context) => this.subscriptionsService.newMessage(payload, variables, context))
 		};
+
+	@Mutation('startTyping')
+	@UseGuards(GraphqlGuard)
+	async startTyping(@CurrentUser() user: User, @Args('conversationId') conversationId: string): Promise<boolean> {
+			this.logger.debug(`[startTyping] for conversation ${conversationId}`);
+		const userConversation = await this.userConversationService.findOne({where: {conversationId: {eq: conversationId}}});
+		this.logger.debug(`[startTyping] publishing subscription`);
+		await this.pubSub.publish('startTyping', {startTyping: userConversation});
+		return true;
+	}
+
+	@Mutation('stopTyping')
+	@UseGuards(GraphqlGuard)
+	async stopTyping(@CurrentUser() user: User, @Args('conversationId') conversationId: string): Promise<boolean> {
+		this.logger.debug(`[stopTyping] for conversation ${conversationId}`);
+		const userConversation = await this.userConversationService.findOne({where: {conversationId: {eq: conversationId}}});
+		this.logger.debug(`[stopTyping] publishing subscription`);
+		await this.pubSub.publish('stopTyping', {stopTyping: userConversation});
+		return true;
 	}
 
 	@Subscription('messageUpdated')
@@ -103,10 +121,34 @@ export class MessageResolver {
 
 	@ResolveProperty('author')
 	async getAuthor(@Parent() message: MessageEntity): Promise<User> {
-		try {
-			return this.userService.findOneById(message.authorId);
-		} catch (e) {
+			try {
+				return this.userService.findOneById(message.authorId);
+	} catch (e) {
 			return this.userService.create({});
 		}
 	}
-}
+
+	@Subscription('newMessage')
+		newMessage() {
+			return {
+				subscribe: withFilter(() => this.pubSub.asyncIterator('newMessage'),
+					(payload, variables, context) => this.subscriptionsService.newMessage(payload, variables, context))
+			};
+		}
+
+	@Subscription('startTyping')
+		onStartTyping() {
+			return {
+				subscribe: withFilter(() => this.pubSub.asyncIterator('startTyping'),
+					(payload, variables, context) => this.subscriptionsService.startTyping(payload, variables, context))
+			};
+		}
+
+	@Subscription('stopTyping')
+		onStopTyping() {
+			return {
+				subscribe: withFilter(() => this.pubSub.asyncIterator('stopTyping'),
+					(payload, variables, context) => this.subscriptionsService.stopTyping(payload, variables, context))
+			};
+		}
+	}

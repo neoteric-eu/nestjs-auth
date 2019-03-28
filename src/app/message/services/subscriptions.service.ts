@@ -45,4 +45,37 @@ export class SubscriptionsService {
 		});
 		return conversations.some(conversation => conversation.conversationId === conversationId);
 	}
+
+	public async startTyping(payload, varibles, context) {
+		this.logger.debug(`[startTyping]`);
+		try {
+			const userId = context.req.user.id.toString();
+			const conversationId = payload.startTyping.conversationId;
+			return this.typingLifecycle(userId, conversationId);
+		} catch (e) {
+			this.logger.error(e.message, e.stack);
+			return false;
+		}
+	}
+
+	public async stopTyping(payload, variables, context) {
+		this.logger.debug(`[stopTyping]`);
+		try {
+			const userId = context.req.user.id.toString();
+			const conversationId = payload.stopTyping.conversationId;
+			return this.typingLifecycle(userId, conversationId);
+		} catch (e) {
+			this.logger.error(e.message, e.stack);
+			return false;
+		}
+	}
+
+	private async typingLifecycle(userId, conversationId): Promise<boolean> {
+		this.logger.debug(`[typingLifecycle] for user ${userId}`);
+		this.logger.debug(`[typingLifecycle] for conversationId ${conversationId}`);
+		const conversations = await this.userConversationService.findAll({where: {userId: {eq: userId}}});
+		const found = conversations.some(conversation => conversation.conversationId === conversationId);
+		this.logger.debug(`[typingLifecycle] Do we found conversation for this user ${userId}? ${found}`);
+		return found;
+	}
 }
