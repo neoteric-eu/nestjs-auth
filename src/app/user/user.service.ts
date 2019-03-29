@@ -24,7 +24,7 @@ export class UserService extends CrudService<UserEntity> {
 
 	public async findByEmail(email: string): Promise<UserEntity> {
 		this.logger.debug(`[findByEmail] Looking in users for ${email}`);
-		const user = await this.findOne({where: {email}});
+		const user = await this.findOne({where: {email: {eq: email}}});
 		if (user) {
 			this.logger.debug(`[findByEmail] Found in users an user with id ${user.id}`);
 		} else {

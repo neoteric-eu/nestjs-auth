@@ -46,6 +46,8 @@ export class MessageVoter extends Voter {
 				return this.canCreate(subject as MessageEntity, user);
 			case RestVoterActionEnum.UPDATE:
 				return this.canUpdate(subject as MessageEntity, user);
+			case RestVoterActionEnum.SOFT_DELETE:
+				return this.canSoftDelete(subject as MessageEntity, user);
 		}
 
 		return Promise.resolve(false);
@@ -71,5 +73,12 @@ export class MessageVoter extends Voter {
 	private async canUpdate(message: MessageEntity, user: UserEntity): Promise<boolean> {
 		this.logger.debug(`[canUpdate[ only owner of message can update it`);
 		return message.authorId === user.id.toString();
+	}
+
+	private async canSoftDelete(message: MessageEntity, user: UserEntity): Promise<boolean> {
+		this.logger.debug(`[canSoftDelete[ only conversation collaborators can soft delete it`);
+		const userId = user.id.toString();
+		const userConversations = await this.userConversationService.findAll({where: {conversationId: {eq: message.conversationId}}});
+		return userConversations.some(userConversation => userConversation.userId === userId);
 	}
 }
