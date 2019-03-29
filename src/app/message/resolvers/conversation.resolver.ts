@@ -10,16 +10,12 @@ export class ConversationResolver {
 	constructor(
 		private readonly messageService: MessageService,
 		private readonly homeService: HomeService
-		) {
+	) {
 	}
 
 	@ResolveProperty('messages')
 	async getMessage(@Parent() conversation: ConversationEntity): Promise<any> {
-		try {
-			return this.messageService.findAll({where: {conversationId: {eq: conversation.id.toString()}}});
-		} catch (e) {
-			return this.messageService.create({});
-		}
+		return this.messageService.findAll({where: {conversationId: {eq: conversation.id.toString()}}});
 	}
 
 	@ResolveProperty('home')
@@ -27,7 +23,7 @@ export class ConversationResolver {
 		try {
 			return this.homeService.findOneById(conversation.homeId.toString());
 		} catch (e) {
-			return this.homeService.create({});
+			return {} as any;
 		}
 	}
 }

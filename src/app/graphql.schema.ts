@@ -270,6 +270,8 @@ export abstract class IMutation {
 
     abstract createMessage(conversationId: string, content?: string, type?: string): Message | Promise<Message>;
 
+    abstract deleteMessage(messageId: string, forEveryone?: boolean): boolean | Promise<boolean>;
+
     abstract markAsRead(messageId: string): boolean | Promise<boolean>;
 
     abstract startTyping(conversationId: string): boolean | Promise<boolean>;
@@ -689,6 +691,8 @@ export abstract class ISubscription {
     abstract newUserConversation(): UserConversation | Promise<UserConversation>;
 
     abstract messageUpdated(): Message | Promise<Message>;
+
+    abstract messageDeleted(): Message | Promise<Message>;
 
     abstract userConversationUpdated(): UserConversation | Promise<UserConversation>;
 

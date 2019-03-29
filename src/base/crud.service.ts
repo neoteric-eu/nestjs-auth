@@ -1,15 +1,15 @@
 import {forwardRef, HttpException, HttpStatus, Inject} from '@nestjs/common';
 import {validate, ValidatorOptions} from 'class-validator';
-import {SecurityService} from '../app/security/security.service';
-import {RestVoterActionEnum} from '../app/security/voter';
 import {DateTime} from 'luxon';
 import {DeepPartial, FindManyOptions, FindOneOptions, MongoRepository, ObjectLiteral} from 'typeorm';
-import {config} from '../config';
 import {ExtendedEntity, typeormFilterMapper} from '../app/_helpers';
+import {SecurityService} from '../app/security/security.service';
+import {RestVoterActionEnum} from '../app/security/voter';
+import {config} from '../config';
 
 export class CrudService<T extends ExtendedEntity> {
 	protected repository: MongoRepository<T>;
-	@Inject(forwardRef(() => SecurityService)) private readonly securityService: SecurityService;
+	@Inject(forwardRef(() => SecurityService)) protected readonly securityService: SecurityService;
 
 	constructor(repository?: MongoRepository<T>) {
 		if (repository) {

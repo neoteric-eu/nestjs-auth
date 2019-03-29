@@ -1,12 +1,12 @@
-import {ConversationService} from '../services/conversation.service';
-import {UserService} from '../../user/user.service';
-import {ConversationEntity, MessageEntity, UserConversationEntity} from '../entity';
-import {CreateConversationInput} from '../../graphql.schema';
-import {UserEntity as User} from '../../user/entity';
 import {UseGuards} from '@nestjs/common';
 import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub, withFilter} from 'graphql-subscriptions';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
+import {CreateConversationInput} from '../../graphql.schema';
+import {UserEntity as User} from '../../user/entity';
+import {UserService} from '../../user/user.service';
+import {ConversationEntity, MessageEntity, UserConversationEntity} from '../entity';
+import {ConversationService} from '../services/conversation.service';
 import {MessageService} from '../services/message.service';
 import {SubscriptionsService} from '../services/subscriptions.service';
 import {UserConversationService} from '../services/user-conversation.service';
@@ -71,7 +71,7 @@ export class UserConversationResolver {
 		try {
 			return this.userService.findOneById(userConversation.userId);
 		} catch (e) {
-			return this.userService.create({});
+			return {} as any;
 		}
 	}
 
@@ -80,7 +80,7 @@ export class UserConversationResolver {
 		try {
 			return this.conversationService.findOneById(userConversation.conversationId);
 		} catch (e) {
-			return this.conversationService.create({});
+			return {} as any;
 		}
 	}
 

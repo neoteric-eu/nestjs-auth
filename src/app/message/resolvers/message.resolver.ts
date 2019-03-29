@@ -3,6 +3,7 @@ import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} 
 import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {PubSub, withFilter} from 'graphql-subscriptions';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
+import {AppLogger} from '../../app.logger';
 import {UserEntity as User} from '../../user/entity';
 import {UserService} from '../../user/user.service';
 import {MessageEntity} from '../entity';
@@ -10,12 +11,11 @@ import {MESSAGE_CMD_NEW} from '../message.constants';
 import {MessageService} from '../services/message.service';
 import {SubscriptionsService} from '../services/subscriptions.service';
 import {UserConversationService} from '../services/user-conversation.service';
-import {AppLogger} from '../../app.logger';
 
 @Resolver('Message')
 export class MessageResolver {
 
-	@Client({ transport: Transport.TCP })
+	@Client({transport: Transport.TCP})
 	private client: ClientProxy;
 	private pubSub = new PubSub();
 	private logger = new AppLogger(MessageResolver.name);
@@ -69,7 +69,8 @@ export class MessageResolver {
 
 		await this.pubSub.publish('newMessage', {newMessage: createdMessage});
 
-		this.client.send({cmd: MESSAGE_CMD_NEW}, createdMessage).subscribe(() => {}, error => {
+		this.client.send({cmd: MESSAGE_CMD_NEW}, createdMessage).subscribe(() => {
+		}, error => {
 			this.logger.error(error, '');
 		});
 
@@ -104,11 +105,36 @@ export class MessageResolver {
 		return true;
 	}
 
+	@Mutation('deleteMessage')
+	@UseGuards(GraphqlGuard)
+	async deleteMessage(
+		@CurrentUser() user: User,
+		@Args('messageId') messageId: string,
+		@Args('forEveryone') forEveryone: boolean = false
+	): Promise<boolean> {
+		const message = await this.messageService.findOneById(messageId);
+		message.deletedFor = [user.id.toString()];
+		if (forEveryone) {
+			const allConversations = await this.userConversationService.findAll({where: {conversationId: {eq: message.conversationId}}});
+			message.deletedFor = allConversations.map(userConversation => userConversation.userId);
+		}
+		await this.pubSub.publish('messageDeleted', {messageDeleted: message});
+		return !!this.messageService.softDelete(message);
+	}
+
 	@Subscription('messageUpdated')
 	messageUpdated() {
 		return {
 			subscribe: withFilter(() => this.pubSub.asyncIterator('messageUpdated'),
 				(payload, variables, context) => this.subscriptionsService.messageUpdated(payload, variables, context))
+		};
+	}
+
+	@Subscription('messageDeleted')
+	messageDeleted() {
+		return {
+			subscribe: withFilter(() => this.pubSub.asyncIterator('messageDeleted'),
+				(payload, variables, context) => this.subscriptionsService.messageDeleted(payload, variables, context))
 		};
 	}
 
