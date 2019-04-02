@@ -20,4 +20,7 @@ export class UserConversationEntity extends ExtendedEntity {
 	@IsString()
 	@Column()
 	public userId: string;
+
+	@Column()
+	public isDeleted: boolean;
 }

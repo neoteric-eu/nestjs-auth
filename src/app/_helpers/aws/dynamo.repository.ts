@@ -5,7 +5,7 @@ import {plainToClass} from 'class-transformer';
 import {Observable} from 'rxjs';
 import {config} from '../../../config';
 import {AppLogger} from '../../app.logger';
-import {Repository, DeepPartial} from '../database';
+import {DeepPartial, Repository} from '../database';
 import {ExtendedEntity} from '../entity';
 import {graphqlFilterMapper} from './graphql-filter.mapper';
 import {DynamoException} from './dynamo.exception';
@@ -16,7 +16,9 @@ function asyncToObservable<T>(iterable: AsyncIterableIterator<T>): Observable<T>
 	return new Observable(observer => void (async () => {
 		try {
 			for await (const item of iterable) {
-				if (observer.closed) { return; }
+				if (observer.closed) {
+					return;
+				}
 				observer.next(item);
 			}
 			observer.complete();
@@ -110,7 +112,6 @@ export class DynamoRepository<T extends ExtendedEntity> implements Repository<T>
 			}
 			return collected;
 		} catch (e) {
-			console.error(e);
 			throw new DynamoException(e.message);
 		}
 	}

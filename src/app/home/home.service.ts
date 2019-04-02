@@ -72,7 +72,6 @@ export class HomeService extends CrudService<HomeEntity> {
 			});
 
 			if (res.status !== 200) {
-				console.error(res);
 				throw new HttpException(res, HttpStatus.BAD_REQUEST);
 			}
 

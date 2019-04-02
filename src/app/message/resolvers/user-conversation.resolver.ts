@@ -1,5 +1,6 @@
 import {UseGuards} from '@nestjs/common';
 import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
+import iterare from 'iterare';
 import {PubSub, withFilter} from 'graphql-subscriptions';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
 import {CreateConversationInput} from '../../graphql.schema';
@@ -30,7 +31,16 @@ export class UserConversationResolver {
 	@Query('allConversations')
 	@UseGuards(GraphqlGuard)
 	async getAllConversations(@CurrentUser() user: User) {
-		return this.userConversationService.findAll({where: {userId: {eq: user.id.toString()}}});
+		return this.userConversationService.findAll({
+			where: {
+				userId: {
+					eq: user.id.toString()
+				},
+				isDeleted: {
+					eq: false
+				}
+			}
+		});
 	}
 
 	@Mutation('createConversation')
@@ -48,6 +58,21 @@ export class UserConversationResolver {
 		return createdAuthorConversation;
 	}
 
+	@Mutation('deleteConversation')
+	@UseGuards(GraphqlGuard)
+	async deleteMessage(
+		@CurrentUser() user: User,
+		@Args('conversationId') conversationId: string
+	): Promise<boolean> {
+		const allConversations = await this.userConversationService.findAll({where: {conversationId: {eq: conversationId}}});
+		for (const userConversation of allConversations) {
+			userConversation.isDeleted = true;
+			await this.userConversationService.softDelete(userConversation);
+			await this.pubSub.publish('userConversationDeleted', {conversationDeleted: userConversation});
+		}
+		return true;
+	}
+
 	@Subscription('newUserConversation')
 	@UseGuards(GraphqlGuard)
 	newUserConversation() {
@@ -63,6 +88,15 @@ export class UserConversationResolver {
 		return {
 			subscribe: withFilter(() => this.pubSub.asyncIterator('userConversationUpdated'),
 				(payload, variables, context) => this.subscriptionsService.userConversationUpdated(payload, variables, context))
+		};
+	}
+
+	@Subscription('userConversationDeleted')
+	@UseGuards(GraphqlGuard)
+	userConversationDeleted() {
+		return {
+			subscribe: withFilter(() => this.pubSub.asyncIterator('userConversationDeleted'),
+				(payload, variables, context) => this.subscriptionsService.userConversationDeleted(payload, variables, context))
 		};
 	}
 
@@ -85,11 +119,14 @@ export class UserConversationResolver {
 	}
 
 	@ResolveProperty('message')
-	async getMessage(@Parent() userConversation: UserConversationEntity): Promise<MessageEntity> {
+	async getMessage(@CurrentUser() user: User, @Parent() userConversation: UserConversationEntity): Promise<MessageEntity> {
 		return this.messageService.findOne({
 			where: {
 				conversationId: {
 					eq: userConversation.conversationId
+				},
+				deletedFor: {
+					nin: [user.id.toString()]
 				}
 			},
 			order: {
