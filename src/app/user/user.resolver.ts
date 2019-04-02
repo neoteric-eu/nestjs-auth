@@ -17,7 +17,6 @@ export class UserResolver {
 
 	@Query('me')
 	async getMe(@CurrentUser() user: UserEntity): Promise<UserEntity> {
-		console.log(user);
 		return user;
 	}
 

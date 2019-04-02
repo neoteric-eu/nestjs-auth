@@ -26,9 +26,7 @@ export class UserCommand {
 		this.logger.debug(`[create] execute for amount ${amount}!`);
 
 		this.logger.debug(`[create] delete from db everything with provider "faker"`);
-		const output = await this.userService.deleteAll({provider: 'faker'});
-
-		console.dir(output.raw, output.affected);
+		await this.userService.deleteAll({provider: 'faker'});
 
 		const persons: UserEntity[] = [];
 		for (let i = 0; i < amount; i++) {

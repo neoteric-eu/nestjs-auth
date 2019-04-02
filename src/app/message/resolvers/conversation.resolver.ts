@@ -1,9 +1,11 @@
-import {Resolver, ResolveProperty, Parent} from '@nestjs/graphql';
+import {Parent, ResolveProperty, Resolver} from '@nestjs/graphql';
 import {HomeEntity} from '../../home/entity';
 import {HomeService} from '../../home/home.service';
 import {ConversationEntity} from '../entity';
 import {Conversation} from '../../graphql.schema';
 import {MessageService} from '../services/message.service';
+import {User as CurrentUser} from '../../_helpers/graphql';
+import {UserEntity as User} from '../../user/entity';
 
 @Resolver('Conversation')
 export class ConversationResolver {
@@ -14,8 +16,20 @@ export class ConversationResolver {
 	}
 
 	@ResolveProperty('messages')
-	async getMessage(@Parent() conversation: ConversationEntity): Promise<any> {
-		return this.messageService.findAll({where: {conversationId: {eq: conversation.id.toString()}}});
+	async getMessage(@CurrentUser() user: User, @Parent() conversation: ConversationEntity): Promise<any> {
+		return this.messageService.findAll({
+			where: {
+				conversationId: {
+					eq: conversation.id.toString()
+				},
+				deletedFor: {
+					nin: [user.id.toString()]
+				}
+			},
+			order: {
+				createdAt: 'DESC'
+			}
+		});
 	}
 
 	@ResolveProperty('home')

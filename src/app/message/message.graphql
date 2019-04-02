@@ -7,6 +7,7 @@ type Query {
 
 type Mutation {
     createConversation(conversationInput: CreateConversationInput): UserConversation
+    deleteConversation(conversationId: ID!): Boolean
     createMessage(conversationId: ID!, content: String, type: String): Message
     deleteMessage(messageId: ID!, forEveryone: Boolean): Boolean
     markAsRead(messageId: ID!): Boolean
@@ -20,6 +21,7 @@ type Subscription {
     messageUpdated: Message
     messageDeleted: Message
     userConversationUpdated: UserConversation
+    userConversationDeleted: UserConversation
     startTyping: UserConversation
     stopTyping: UserConversation
 

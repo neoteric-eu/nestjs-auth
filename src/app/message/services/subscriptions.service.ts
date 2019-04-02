@@ -40,6 +40,12 @@ export class SubscriptionsService {
 		return found;
 	}
 
+	public async userConversationDeleted(payload, variables, context) {
+		const found = await this.haveConversationForUser(payload.userConversationDeleted.conversationId, context.req.user);
+		this.logger.debug(`[userConversationDeleted] Do we found this conversation for this user ${context.req.user.id}? ${found}`);
+		return found;
+	}
+
 	public async startTyping(payload, varibles, context) {
 		this.logger.debug(`[startTyping]`);
 		try {
