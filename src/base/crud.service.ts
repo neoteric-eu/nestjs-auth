@@ -92,6 +92,9 @@ export class CrudService<T extends ExtendedEntity> {
 	}
 
 	public deleteAll(conditions?: ObjectLiteral): Promise<any> {
+		if (conditions) {
+			conditions = typeormFilterMapper({where: conditions});
+		}
 		return this.repository.deleteMany(conditions);
 	}
 

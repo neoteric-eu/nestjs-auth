@@ -31,11 +31,11 @@ export class HomeCommand {
 		this.logger.debug(`[create] execute for amount ${amount}!`);
 
 		this.logger.debug(`[create] delete from home everything with json "faker"`);
-		await this.homeService.deleteAll({json: '{"faker": true}'});
+		await this.homeService.deleteAll({json: {eq: '{"faker": true}'}});
 		this.logger.debug(`[create] delete from home_media everything with mimetype "image/fake"`);
-		await this.homeMediaService.deleteAll({mimetype: 'image/fake'});
+		await this.homeMediaService.deleteAll({mimetype: {eq: 'image/fake'}});
 		this.logger.debug(`[create] delete from home_favorites everything with fake`);
-		await this.homeFavoriteService.deleteAll({fake: true});
+		await this.homeFavoriteService.deleteAll({fake: {eq: true}});
 
 		this.logger.debug(`[create] fetch faked users`);
 		const users = await this.userService.findAll({where: {provider: {eq: 'faker'}}});

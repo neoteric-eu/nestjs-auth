@@ -42,6 +42,9 @@ export class CreateHomeMediaInput {
     mimetype?: string;
     size?: number;
     url?: string;
+    type: string;
+    order: number;
+    caption: string;
 }
 
 export class DeleteHomeFavoriteInput {
@@ -237,6 +240,9 @@ export class HomeMedia {
     mimetype?: string;
     size?: number;
     url?: string;
+    type: string;
+    order: number;
+    caption: string;
 }
 
 export class Message {
