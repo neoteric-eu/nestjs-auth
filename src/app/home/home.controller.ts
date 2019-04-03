@@ -1,7 +1,6 @@
-import {Body, Controller, Get, HttpCode, Param, Post, Query} from '@nestjs/common';
+import {Body, Controller, HttpCode, Param, Post, UseGuards} from '@nestjs/common';
 import {Client, ClientProxy, Transport} from '@nestjs/microservices';
-import {ApiImplicitParam, ApiResponse, ApiUseTags} from '@nestjs/swagger';
-import {DateTime} from 'luxon';
+import {ApiImplicitParam, ApiResponse, ApiUseTags, ApiBearerAuth} from '@nestjs/swagger';
 import crypto from 'crypto';
 import {AppLogger} from '../app.logger';
 import {HomeService} from './home.service';
@@ -9,11 +8,12 @@ import {HomePipe} from './pipe/home.pipe';
 import {HomeEntity} from './entity';
 import {ConvertTemplateDto} from './dto/convert-template.dto';
 import {HomePdfService} from './home-pdf.service';
+import {AuthGuard} from '@nestjs/passport';
 
 @ApiUseTags('home')
 @Controller('home')
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 export class HomeController {
 
 	@Client({transport: Transport.TCP})
