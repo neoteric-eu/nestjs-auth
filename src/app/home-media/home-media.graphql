@@ -19,6 +19,9 @@ type HomeMedia {
     mimetype: String
     size: Int
     url: String
+    type: String!
+    order: Int!
+    caption: String!
 }
 
 input CreateHomeMediaInput {
@@ -26,6 +29,9 @@ input CreateHomeMediaInput {
     mimetype: String
     size: Int
     url: String
+    type: String!
+    order: Int!
+    caption: String!
 }
 
 input DeleteHomeMediaInput {

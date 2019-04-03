@@ -54,9 +54,9 @@ export class HomeService extends CrudService<HomeEntity> {
 		return new Promise(async (resolve, reject) => {
 
 			this.logger.debug(`[importAddresses] delete from home everything with json "faker"`);
-			await this.deleteAll({where: {json: {eq: '{"faker": true}'}}});
+			await this.deleteAll({json: {eq: '{"faker": true}'}});
 			this.logger.debug(`[importAddresses] delete from home_media everything with mimetype "image/fake"`);
-			await this.homeMediaService.deleteAll({where: {mimetype: {eq: 'image/fake'}}});
+			await this.homeMediaService.deleteAll({mimetype: {eq: 'image/fake'}});
 
 			this.logger.debug(`[importAddresses] Find 20 faked users`);
 
@@ -192,6 +192,9 @@ export class HomeService extends CrudService<HomeEntity> {
 					mimetype: 'image/fake',
 					size: faker.random.number({min: 86400, max: 259200}),
 					url: row[i],
+					type: faker.hacker.noun(),
+					order: i,
+					caption: faker.random.word(),
 					createdAt: DateTime.utc().toString(),
 					updatedAt: DateTime.utc().toString()
 				});

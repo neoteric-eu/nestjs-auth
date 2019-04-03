@@ -34,4 +34,19 @@ export class HomeMediaEntity extends ExtendedEntity {
 	@IsString()
 	@Column()
 	url: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@Column()
+	type: string;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@Column()
+	order: number;
+
+	@ApiModelProperty()
+	@IsString()
+	@Column()
+	caption: string;
 }
