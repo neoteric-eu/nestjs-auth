@@ -113,6 +113,10 @@ export const config: Config = {
 		// synchronize: true,
 		logging: 'all',
 		useNewUrlParser: true,
+		migrationsRun: true,
+		migrations: [
+			__dirname + '/../migrations/*{.ts,.js}'
+		],
 		entities: [
 			__dirname + '/../**/entity/*.entity{.ts,.js}'
 		]
