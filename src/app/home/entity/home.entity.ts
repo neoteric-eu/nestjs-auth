@@ -126,7 +126,7 @@ export class HomeEntity extends ExtendedEntity {
 	@ApiModelProperty()
 	@IsNumber()
 	@Column()
-	public showing_count: number;
+	public showing_count = 0;
 
 	@ApiModelProperty()
 	@IsBoolean()
