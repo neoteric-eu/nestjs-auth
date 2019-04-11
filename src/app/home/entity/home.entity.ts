@@ -120,7 +120,7 @@ export class HomeEntity extends ExtendedEntity {
 	@ApiModelProperty()
 	@IsNumber()
 	@Column()
-	public fav_count: number;
+	public fav_count = 0;
 
 
 	@ApiModelProperty()
@@ -136,12 +136,14 @@ export class HomeEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
 	@IsNumber()
+	@IsOptional()
 	@Column()
 	public buyers_agent_amt: number;
 
 
 	@ApiModelProperty()
 	@IsNumber()
+	@IsOptional()
 	@Column()
 	public buyers_agent_type: number;
 }
