@@ -20,6 +20,6 @@ export class HomeFavoriteController {
 	@MessagePattern({ cmd: HOME_CMD_DELETE })
 	public async onHomeDelete(home: HomeEntity): Promise<void> {
 		this.logger.debug(`[onHomeDelete] soft delete all favorites for home ${home.id}`);
-		await this.homeFavoriteService.updateAll({homeFavoriteHomeId: {eq: home.id.toString()}}, {isDeleted: true});
+		await this.homeFavoriteService.updateAll({homeFavoriteHomeId: {eq: home.id.toString()}}, {'$set': {isDeleted: true}});
 	}
 }

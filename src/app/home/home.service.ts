@@ -173,6 +173,7 @@ export class HomeService extends CrudService<HomeEntity> {
 				fav_count: faker.random.number(10),
 				showing_count: faker.random.number({max: 100000, min: 100}),
 				buyers_agent: faker.random.boolean(),
+				isDeleted: false,
 				createdAt: DateTime.utc().toString(),
 				updatedAt: DateTime.utc().toString()
 			};
@@ -195,6 +196,7 @@ export class HomeService extends CrudService<HomeEntity> {
 					type: faker.hacker.noun(),
 					order: i,
 					caption: faker.random.word(),
+					isDeleted: false,
 					createdAt: DateTime.utc().toString(),
 					updatedAt: DateTime.utc().toString()
 				});

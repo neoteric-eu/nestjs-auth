@@ -231,6 +231,7 @@ export class HomeFavorite {
     id: string;
     homeFavoriteUserId?: string;
     homeFavoriteHomeId?: string;
+    home?: Home;
 }
 
 export class HomeMedia {

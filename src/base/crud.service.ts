@@ -68,7 +68,10 @@ export class CrudService<T extends ExtendedEntity> {
 		return this.patch(id, data);
 	}
 
-	public async updateAll(query, data: DeepPartial<T>): Promise<boolean> {
+	public async updateAll(query, data: any): Promise<boolean> {
+		if (query) {
+			query = typeormFilterMapper({where: query	});
+		}
 		const response = await this.repository.updateMany(query, data);
 		return !!response.matchedCount;
 	}
@@ -113,7 +116,8 @@ export class CrudService<T extends ExtendedEntity> {
 		const entity = await this.findOneById(id as any);
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.SOFT_DELETE, entity);
 		entity.isDeleted = true;
-		return this.update(entity);
+		entity.updatedAt = DateTime.utc();
+		return entity.save();
 	}
 
 	protected async validate(entity: T, options?: ValidatorOptions) {
