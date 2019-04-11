@@ -60,18 +60,40 @@ export class HomeResolver {
 
 	@Query('listHomes')
 	async findAll(@Args('filter') filter?: ModelHomeFilterInput, @Args('limit') limit?: number): Promise<HomeEntity[]> {
-		return this.homeService.findAll({where: filter, take: limit});
+		return this.homeService.findAll({
+			where: {
+				...filter,
+				isDeleted: {
+					eq: false
+				}
+			},
+			take: limit
+		});
 	}
 
 	@Query('myHomes')
 	@UseGuards(GraphqlGuard)
 	async findAllMyHomes(@CurrentUser() user: User): Promise<HomeEntity[]> {
-		return this.homeService.findAll({where: {owner: {eq: user.id.toString()}}});
+		return this.homeService.findAll({
+			where: {
+				owner: {
+					eq: user.id.toString()
+				},
+				isDeleted: {
+					eq: false
+				}
+			}
+		});
 	}
 
 	@Query('getHome')
 	async findOneById(@Args('id') id: string): Promise<HomeEntity> {
-		return await this.homeService.findOneById(id);
+		const home = await this.homeService.findOneById(id);
+		if (isNaN(home.showing_count)) {
+			home.showing_count = 0;
+		}
+		home.showing_count++;
+		return this.homeService.update(home);
 	}
 
 	@Mutation('createHome')
@@ -88,7 +110,7 @@ export class HomeResolver {
 	@Mutation('deleteHome')
 	@UseGuards(GraphqlGuard)
 	async delete(@CurrentUser() user: User, @Args('deleteHomeInput') args: DeleteHomeDto): Promise<HomeEntity> {
-		const deletedHome = await this.homeService.delete(args.id);
+		const deletedHome = await this.homeService.softDelete(args);
 		this.client.send({cmd: HOME_CMD_DELETE}, deletedHome).subscribe(() => {}, error => {
 			this.logger.error(error, '');
 		});

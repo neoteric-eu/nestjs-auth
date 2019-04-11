@@ -63,18 +63,28 @@ export class CrudService<T extends ExtendedEntity> {
 		return this.repository.save(data);
 	}
 
-	public async update(data: DeepPartial<T>): Promise<T> {
+	public async update(data: DeepPartial<T>|T): Promise<T> {
 		const id: string = String(data.id || '');
 		return this.patch(id, data);
 	}
 
-	public async patch(id: string, data: DeepPartial<T>): Promise<T> {
-		const entity: T = await this.findOneById(id);
+	public async updateAll(query, data: DeepPartial<T>): Promise<boolean> {
+		const response = await this.repository.updateMany(query, data);
+		return !!response.matchedCount;
+	}
+
+	public async patch(id: string, data: DeepPartial<T>|T): Promise<T> {
+		let entity: T = null;
+		if (data instanceof ExtendedEntity) {
+			entity = data;
+		} else {
+			entity = await this.findOneById(id);
+			this.repository.merge(entity, data);
+		}
 		let createdAt = entity.createdAt;
 		if (!createdAt) {
 			createdAt = DateTime.utc();
 		}
-		this.repository.merge(entity, data);
 		entity.createdAt = createdAt;
 		entity.updatedAt = DateTime.utc();
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.UPDATE, entity);
@@ -96,6 +106,14 @@ export class CrudService<T extends ExtendedEntity> {
 			conditions = typeormFilterMapper({where: conditions});
 		}
 		return this.repository.deleteMany(conditions);
+	}
+
+
+	public async softDelete({id}: DeepPartial<T>): Promise<T> {
+		const entity = await this.findOneById(id as any);
+		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.SOFT_DELETE, entity);
+		entity.isDeleted = true;
+		return this.update(entity);
 	}
 
 	protected async validate(entity: T, options?: ValidatorOptions) {

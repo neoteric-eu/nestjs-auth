@@ -1,6 +1,5 @@
 import {UseGuards} from '@nestjs/common';
 import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
-import iterare from 'iterare';
 import {PubSub, withFilter} from 'graphql-subscriptions';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
 import {CreateConversationInput} from '../../graphql.schema';
@@ -66,7 +65,6 @@ export class UserConversationResolver {
 	): Promise<boolean> {
 		const allConversations = await this.userConversationService.findAll({where: {conversationId: {eq: conversationId}}});
 		for (const userConversation of allConversations) {
-			userConversation.isDeleted = true;
 			await this.userConversationService.softDelete(userConversation);
 			await this.pubSub.publish('userConversationDeleted', {conversationDeleted: userConversation});
 		}

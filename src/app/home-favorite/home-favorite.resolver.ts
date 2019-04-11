@@ -1,24 +1,38 @@
 import {UseGuards} from '@nestjs/common';
-import {Args, Mutation, Query, Resolver, Subscription} from '@nestjs/graphql';
+import {Args, Mutation, Query, Resolver, Subscription, ResolveProperty, Parent} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
-import {HomeFavoriteService} from './home-favorite.service';
-import {HomeFavorite} from '../graphql.schema';
-import {CreateHomeFavoriteDto, DeleteHomeFavoriteDto} from './dto';
 import {GraphqlGuard} from '../_helpers';
 import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
+import {Home, HomeFavorite} from '../graphql.schema';
+import {HomeEntity} from '../home/entity';
+import {HomeService} from '../home/home.service';
 import {UserEntity as User} from '../user/entity';
+import {CreateHomeFavoriteDto, DeleteHomeFavoriteDto} from './dto';
+import {HomeFavoriteService} from './home-favorite.service';
 
 @Resolver('HomeFavorite')
 @UseGuards(GraphqlGuard)
 export class HomeFavoriteResolver {
 	private pubSub = new PubSub();
 
-	constructor(private readonly homeFavoriteService: HomeFavoriteService) {
+	constructor(
+		private readonly homeFavoriteService: HomeFavoriteService,
+		private readonly homeService: HomeService
+	) {
 	}
 
 	@Query('getHomeFavorites')
 	async findAll(@CurrentUser() user: User): Promise<HomeFavorite[]> {
-		return this.homeFavoriteService.findAll({where : {homeFavoriteUserId: {eq: user.id.toString()}}});
+		return this.homeFavoriteService.findAll({
+			where : {
+				homeFavoriteUserId: {
+					eq: user.id.toString()
+				},
+				isDeleted: {
+					eq: false
+				}
+			}
+		});
 	}
 
 	@Query('getHomeFavorite')
@@ -46,5 +60,10 @@ export class HomeFavoriteResolver {
 		return {
 			subscribe: () => this.pubSub.asyncIterator('homeFavoriteCreated')
 		};
+	}
+
+	@ResolveProperty('home')
+	getHome(@Parent() homeFavorite: HomeFavorite): Promise<HomeEntity> {
+		return this.homeService.findOneById(homeFavorite.homeFavoriteHomeId);
 	}
 }

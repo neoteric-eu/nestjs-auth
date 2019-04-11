@@ -16,6 +16,7 @@ type HomeFavorite {
     id: ID!
     homeFavoriteUserId: String
     homeFavoriteHomeId: String
+    home: Home
 }
 
 input CreateHomeFavoriteInput {
