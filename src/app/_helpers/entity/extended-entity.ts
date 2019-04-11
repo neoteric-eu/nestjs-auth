@@ -4,7 +4,9 @@ import {DateTime} from 'luxon';
 
 export class ExtendedEntity extends BaseEntity {
 	public id?: string;
-	public isDeleted?: boolean;
+
+	@Column()
+	public isDeleted = false;
 
 	@ApiModelProperty()
 	@Column()
