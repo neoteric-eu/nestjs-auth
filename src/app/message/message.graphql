@@ -45,6 +45,7 @@ input CreateConversationInput {
 type UserConversation {
     conversation: Conversation
     user: User
+    author: User
     message: Message
     createdAt: Date
     updatedAt: Date

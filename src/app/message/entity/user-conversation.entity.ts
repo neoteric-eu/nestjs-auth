@@ -20,6 +20,11 @@ export class UserConversationEntity extends ExtendedEntity {
 	@Column()
 	public userId: string;
 
+	@ApiModelProperty()
+	@IsString()
+	@Column()
+	public authorId: string;
+
 	@Column()
 	public isDeleted = false;
 }
