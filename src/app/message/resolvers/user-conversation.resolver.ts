@@ -45,13 +45,14 @@ export class UserConversationResolver {
 	@Mutation('createConversation')
 	@UseGuards(GraphqlGuard)
 	async createConversation(@CurrentUser() user: User, @Args('conversationInput') conversationInput: CreateConversationInput) {
-		const createdConversation = await this.conversationService.create(conversationInput);
-		const authorId = user.id.toString();
+		const createdConversation = await this.conversationService.create({
+			...conversationInput, authorId: user.id.toString()
+		});
 
 		const createdAuthorConversation = await this.userConversationService
-			.create({userId: authorId, authorId, conversationId: createdConversation.id.toString()});
+			.create({userId: user.id.toString(), conversationId: createdConversation.id.toString()});
 		await this.userConversationService
-			.create({userId: conversationInput.recipientId.toString(), authorId, conversationId: createdConversation.id.toString()});
+			.create({userId: conversationInput.recipientId.toString(), conversationId: createdConversation.id.toString()});
 
 		await this.pubSub.publish('newUserConversation', {newUserConversation: createdAuthorConversation});
 
@@ -132,14 +133,5 @@ export class UserConversationResolver {
 				createdAt: 'DESC'
 			}
 		});
-	}
-
-	@ResolveProperty('author')
-	async getAuthor(@Parent() userConversation: UserConversationEntity): Promise<User> {
-		try {
-			return this.userService.findOneById(userConversation.authorId);
-		} catch (e) {
-			return this.userService.create({});
-		}
 	}
 }

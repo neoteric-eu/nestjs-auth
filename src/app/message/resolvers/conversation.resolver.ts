@@ -6,12 +6,14 @@ import {Conversation} from '../../graphql.schema';
 import {MessageService} from '../services/message.service';
 import {User as CurrentUser} from '../../_helpers/graphql';
 import {UserEntity as User} from '../../user/entity';
+import {UserService} from '../../user/user.service';
 
 @Resolver('Conversation')
 export class ConversationResolver {
 	constructor(
 		private readonly messageService: MessageService,
-		private readonly homeService: HomeService
+		private readonly homeService: HomeService,
+		private readonly userService: UserService
 	) {
 	}
 
@@ -38,6 +40,15 @@ export class ConversationResolver {
 			return this.homeService.findOneById(conversation.homeId.toString());
 		} catch (e) {
 			return {} as any;
+		}
+	}
+
+	@ResolveProperty('author')
+	async getAuthor(@Parent() conversation: ConversationEntity): Promise<User> {
+		try {
+			return this.userService.findOneById(conversation.authorId);
+		} catch (e) {
+			return {} as User;
 		}
 	}
 }

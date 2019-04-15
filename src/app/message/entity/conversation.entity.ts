@@ -18,5 +18,10 @@ export class ConversationEntity extends ExtendedEntity {
 	@ApiModelProperty()
 	@IsString()
 	@Column()
+	public authorId: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@Column()
 	public type: string;
 }
