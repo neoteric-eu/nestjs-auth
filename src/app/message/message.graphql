@@ -30,6 +30,7 @@ type Subscription {
 type Conversation {
     id: ID!
     home: Home
+    author: User
     type: String
     messages: [Message]
     createdAt: Date

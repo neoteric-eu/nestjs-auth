@@ -39,6 +39,7 @@
     "@types/async": "^2.4.1",
     "@types/lodash": "^4.14.123",
     "@types/luxon": "^1.11.1",
+    "@types/mongodb": "^3.1.23",
     "apollo-server-express": "^2.4.8",
     "async": "^2.6.2",
     "async-exit-hook": "^2.0.1",
