@@ -4,6 +4,7 @@ import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {PubSub, withFilter} from 'graphql-subscriptions';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
 import {AppLogger} from '../../app.logger';
+import {AllMessagesFilterInput} from '../../graphql.schema';
 import {UserEntity as User} from '../../user/entity';
 import {UserService} from '../../user/user.service';
 import {MessageEntity} from '../entity';
@@ -31,15 +32,13 @@ export class MessageResolver {
 	@UseGuards(GraphqlGuard)
 	async getAllMessages(
 		@CurrentUser() user: User,
-		@Args('conversationId') conversationId: string,
+		@Args('filter') filter: AllMessagesFilterInput,
 		@Args('after') after: number,
 		@Args('limit') limit?: number
 	) {
 		return this.messageService.findAll({
 			where: {
-				conversationId: {
-					eq: conversationId
-				},
+				...filter,
 				deletedFor: {
 					nin: [user.id.toString()]
 				}

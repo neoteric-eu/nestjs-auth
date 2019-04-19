@@ -2,7 +2,7 @@ scalar Date
 
 type Query {
     allConversations: [UserConversation]
-    allMessages(conversationId: ID!, after: Int, limit: Int): [Message]
+    allMessages(filter: AllMessagesFilterInput, after: Int, limit: Int): [Message]
 }
 
 type Mutation {
@@ -61,4 +61,24 @@ type Message {
     isRead: Boolean
     createdAt: Date
     updatedAt: Date
+}
+
+input ModelDateFilterInput {
+    ne: Date
+    eq: Date
+    le: Date
+    lt: Date
+    ge: Date
+    gt: Date
+    between: [Date]
+}
+
+input AllMessagesFilterInput {
+    conversationId: ModelIDFilterInput
+    content: ModelStringFilterInput
+    type: ModelStringFilterInput
+    isSent: ModelBooleanFilterInput
+    isRead: ModelBooleanFilterInput
+    createdAt: ModelDateFilterInput
+    updatedAt: ModelDateFilterInput
 }

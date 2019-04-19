@@ -43,6 +43,11 @@ export class HomeEntity extends ExtendedEntity {
 	public descr: string;
 
 	@ApiModelProperty()
+	@IsOptional()
+	@Column()
+	public provision: string;
+
+	@ApiModelProperty()
 	@IsString()
 	@Column()
 	public json: string;

@@ -2,6 +2,7 @@ import {HttpModule, Module} from '@nestjs/common';
 import {DatabaseModule} from '../database/database.module';
 import {HomeModule} from '../home/home.module';
 import {UserModule} from '../user/user.module';
+import {DateScalar} from './date.scalar';
 import {messageProviders} from './message.providers';
 import {ConversationResolver} from './resolvers/conversation.resolver';
 import {MessageResolver} from './resolvers/message.resolver';
@@ -18,6 +19,7 @@ import {MessageController} from './message.controller';
 	controllers: [MessageController],
 	providers: [
 		...messageProviders,
+		DateScalar,
 		MessageService,
 		ConversationService,
 		UserConversationService,

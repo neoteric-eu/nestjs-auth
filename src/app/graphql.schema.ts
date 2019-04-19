@@ -1,4 +1,14 @@
 /* tslint:disable */
+export class AllMessagesFilterInput {
+    conversationId?: ModelIDFilterInput;
+    content?: ModelStringFilterInput;
+    type?: ModelStringFilterInput;
+    isSent?: ModelBooleanFilterInput;
+    isRead?: ModelBooleanFilterInput;
+    createdAt?: ModelDateFilterInput;
+    updatedAt?: ModelDateFilterInput;
+}
+
 export class CreateConversationInput {
     homeId: string;
     type: string;
@@ -16,6 +26,7 @@ export class CreateHomeInput {
     price?: number;
     price_adjustment?: number;
     descr?: string;
+    provision?: string;
     json?: string;
     address_1?: string;
     address_2?: string;
@@ -73,6 +84,16 @@ export class ModelBooleanFilterInput {
     eq?: boolean;
 }
 
+export class ModelDateFilterInput {
+    ne?: Date;
+    eq?: Date;
+    le?: Date;
+    lt?: Date;
+    ge?: Date;
+    gt?: Date;
+    between?: Date[];
+}
+
 export class ModelFloatFilterInput {
     ne?: number;
     eq?: number;
@@ -93,6 +114,7 @@ export class ModelHomeFilterInput {
     price?: ModelFloatFilterInput;
     price_adjustment?: ModelFloatFilterInput;
     descr?: ModelStringFilterInput;
+    provision?: ModelStringFilterInput;
     json?: ModelStringFilterInput;
     address_1?: ModelStringFilterInput;
     address_2?: ModelStringFilterInput;
@@ -150,6 +172,7 @@ export class UpdateHomeInput {
     price?: number;
     price_adjustment?: number;
     descr?: string;
+    provision?: string;
     json?: string;
     address_1?: string;
     address_2?: string;
@@ -188,6 +211,7 @@ export class AVM {
 export class Conversation {
     id: string;
     home?: Home;
+    author?: User;
     type?: string;
     messages?: Message[];
     createdAt?: Date;
@@ -203,6 +227,7 @@ export class Home {
     price?: number;
     price_adjustment?: number;
     descr?: string;
+    provision?: string;
     json?: string;
     address_1?: string;
     address_2?: string;
@@ -499,7 +524,7 @@ export abstract class IQuery {
 
     abstract allConversations(): UserConversation[] | Promise<UserConversation[]>;
 
-    abstract allMessages(conversationId: string, after?: number, limit?: number): Message[] | Promise<Message[]>;
+    abstract allMessages(filter?: AllMessagesFilterInput, after?: number, limit?: number): Message[] | Promise<Message[]>;
 
     abstract me(): User | Promise<User>;
 
