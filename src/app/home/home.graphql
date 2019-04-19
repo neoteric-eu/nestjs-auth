@@ -396,6 +396,7 @@ type Home {
     price: Float
     price_adjustment: Float
     descr: String
+    provision: String
     json: String
     address_1: String
     address_2: String
@@ -426,6 +427,7 @@ input CreateHomeInput {
     price: Float
     price_adjustment: Float
     descr: String
+    provision: String
     json: String
     address_1: String
     address_2: String
@@ -454,6 +456,7 @@ input UpdateHomeInput {
     price: Float
     price_adjustment: Float
     descr: String
+    provision: String
     json: String
     address_1: String
     address_2: String
@@ -533,6 +536,7 @@ input ModelHomeFilterInput {
     price: ModelFloatFilterInput
     price_adjustment: ModelFloatFilterInput
     descr: ModelStringFilterInput
+    provision: ModelStringFilterInput
     json: ModelStringFilterInput
     address_1: ModelStringFilterInput
     address_2: ModelStringFilterInput
