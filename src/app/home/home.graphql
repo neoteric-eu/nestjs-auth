@@ -417,6 +417,38 @@ type Home {
     buyers_agent_amt: Float
     buyers_agent_type: Int
     favorite: Boolean
+    nonrealty_items: String
+    lot: String
+    block: String
+    addition: String
+    mortgage_amount: Int
+    mortgage_date: Date
+    electricity: Int
+    gas: Int
+    internet: Int
+    cable_sattelite: Int
+    homeowners_insurance: Int
+    agent: String
+    agent_fee: Int
+    survey_date: Date
+    hoa: Int
+    elementary_school: String
+    middle_school: String
+    high_school: String
+    style: String
+    type: String
+    roof_type: String
+    exterior_material: String
+    foundation_type: String
+    utilities: String
+    parking: String
+    patio: String
+    yard: String
+    sprinklers: String
+    lot_depth: Float
+    lot_width: String
+    parcel_number: String
+    tax_history: String
     createdAt: Date
     updatedAt: Date
 }
@@ -447,6 +479,38 @@ input CreateHomeInput {
     buyers_agent: Boolean
     buyers_agent_amt: Float
     buyers_agent_type: Int
+    nonrealty_items: String
+    lot: String
+    block: String
+    addition: String
+    mortgage_amount: Int
+    mortgage_date: Date
+    electricity: Int
+    gas: Int
+    internet: Int
+    cable_sattelite: Int
+    homeowners_insurance: Int
+    agent: String
+    agent_fee: Int
+    survey_date: Date
+    hoa: Int
+    elementary_school: String
+    middle_school: String
+    high_school: String
+    style: String
+    type: String
+    roof_type: String
+    exterior_material: String
+    foundation_type: String
+    utilities: String
+    parking: String
+    patio: String
+    yard: String
+    sprinklers: String
+    lot_depth: Float
+    lot_width: String
+    parcel_number: String
+    tax_history: String
 }
 
 input UpdateHomeInput {
@@ -476,6 +540,38 @@ input UpdateHomeInput {
     buyers_agent: Boolean
     buyers_agent_amt: Float
     buyers_agent_type: Int
+    nonrealty_items: String
+    lot: String
+    block: String
+    addition: String
+    mortgage_amount: Int
+    mortgage_date: Date
+    electricity: Int
+    gas: Int
+    internet: Int
+    cable_sattelite: Int
+    homeowners_insurance: Int
+    agent: String
+    agent_fee: Int
+    survey_date: Date
+    hoa: Int
+    elementary_school: String
+    middle_school: String
+    high_school: String
+    style: String
+    type: String
+    roof_type: String
+    exterior_material: String
+    foundation_type: String
+    utilities: String
+    parking: String
+    patio: String
+    yard: String
+    sprinklers: String
+    lot_depth: Float
+    lot_width: String
+    parcel_number: String
+    tax_history: String
 }
 
 input DeleteHomeInput {
@@ -556,6 +652,38 @@ input ModelHomeFilterInput {
     buyers_agent: ModelBooleanFilterInput
     buyers_agent_amt: ModelFloatFilterInput
     buyers_agent_type: ModelIntFilterInput
+    nonrealty_items: ModelStringFilterInput
+    lot: ModelStringFilterInput
+    block: ModelStringFilterInput
+    addition: ModelStringFilterInput
+    mortgage_amount: ModelIntFilterInput
+    mortgage_date: ModelDateFilterInput
+    electricity: ModelIntFilterInput
+    gas: ModelIntFilterInput
+    internet: ModelIntFilterInput
+    cable_sattelite: ModelIntFilterInput
+    homeowners_insurance: ModelIntFilterInput
+    agent: ModelStringFilterInput
+    agent_fee: ModelIntFilterInput
+    survey_date: ModelDateFilterInput
+    hoa: ModelIntFilterInput
+    elementary_school: ModelStringFilterInput
+    middle_school: ModelStringFilterInput
+    high_school: ModelStringFilterInput
+    style: ModelStringFilterInput
+    type: ModelStringFilterInput
+    roof_type: ModelStringFilterInput
+    exterior_material: ModelStringFilterInput
+    foundation_type: ModelStringFilterInput
+    utilities: ModelStringFilterInput
+    parking: ModelStringFilterInput
+    patio: ModelStringFilterInput
+    yard: ModelStringFilterInput
+    sprinklers: ModelStringFilterInput
+    lot_depth: ModelFloatFilterInput
+    lot_width: ModelStringFilterInput
+    parcel_number: ModelStringFilterInput
+    tax_history: ModelStringFilterInput
 }
 
 input GetAVMDetailInput {

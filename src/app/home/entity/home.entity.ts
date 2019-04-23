@@ -151,4 +151,194 @@ export class HomeEntity extends ExtendedEntity {
 	@IsOptional()
 	@Column()
 	public buyers_agent_type: number;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public nonrealty_items?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public lot?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public block?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public addition?: string;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public mortgage_amount?: number;
+
+	@ApiModelProperty()
+	@IsOptional()
+	@Column()
+	public mortgage_date?: Date;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public electricity?: number;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public gas?: number;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public internet?: number;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public cable_sattelite?: number;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public homeowners_insurance?: number;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public agent?: string;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public agent_fee?: number;
+
+	@ApiModelProperty()
+	@IsOptional()
+	@Column()
+	public survey_date?: Date;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public hoa?: number;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public elementary_school?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public middle_school?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public high_school?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public style?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public type?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public roof_type?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public exterior_material?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public foundation_type?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public utilities?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public parking?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public patio?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public yard?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public sprinklers?: string;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public lot_depth?: number;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public lot_width?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public parcel_number?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public tax_history?: string;
 }
