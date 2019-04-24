@@ -1,5 +1,6 @@
 import {Scalar} from '@nestjs/graphql';
 import {Kind} from 'graphql';
+import {DateTime} from 'luxon';
 
 @Scalar('Date')
 export class DateScalar {
@@ -9,7 +10,10 @@ export class DateScalar {
 		return new Date(value); // value from the client
 	}
 
-	serialize(value: Date) {
+	serialize(value: Date|DateTime) {
+		if (value instanceof DateTime) {
+			return value.toJSON();
+		}
 		return value.toISOString(); // value sent to the client
 	}
 
