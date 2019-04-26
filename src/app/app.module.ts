@@ -2,6 +2,7 @@ import {MiddlewareConsumer, Module, RequestMethod} from '@nestjs/common';
 import {CommandModule} from 'nestjs-command';
 import {AuthModule} from './auth/auth.module';
 import {AppLogger} from './app.logger';
+import {ContractModule} from './contract/contract.module';
 import {DatabaseModule} from './database/database.module';
 import {GraphQLModule} from '@nestjs/graphql';
 import {HealthCheckModule} from './healtcheck/healthcheck.module';
@@ -27,6 +28,7 @@ import {SecurityModule} from './security';
 		HomeFavoriteModule,
 		HomeMediaModule,
 		MessageModule,
+		ContractModule,
 		GraphQLModule.forRootAsync({
 			imports: [UserModule],
 			useClass: GqlConfigService

@@ -1,0 +1,110 @@
+type Query {
+    allContractsAsBuyer(filter: ContractFilterInput, limit: Int): [Contract]
+    allContractsAsSeller(filter: ContractFilterInput, limit: Int): [Contract]
+    getContract(id: ID!): Contract
+}
+
+type Mutation {
+    createContract(input: ContractInput): Contract
+    updateContract(id: ID!, input: ContractInput): Contract
+    deleteContract(id: ID!): Boolean
+}
+
+type Subscription {
+    newContract: Contract
+    updatedContract: Contract
+    deletedContract: Contract
+}
+
+type Contract {
+    id: ID!
+    home: Home
+    user: User
+    sales_price: Float
+    buyer_cash: Float
+    loan_amount: Float
+    earnest_money: Float
+    earnest_money_days: Int
+    earnest_money_to: String
+    property_condition: String
+    repairs: String
+    home_warranty: Boolean
+    home_warranty_amount: Float
+    closing_date: Date
+    special_provisions: String
+    non_realty_items: String
+    seller_expenses: String
+    option_period_fee: Float
+    option_period_days: Int
+    option_period_credit: Boolean
+    contract_execution_date: Date
+    digital_signatures: [String]
+    title_policy_expense: String
+    title_policy_issuer: String
+    title_policy_discrepancies_amendments_payment: Float
+    survey: String
+    new_survey_days: Int
+    new_survey_payment: String
+    amendments: String
+    createdAt: Date
+    updatedAt: Date
+}
+
+input ContractInput {
+    home_id: String
+    sales_price: Float
+    buyer_cash: Float
+    loan_amount: Float
+    earnest_money: Float
+    earnest_money_days: Int
+    earnest_money_to: String
+    property_condition: String
+    repairs: String
+    home_warranty: Boolean
+    home_warranty_amount: Float
+    closing_date: Date
+    special_provisions: String
+    non_realty_items: String
+    seller_expenses: String
+    option_period_fee: Float
+    option_period_days: Int
+    option_period_credit: Boolean
+    contract_execution_date: Date
+    digital_signatures: [String]
+    title_policy_expense: String
+    title_policy_issuer: String
+    title_policy_discrepancies_amendments_payment: Float
+    survey: String
+    new_survey_days: Int
+    new_survey_payment: String
+    amendments: String
+}
+
+input ContractFilterInput {
+    home: ModelIDFilterInput
+    sales_price: ModelFloatFilterInput
+    buyer_cash: ModelFloatFilterInput
+    loan_amount: ModelFloatFilterInput
+    earnest_money: ModelFloatFilterInput
+    earnest_money_days: ModelIntFilterInput
+    earnest_money_to: ModelStringFilterInput
+    property_condition: ModelStringFilterInput
+    repairs: ModelStringFilterInput
+    home_warranty: ModelBooleanFilterInput
+    home_warranty_amount: ModelFloatFilterInput
+    closing_date: ModelDateFilterInput
+    special_provisions: ModelStringFilterInput
+    non_realty_items: ModelStringFilterInput
+    seller_expenses: ModelStringFilterInput
+    option_period_fee: ModelFloatFilterInput
+    option_period_days: ModelIntFilterInput
+    option_period_credit: ModelBooleanFilterInput
+    contract_execution_date: ModelDateFilterInput
+    title_policy_expense: ModelStringFilterInput
+    title_policy_issuer: ModelStringFilterInput
+    title_policy_discrepancies_amendments_payment: ModelFloatFilterInput
+    survey: ModelStringFilterInput
+    new_survey_days: ModelIntFilterInput
+    new_survey_payment: ModelStringFilterInput
+    amendments: ModelStringFilterInput
+}

@@ -390,6 +390,7 @@ type SchoolDistrictSummary {
 type Home {
     id: ID!
     owner: User
+    contracts: [Contract]
     status: String
     schedule: String
     media: [HomeMedia]
@@ -626,7 +627,7 @@ input ModelStringFilterInput {
 
 input ModelHomeFilterInput {
     id: ModelIDFilterInput
-    owner: ModelIDFilterInput,
+    owner: ModelIDFilterInput
     status: ModelStringFilterInput
     schedule: ModelStringFilterInput
     price: ModelFloatFilterInput
