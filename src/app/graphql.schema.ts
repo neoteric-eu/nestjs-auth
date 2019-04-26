@@ -9,6 +9,65 @@ export class AllMessagesFilterInput {
     updatedAt?: ModelDateFilterInput;
 }
 
+export class ContractFilterInput {
+    home?: ModelIDFilterInput;
+    sales_price?: ModelFloatFilterInput;
+    buyer_cash?: ModelFloatFilterInput;
+    loan_amount?: ModelFloatFilterInput;
+    earnest_money?: ModelFloatFilterInput;
+    earnest_money_days?: ModelIntFilterInput;
+    earnest_money_to?: ModelStringFilterInput;
+    property_condition?: ModelStringFilterInput;
+    repairs?: ModelStringFilterInput;
+    home_warranty?: ModelBooleanFilterInput;
+    home_warranty_amount?: ModelFloatFilterInput;
+    closing_date?: ModelDateFilterInput;
+    special_provisions?: ModelStringFilterInput;
+    non_realty_items?: ModelStringFilterInput;
+    seller_expenses?: ModelStringFilterInput;
+    option_period_fee?: ModelFloatFilterInput;
+    option_period_days?: ModelIntFilterInput;
+    option_period_credit?: ModelBooleanFilterInput;
+    contract_execution_date?: ModelDateFilterInput;
+    title_policy_expense?: ModelStringFilterInput;
+    title_policy_issuer?: ModelStringFilterInput;
+    title_policy_discrepancies_amendments_payment?: ModelFloatFilterInput;
+    survey?: ModelStringFilterInput;
+    new_survey_days?: ModelIntFilterInput;
+    new_survey_payment?: ModelStringFilterInput;
+    amendments?: ModelStringFilterInput;
+}
+
+export class ContractInput {
+    home_id?: string;
+    sales_price?: number;
+    buyer_cash?: number;
+    loan_amount?: number;
+    earnest_money?: number;
+    earnest_money_days?: number;
+    earnest_money_to?: string;
+    property_condition?: string;
+    repairs?: string;
+    home_warranty?: boolean;
+    home_warranty_amount?: number;
+    closing_date?: Date;
+    special_provisions?: string;
+    non_realty_items?: string;
+    seller_expenses?: string;
+    option_period_fee?: number;
+    option_period_days?: number;
+    option_period_credit?: boolean;
+    contract_execution_date?: Date;
+    digital_signatures?: string[];
+    title_policy_expense?: string;
+    title_policy_issuer?: string;
+    title_policy_discrepancies_amendments_payment?: number;
+    survey?: string;
+    new_survey_days?: number;
+    new_survey_payment?: string;
+    amendments?: string;
+}
+
 export class CreateConversationInput {
     homeId: string;
     type: string;
@@ -304,6 +363,40 @@ export class AVM {
     schools?: School[];
 }
 
+export class Contract {
+    id: string;
+    home?: Home;
+    user?: User;
+    sales_price?: number;
+    buyer_cash?: number;
+    loan_amount?: number;
+    earnest_money?: number;
+    earnest_money_days?: number;
+    earnest_money_to?: string;
+    property_condition?: string;
+    repairs?: string;
+    home_warranty?: boolean;
+    home_warranty_amount?: number;
+    closing_date?: Date;
+    special_provisions?: string;
+    non_realty_items?: string;
+    seller_expenses?: string;
+    option_period_fee?: number;
+    option_period_days?: number;
+    option_period_credit?: boolean;
+    contract_execution_date?: Date;
+    digital_signatures?: string[];
+    title_policy_expense?: string;
+    title_policy_issuer?: string;
+    title_policy_discrepancies_amendments_payment?: number;
+    survey?: string;
+    new_survey_days?: number;
+    new_survey_payment?: string;
+    amendments?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 export class Conversation {
     id: string;
     home?: Home;
@@ -317,6 +410,7 @@ export class Conversation {
 export class Home {
     id: string;
     owner?: User;
+    contracts?: Contract[];
     status?: string;
     schedule?: string;
     media?: HomeMedia[];
@@ -412,6 +506,12 @@ export class Message {
 }
 
 export abstract class IMutation {
+    abstract createContract(input?: ContractInput): Contract | Promise<Contract>;
+
+    abstract updateContract(id: string, input?: ContractInput): Contract | Promise<Contract>;
+
+    abstract deleteContract(id: string): boolean | Promise<boolean>;
+
     abstract createHome(createHomeInput?: CreateHomeInput): Home | Promise<Home>;
 
     abstract deleteHome(deleteHomeInput?: DeleteHomeInput): Home | Promise<Home>;
@@ -636,6 +736,12 @@ export class PropertyVintage {
 }
 
 export abstract class IQuery {
+    abstract allContractsAsBuyer(filter?: ContractFilterInput, limit?: number): Contract[] | Promise<Contract[]>;
+
+    abstract allContractsAsSeller(filter?: ContractFilterInput, limit?: number): Contract[] | Promise<Contract[]>;
+
+    abstract getContract(id: string): Contract | Promise<Contract>;
+
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
 
     abstract myHomes(): Home[] | Promise<Home[]>;
@@ -836,6 +942,12 @@ export class SchoolVintage {
 }
 
 export abstract class ISubscription {
+    abstract newContract(): Contract | Promise<Contract>;
+
+    abstract updatedContract(): Contract | Promise<Contract>;
+
+    abstract deletedContract(): Contract | Promise<Contract>;
+
     abstract homeCreated(): Home | Promise<Home>;
 
     abstract homeUpdated(): Home | Promise<Home>;

@@ -1,4 +1,5 @@
-import {HttpModule, Module} from '@nestjs/common';
+import {forwardRef, HttpModule, Module} from '@nestjs/common';
+import {ContractModule} from '../contract/contract.module';
 import {HomeService} from './home.service';
 import {HomeResolver} from './home.resolver';
 import {homeProviders} from './home.providers';
@@ -29,7 +30,8 @@ const MODULES = [
 	DatabaseModule,
 	UserModule,
 	HomeFavoriteModule,
-	HomeMediaModule
+	HomeMediaModule,
+	forwardRef(() => ContractModule)
 ];
 
 @Module({

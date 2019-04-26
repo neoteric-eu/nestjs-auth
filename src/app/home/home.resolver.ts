@@ -5,6 +5,8 @@ import {PubSub} from 'graphql-subscriptions';
 import {GraphqlGuard} from '../_helpers';
 import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
 import {AppLogger} from '../app.logger';
+import {ContractService} from '../contract/contract.service';
+import {ContractEntity} from '../contract/entity';
 import {GetAVMDetailInput, Home, ModelHomeFilterInput} from '../graphql.schema';
 import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
 import {HomeMediaEntity} from '../home-media/entity';
@@ -29,7 +31,9 @@ export class HomeResolver {
 							private readonly attomDataService: AttomDataApiService,
 							private readonly userService: UserService,
 							private readonly homeMediaService: HomeMediaService,
-							private readonly homeFavoriteService: HomeFavoriteService) {
+							private readonly homeFavoriteService: HomeFavoriteService,
+							private readonly contractService: ContractService
+	) {
 	}
 
 	@Query('getAVMDetail')
@@ -171,5 +175,26 @@ export class HomeResolver {
 			}
 		});
 		return !!homeFavorites.length;
+	}
+
+	@ResolveProperty('contracts')
+	@UseGuards(GraphqlGuard)
+	async getContracts(@CurrentUser() user: User, @Parent() home: HomeEntity): Promise<ContractEntity[]> {
+		if (!user) {
+			return [];
+		}
+		const userId = user.id.toString();
+		const filter = {};
+		if (home.owner !== userId) {
+			filter['owner'] = { eq: userId };
+		}
+		return this.contractService.findAll({
+			where: {
+				home_id: {
+					eq: home.id.toString()
+				},
+				...filter
+			}
+		});
 	}
 }
