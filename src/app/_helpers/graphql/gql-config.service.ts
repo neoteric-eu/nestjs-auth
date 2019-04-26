@@ -43,10 +43,13 @@ export class GqlConfigService implements GqlOptionsFactory {
 				}
 			},
 			formatError: error => {
-				const err: any = {};
-				Object.assign(err, error);
-				delete err.extensions;
-				return err;
+				if (config.isProduction) {
+					const err: any = {};
+					Object.assign(err, error);
+					delete err.extensions;
+					return err;
+				}
+				return error;
 			},
 			context: (context) => {
 				let req = context.req;
