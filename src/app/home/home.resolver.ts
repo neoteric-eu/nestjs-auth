@@ -186,7 +186,7 @@ export class HomeResolver {
 		const userId = user.id.toString();
 		const filter = {};
 		if (home.owner !== userId) {
-			filter['owner'] = { eq: userId };
+			filter['userId'] = { eq: userId };
 		}
 		return this.contractService.findAll({
 			where: {
