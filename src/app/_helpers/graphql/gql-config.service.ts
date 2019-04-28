@@ -1,20 +1,26 @@
-import {join} from 'path';
 import {Injectable} from '@nestjs/common';
 import {GqlModuleOptions, GqlOptionsFactory} from '@nestjs/graphql';
 import auth_hdr from 'passport-jwt/lib/auth_header';
+import {join} from 'path';
+import {has} from 'lodash';
 import {config} from '../../../config';
-import {verifyToken} from '../../auth/jwt';
-import {TokenDto} from '../../auth/dto/token.dto';
-import {UserService} from '../../user/user.service';
 import {AppLogger} from '../../app.logger';
+import {TokenDto} from '../../auth/dto/token.dto';
+import {verifyToken} from '../../auth/jwt';
+import {OnlineService} from '../../user/online.service';
+import {UserService} from '../../user/user.service';
 
 @Injectable()
 export class GqlConfigService implements GqlOptionsFactory {
 	private logger = new AppLogger(GqlConfigService.name);
 
-	constructor(private readonly userService: UserService) {
+	constructor(
+		private readonly userService: UserService,
+		private readonly onlineService: OnlineService
+	) {
 
 	}
+
 	createGqlOptions(): GqlModuleOptions {
 		return {
 			typePaths: [join(process.cwd(), '**/*.graphql')],
@@ -34,11 +40,21 @@ export class GqlConfigService implements GqlOptionsFactory {
 							const authToken = connectionParams['Authorization'];
 							const token = await this.validateToken(authToken);
 							const user = await this.userService.findOneById(token.id);
+							await this.onlineService.addUser(user);
 							resolve({req: {...context.request, user}});
 						} catch (e) {
 							this.logger.error(e.message, e.stack);
 							reject({message: 'Unauthorized'});
 						}
+					});
+				},
+				onDisconnect: (websocket, context: any) => {
+					return new Promise(async resolve => {
+						const initialContext = await context.initPromise;
+						if (has(initialContext, 'req.user')) {
+							await this.onlineService.removeUser(initialContext.req.user);
+						}
+						resolve();
 					});
 				}
 			},

@@ -1,5 +1,6 @@
 import {ApiModelProperty} from '@nestjs/swagger';
 import {IsEmail, IsOptional, IsString, IsUrl, MinLength, Validate, ValidateIf} from 'class-validator';
+import {DateTime} from 'luxon';
 import {ExtendedEntity, passwordHash} from '../../_helpers';
 import {IsUserAlreadyExist} from '../user.validator';
 import {config} from '../../../config';
@@ -65,6 +66,9 @@ export class UserEntity extends ExtendedEntity {
 
 	@Column()
 	public activationCode: string;
+
+	@Column()
+	public onlineAt: DateTime;
 
 	hashPassword() {
 		this.password = passwordHash(this.password);

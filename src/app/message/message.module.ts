@@ -3,6 +3,8 @@ import {DatabaseModule} from '../database/database.module';
 import {HomeModule} from '../home/home.module';
 import {UserModule} from '../user/user.module';
 import {DateScalar} from './date.scalar';
+import {MessageBuffer} from './message.buffer';
+import {MessageCron} from './message.cron';
 import {messageProviders} from './message.providers';
 import {ConversationResolver} from './resolvers/conversation.resolver';
 import {MessageResolver} from './resolvers/message.resolver';
@@ -16,7 +18,9 @@ import {MessageController} from './message.controller';
 
 
 @Module({
-	controllers: [MessageController],
+	controllers: [
+		MessageController
+	],
 	providers: [
 		...messageProviders,
 		DateScalar,
@@ -24,6 +28,8 @@ import {MessageController} from './message.controller';
 		ConversationService,
 		UserConversationService,
 		MessageResolver,
+		MessageBuffer,
+		MessageCron,
 		UserConversationResolver,
 		ConversationResolver,
 		SubscriptionsService,

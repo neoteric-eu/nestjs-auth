@@ -1,11 +1,10 @@
 {
   "name": "ava",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "AVA - The new agent in town",
   "main": "dist/index.js",
   "repository": "git@github.com:neoteric-eu/nestjs-auth.git",
   "scripts": {
-    "prestart": "docker-compose -f ./docker-compose.dev.yml up -d",
     "start": "node $NODE_DEBUG_OPTION -r ts-node/register -r dotenv-safe/config src/index.ts",
     "cli": "node -r dotenv-safe/config -r ts-node/register src/cli.ts",
     "watch": "nodemon",
@@ -26,8 +25,6 @@
     "lint:check"
   ],
   "dependencies": {
-    "@aws/dynamodb-data-mapper": "^0.7.3",
-    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
     "@nestjs/common": "^5.7.4",
     "@nestjs/core": "^5.7.4",
     "@nestjs/graphql": "^5.5.7",
