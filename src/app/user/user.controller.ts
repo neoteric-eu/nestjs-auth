@@ -1,6 +1,6 @@
-import {equals} from '@aws/dynamodb-expressions';
-import {ApiResponse, ApiUseTags} from '@nestjs/swagger';
-import {Controller, Get, HttpCode, Post} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
+import {ApiBearerAuth, ApiResponse, ApiUseTags} from '@nestjs/swagger';
+import {Controller, Get, HttpCode, Post, UseGuards} from '@nestjs/common';
 import {MessagePattern} from '@nestjs/microservices';
 import voucherCodes from 'voucher-code-generator';
 import {UserService} from './user.service';
@@ -32,7 +32,9 @@ export class UserController {
 		await this.service.subscription.patch(user.id.toString(), {email: false});
 	}
 
-	@Get('import')
+	@Post('import')
+	@ApiBearerAuth()
+	@UseGuards(AuthGuard('jwt'))
 	public async importUsers(): Promise<any> {
 		return this.userCmd.create(20);
 	}

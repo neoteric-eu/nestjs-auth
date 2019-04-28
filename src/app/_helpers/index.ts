@@ -4,7 +4,6 @@ import {config} from '../../config';
 export * from './entity';
 export * from './filters';
 export * from './database';
-export * from './aws';
 export * from './graphql';
 export * from './rest.exception';
 export * from './request-context';
