@@ -26,6 +26,7 @@ type HomeMedia {
 
 input CreateHomeMediaInput {
     homeId: String
+    originalname: String
     mimetype: String
     size: Int
     url: String
