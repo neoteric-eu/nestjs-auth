@@ -1,4 +1,6 @@
 .idea/
 node_modules/
 .env
+.env.stag
+.env.dev
 dist/

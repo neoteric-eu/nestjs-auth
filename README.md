@@ -73,7 +73,7 @@ Change region to yours.
 ### Generate KMS
 
 ```bash
-aws kms create-key --description dev-threeleaf --region us-east-2
+aws kms create-key --description dev-threeleaf --region us-east-2 --profile threeleaf_ENV
 ```
 
 Save output somewhere
@@ -106,7 +106,7 @@ A: Basically, you want to pass some variables to the container, by this, you're 
 Create role
 
 ```bash
-aws iam --region us-east-1 create-role --role-name ecsTaskExecutionRole --assume-role-policy-document file://ecs/task-execution-assume-role.json
+aws iam --region us-east-2 --profile threeleaf_ENV create-role --role-name ecsTaskExecutionRole --assume-role-policy-document file://ecs/task-execution-assume-role.json
 ```
 
 To create policy to read from AWS System Manager, edit: `ecs/secret-access.json`
@@ -117,7 +117,7 @@ To create policy to read from AWS System Manager, edit: `ecs/secret-access.json`
 
 
 ```bash
-aws iam --region us-east-2 create-policy --policy-name ecsTaskAssumePolicy --policy-document file://ecs/secret-access.json
+aws iam --region us-east-2 --profile threeleaf_ENV create-policy --policy-name ecsTaskAssumePolicy --policy-document file://ecs/secret-access.json
 ```
 
 Save output for latter usage
@@ -125,13 +125,13 @@ Save output for latter usage
 Then attach policy to our role:
 
 ```bash
-aws iam --region us-east-1 attach-role-policy --role-name ecsTaskExecutionRole --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+aws iam --region us-east-2 --profile threeleaf_ENV attach-role-policy --role-name ecsTaskExecutionRole --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
 ```
 
 And now, attach another policy `ecsTaskAssumePolicy`, that we create, to our role `ecsTaskExecutionRole`
 
 ```bash
-aws iam --region us-east-2 attach-role-policy --role-name ecsTaskExecutionRole --policy-arn ${POLICY_ARN}
+aws iam --region us-east-2 --profile threeleaf_ENV attach-role-policy --role-name ecsTaskExecutionRole --policy-arn ${POLICY_ARN}
 ```
 
 Replace `${POLICY_ARN}` to one from above, where we create policy `ecsTaskAssumePolicy`
@@ -139,26 +139,26 @@ Replace `${POLICY_ARN}` to one from above, where we create policy `ecsTaskAssume
 ### Configure ECS
 
 ```bash
-ecs-cli configure --cluster threeleaf-backend --region us-east-1 --default-launch-type FARGATE --config-name threeleaf-backend
+ecs-cli configure --cluster threeleaf-backend --region us-east-2 --default-launch-type FARGATE --config-name threeleaf-backend
 ```
 
 
 ### Create a Cluster and Security Group
 
 ```bash
-ecs-cli up --cluster threeleaf-backend --region us-east-1
+ecs-cli up --cluster threeleaf-backend --region us-east-2
 ```
 
 Replace `VPC_ID` from the previous output 
 
 ```bash
-aws ec2 create-security-group --group-name "threeleaf-sg" --description "Three Leaf Security Group" --vpc-id "VPC_ID" --region us-east-1
+aws ec2 create-security-group --group-name "threeleaf-sg" --description "Three Leaf Security Group" --vpc-id "VPC_ID" --region us-east-2
 ```
 
 replace `security_group_id` from previous output
 
 ```bash
-aws ec2 authorize-security-group-ingress --group-id "security_group_id" --protocol tcp --port 80 --cidr 0.0.0.0/0 --region us-east-1
+aws ec2 authorize-security-group-ingress --group-id "security_group_id" --protocol tcp --port 80 --cidr 0.0.0.0/0 --region us-east-2
 ```
 
 Then update `ecs/ecs-params.yml` for `subnets` and `security_groups`
