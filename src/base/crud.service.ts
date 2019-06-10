@@ -66,7 +66,6 @@ export class CrudService<T extends ExtendedEntity> {
 
 	public async update(data: DeepPartial<T>|T): Promise<T> {
 		const id: string = String(data.id || '');
-		delete data.id;
 		return this.patch(id, data);
 	}
 
@@ -84,6 +83,9 @@ export class CrudService<T extends ExtendedEntity> {
 			entity = data;
 		} else {
 			entity = await this.findOneById(id);
+			if (data.id) {
+				delete data.id;
+			}
 			this.repository.merge(entity, data);
 		}
 		let createdAt = entity.createdAt;

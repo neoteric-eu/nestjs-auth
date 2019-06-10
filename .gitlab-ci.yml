@@ -87,3 +87,19 @@ deploy-master:
     - ecs-cli compose --file ./docker-compose.stag.yml --project-name threeleaf-stag --ecs-params ./ecs/ecs-params.stag.yml service up --cluster-config threeleaf-stag --timeout 30 --region $AWS_STAG_REGION --force-deployment --target-group-arn $AWS_STAG_TARGET_GROUP_ARN --container-name threeleaf-stag --container-port 80
   only:
     - master
+
+build-tag:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  tags:
+    - 8gb
+    - docker
+  script:
+    - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN
+    - docker build -t threeleaf-backend:${CI_COMMIT_TAG} .
+    - docker tag threeleaf-backend:${CI_COMMIT_TAG} registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:${CI_COMMIT_TAG}
+    - docker push registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:${CI_COMMIT_TAG}
+  only:
+    - tags
