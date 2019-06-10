@@ -4,7 +4,7 @@ import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {PubSub} from 'graphql-subscriptions';
 import {MEDIA_CMD_DELETE} from '../media/media.constants';
 import {HomeMediaService} from './home-media.service';
-import {CreateHomeMediaInput, DeleteHomeMediaInput, HomeMedia} from '../graphql.schema';
+import {CreateHomeMediaInput, UpdateHomeMediaInput, DeleteHomeMediaInput, HomeMedia} from '../graphql.schema';
 import {GraphqlGuard} from '../_helpers';
 import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
 import {UserEntity as User} from '../user/entity';
@@ -36,6 +36,13 @@ export class HomeMediaResolver {
 		return createdHomeMedia;
 	}
 
+	@Mutation('updateHomeMedia')
+	async update(@CurrentUser() user: User, @Args('updateHomeMediaInput') args: UpdateHomeMediaInput): Promise<HomeMedia> {
+		const updatedHomeMedia = await this.homeMediaService.update(args);
+		await this.pubSub.publish('homeMediaUpdated', {homeMediaCreated: updatedHomeMedia});
+		return updatedHomeMedia;
+	}
+
 	@Mutation('deleteHomeMedia')
 	async delete(@CurrentUser() user: User, @Args('deleteHomeMediaInput') args: DeleteHomeMediaInput): Promise<HomeMedia> {
 		const deletedHomeMedia = await this.homeMediaService.delete(args.id);
@@ -50,6 +57,13 @@ export class HomeMediaResolver {
 	homeMediaCreated() {
 		return {
 			subscribe: () => this.pubSub.asyncIterator('homeMediaCreated')
+		};
+	}
+
+	@Subscription('homeMediaUpdated')
+	homeMediaUpdated() {
+		return {
+			subscribe: () => this.pubSub.asyncIterator('homeMediaUpdated')
 		};
 	}
 

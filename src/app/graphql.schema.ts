@@ -141,6 +141,7 @@ export class CreateHomeInput {
 
 export class CreateHomeMediaInput {
     homeId?: string;
+    originalname?: string;
     mimetype?: string;
     size?: number;
     url?: string;
@@ -349,6 +350,12 @@ export class UpdateHomeInput {
     tax_history?: string;
 }
 
+export class UpdateHomeMediaInput {
+    id: string;
+    order: number;
+    caption: string;
+}
+
 export class UpdateUserInput {
     first_name?: string;
     last_name?: string;
@@ -512,17 +519,19 @@ export abstract class IMutation {
 
     abstract deleteContract(id: string): boolean | Promise<boolean>;
 
+    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
     abstract createHome(createHomeInput?: CreateHomeInput): Home | Promise<Home>;
 
     abstract deleteHome(deleteHomeInput?: DeleteHomeInput): Home | Promise<Home>;
 
     abstract updateHome(updateHomeInput?: UpdateHomeInput): Home | Promise<Home>;
 
-    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
-
-    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
-
     abstract createHomeMedia(createHomeMediaInput?: CreateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
+
+    abstract updateHomeMedia(updateHomeMediaInput?: UpdateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
 
     abstract deleteHomeMedia(deleteHomeMediaInput?: DeleteHomeMediaInput): HomeMedia | Promise<HomeMedia>;
 
@@ -742,6 +751,10 @@ export abstract class IQuery {
 
     abstract getContract(id: string): Contract | Promise<Contract>;
 
+    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
+
+    abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
+
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
 
     abstract myHomes(): Home[] | Promise<Home[]>;
@@ -749,10 +762,6 @@ export abstract class IQuery {
     abstract getHome(id: string): Home | Promise<Home>;
 
     abstract getAVMDetail(getAVMDetailInput?: GetAVMDetailInput): AVM | Promise<AVM>;
-
-    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
-
-    abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
 
     abstract getHomeMedia(homeId: string): HomeMedia[] | Promise<HomeMedia[]>;
 
@@ -948,15 +957,17 @@ export abstract class ISubscription {
 
     abstract deletedContract(): Contract | Promise<Contract>;
 
+    abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
+
     abstract homeCreated(): Home | Promise<Home>;
 
     abstract homeUpdated(): Home | Promise<Home>;
 
     abstract homeDeleted(): Home | Promise<Home>;
 
-    abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
-
     abstract homeMediaCreated(): HomeMedia | Promise<HomeMedia>;
+
+    abstract homeMediaUpdated(): HomeMedia | Promise<HomeMedia>;
 
     abstract homeMediaDeleted(): HomeMedia | Promise<HomeMedia>;
 
