@@ -1,7 +1,7 @@
 version: "3.0"
 services:
-  threeleaf-backend:
-    image: 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
+  threeleaf-stag:
+    image: 391232177924.dkr.ecr.us-east-2.amazonaws.com/threeleaf-stag:master
     ports:
       - "80:80"
     logging:

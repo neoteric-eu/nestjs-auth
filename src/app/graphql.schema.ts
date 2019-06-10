@@ -141,6 +141,7 @@ export class CreateHomeInput {
 
 export class CreateHomeMediaInput {
     homeId?: string;
+    originalname?: string;
     mimetype?: string;
     size?: number;
     url?: string;
@@ -349,6 +350,12 @@ export class UpdateHomeInput {
     tax_history?: string;
 }
 
+export class UpdateHomeMediaInput {
+    id: string;
+    order: number;
+    caption: string;
+}
+
 export class UpdateUserInput {
     first_name?: string;
     last_name?: string;
@@ -523,6 +530,8 @@ export abstract class IMutation {
     abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
 
     abstract createHomeMedia(createHomeMediaInput?: CreateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
+
+    abstract updateHomeMedia(updateHomeMediaInput?: UpdateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
 
     abstract deleteHomeMedia(deleteHomeMediaInput?: DeleteHomeMediaInput): HomeMedia | Promise<HomeMedia>;
 
@@ -957,6 +966,8 @@ export abstract class ISubscription {
     abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
 
     abstract homeMediaCreated(): HomeMedia | Promise<HomeMedia>;
+
+    abstract homeMediaUpdated(): HomeMedia | Promise<HomeMedia>;
 
     abstract homeMediaDeleted(): HomeMedia | Promise<HomeMedia>;
 

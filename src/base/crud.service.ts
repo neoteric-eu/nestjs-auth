@@ -66,6 +66,7 @@ export class CrudService<T extends ExtendedEntity> {
 
 	public async update(data: DeepPartial<T>|T): Promise<T> {
 		const id: string = String(data.id || '');
+		delete data.id;
 		return this.patch(id, data);
 	}
 

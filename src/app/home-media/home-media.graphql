@@ -4,11 +4,13 @@ type Query {
 
 type Mutation {
     createHomeMedia(createHomeMediaInput: CreateHomeMediaInput): HomeMedia
+    updateHomeMedia(updateHomeMediaInput: UpdateHomeMediaInput): HomeMedia
     deleteHomeMedia(deleteHomeMediaInput: DeleteHomeMediaInput): HomeMedia
 }
 
 type Subscription {
     homeMediaCreated: HomeMedia
+    homeMediaUpdated: HomeMedia
     homeMediaDeleted: HomeMedia
 }
 
@@ -26,10 +28,17 @@ type HomeMedia {
 
 input CreateHomeMediaInput {
     homeId: String
+    originalname: String
     mimetype: String
     size: Int
     url: String
     type: String!
+    order: Int!
+    caption: String!
+}
+
+input UpdateHomeMediaInput {
+    id: ID!
     order: Int!
     caption: String!
 }

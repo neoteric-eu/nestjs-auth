@@ -1,12 +1,3 @@
-const fs = require('fs');
-const AWS = require('aws-sdk');
-
-const envs = fs.readFileSync(`${__dirname}/../.env`, 'utf8');
-
-AWS.config.update({
-	region: 'us-east-2'
-});
-const ssm = new AWS.SSM();
 const args = process.argv.slice(2);
 const allowed_envs = ['dev', 'stag', 'prod'];
 
@@ -23,6 +14,18 @@ if (!env) {
 	}
 }
 
+const fs = require('fs');
+const AWS = require('aws-sdk');
+
+const envs = fs.readFileSync(`${__dirname}/../.env.${env}`, 'utf8');
+const credentials = new AWS.SharedIniFileCredentials({profile: `threeleaf_${env}`});
+
+AWS.config.update({
+	credentials,
+	region: 'us-east-2'
+});
+const ssm = new AWS.SSM();
+
 if (!keyId) {
 	// https://aws.amazon.com/blogs/compute/managing-secrets-for-amazon-ecs-applications-using-parameter-store-and-iam-roles-for-tasks/
 	console.error('Missing KeyId as argument for decryption');
@@ -31,7 +34,9 @@ if (!keyId) {
 
 for (const line of envs.split('\n')) {
 	if (!line) continue;
-	let [key, val] = line.split('=');
+	const idx = line.indexOf('=');
+	let key = line.substr(0, idx);
+	let val = line.substr(idx+1, line.length).trim();
 	const isSecret = key.indexOf('SECRET') !== -1;
 	if (key === 'APP_PORT') {
 		val = ''+80;

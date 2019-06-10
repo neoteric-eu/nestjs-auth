@@ -1,11 +1,11 @@
 {
   "name": "ava",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "AVA - The new agent in town",
   "main": "dist/index.js",
   "repository": "git@github.com:neoteric-eu/nestjs-auth.git",
   "scripts": {
-    "start": "node $NODE_DEBUG_OPTION -r ts-node/register -r dotenv-safe/config src/index.ts",
+    "start": "node -r ts-node/register -r dotenv-safe/config src/index.ts",
     "cli": "node -r dotenv-safe/config -r ts-node/register src/cli.ts",
     "watch": "nodemon",
     "prebuild": "rm -rf ./dist",
