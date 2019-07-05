@@ -10,5 +10,3 @@ services:
         awslogs-group: threeleaf
         awslogs-region: us-east-2
         awslogs-stream-prefix: threeleaf
-  database:
-    image: mongo
