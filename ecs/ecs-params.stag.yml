@@ -68,14 +68,6 @@ task_definition:
           name: APP_API2PDF_SECRET
         - value_from: arn:aws:ssm:us-east-2:391232177924:parameter/stag/threeleaf/app_database_secret_url
           name: APP_DATABASE_SECRET_URL
-    database:
-      secrets:
-        - value_from: arn:aws:ssm:us-east-2:391232177924:parameter/stag/threeleaf/mongo_initdb_root_username
-          name: MONGO_INITDB_ROOT_USERNAME
-        - value_from: arn:aws:ssm:us-east-2:391232177924:parameter/stag/threeleaf/mongo_initdb_root_password
-          name: MONGO_INITDB_ROOT_PASSWORD
-        - value_from: arn:aws:ssm:us-east-2:391232177924:parameter/stag/threeleaf/mongo_initdb_database
-          name: MONGO_INITDB_DATABASE
 run_params:
   network_configuration:
     awsvpc_configuration:
