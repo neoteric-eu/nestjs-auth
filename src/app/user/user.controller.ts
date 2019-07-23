@@ -1,17 +1,19 @@
+import {Controller, HttpCode, Post, UseGuards} from '@nestjs/common';
+import {MessagePattern} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiBearerAuth, ApiResponse, ApiUseTags} from '@nestjs/swagger';
-import {Controller, Get, HttpCode, Post, UseGuards} from '@nestjs/common';
-import {MessagePattern} from '@nestjs/microservices';
 import voucherCodes from 'voucher-code-generator';
-import {UserService} from './user.service';
-import {UserEntity} from './entity';
-import {mail, renderTemplate} from '../_helpers/mail';
-import {USER_CMD_PASSWORD_NEW, USER_CMD_PASSWORD_RESET, USER_CMD_REGISTER, USER_CMD_REGISTER_VERIFY} from './user.constants';
 import {config} from '../../config';
+import {User} from '../_helpers/decorators';
+import {mail, renderTemplate} from '../_helpers/mail';
+import {sms} from '../_helpers/sms';
+import {SMSTypeEnum} from '../_helpers/sms/SMSType.enum';
 import {AppLogger} from '../app.logger';
 import {createToken} from '../auth/jwt';
-import {User} from '../_helpers/decorators';
+import {UserEntity} from './entity';
 import {UserCommand} from './user.command';
+import {USER_CMD_PASSWORD_NEW, USER_CMD_PASSWORD_RESET, USER_CMD_REGISTER, USER_CMD_REGISTER_VERIFY} from './user.constants';
+import {UserService} from './user.service';
 
 @Controller('user')
 @ApiUseTags('user')
@@ -42,20 +44,21 @@ export class UserController {
 	@MessagePattern({ cmd: USER_CMD_REGISTER })
 	public async onUserRegister(user: UserEntity): Promise<void> {
 		try {
-			this.logger.debug(`[onUserRegister] Send registration email for user ${user.email}`);
+			this.logger.debug(`[onUserRegister] Send registration SMS for user ${user.email}`);
 			const token = voucherCodes.generate({
-				pattern: '###-###',
+				pattern: '######',
 				charset: voucherCodes.charset('numbers')
 			}).pop();
 			user = await this.service.patch(user.id.toString(), {activationCode: token});
-			await mail({
-				subject: `Verify ${user.first_name} to ${config.name.toUpperCase()}`,
-				to: user.email,
-				html: renderTemplate(`/mail/registration.twig`, {user, config, token})
+			await sms({
+				sender: `AVA`,
+				phoneNumber: user.phone_num,
+				smsType: SMSTypeEnum.TRANSACTIONAL,
+				message: `Some Message Template with ${token}`
 			});
-			this.logger.debug('[onUserRegister] Registration email sent');
+			this.logger.debug('[onUserRegister] Registration SMS sent');
 		} catch (err) {
-			this.logger.error(`[onUserRegister] Mail not sent, because ${err.message}`, err.stack);
+			this.logger.error(`[onUserRegister] SMS not sent, because ${err.message}`, err.stack);
 		}
 	}
 

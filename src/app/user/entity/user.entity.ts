@@ -25,6 +25,7 @@ export class UserEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
 	@IsEmail()
+	@IsOptional()
 	@ValidateIf(o => !o.id)
 	@Validate(IsUserAlreadyExist, {
 		message: 'User already exists'
@@ -34,7 +35,6 @@ export class UserEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
 	@IsString()
-	@IsOptional()
 	@Column()
 	public phone_num: string;
 

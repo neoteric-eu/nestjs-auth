@@ -1,6 +1,9 @@
 import * as crypto from 'crypto';
 import {config} from '../../config';
 
+export * from './mail';
+export * from './sms';
+export * from './sms/sms-options.interface';
 export * from './entity';
 export * from './filters';
 export * from './database';
