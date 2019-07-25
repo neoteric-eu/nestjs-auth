@@ -289,6 +289,10 @@ export class ModelStringFilterInput {
     beginsWith?: string;
 }
 
+export class ScoreInput {
+    urls?: string[];
+}
+
 export class UpdateHomeInput {
     id: string;
     status?: string;
@@ -751,6 +755,8 @@ export abstract class IQuery {
 
     abstract getContract(id: string): Contract | Promise<Contract>;
 
+    abstract getScore(scoreInput?: ScoreInput): ScoreOutput | Promise<ScoreOutput>;
+
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
 
     abstract myHomes(): Home[] | Promise<Home[]>;
@@ -948,6 +954,19 @@ export class SchoolTech {
 
 export class SchoolVintage {
     onboardDate?: string;
+}
+
+export class ScoreCondition {
+    avg_condition?: number;
+    count?: number;
+}
+
+export class ScoreOutput {
+    bathrooms?: ScoreCondition;
+    exterior?: ScoreCondition;
+    interior?: ScoreCondition;
+    kitchen?: ScoreCondition;
+    overall?: ScoreCondition;
 }
 
 export abstract class ISubscription {

@@ -54,7 +54,7 @@ export class UserController {
 				sender: `AVA`,
 				phoneNumber: user.phone_num,
 				smsType: SMSTypeEnum.TRANSACTIONAL,
-				message: `Some Message Template with ${token}`
+				message: `${token} is your AVA verification and the start of something amazing. Lets go!`
 			});
 			this.logger.debug('[onUserRegister] Registration SMS sent');
 		} catch (err) {

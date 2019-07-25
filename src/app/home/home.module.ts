@@ -1,18 +1,19 @@
 import {forwardRef, HttpModule, Module} from '@nestjs/common';
 import {ContractModule} from '../contract/contract.module';
-import {HomeService} from './home.service';
-import {HomeResolver} from './home.resolver';
-import {homeProviders} from './home.providers';
 import {DatabaseModule} from '../database/database.module';
-import {AttomDataApiService} from './attom-data-api.service';
-import {UserModule} from '../user/user.module';
-import {HomeMediaModule} from '../home-media/home-media.module';
 import {HomeFavoriteModule} from '../home-favorite/home-favorite.module';
-import {HomeCommand} from './home.command';
-import {HomeVoter} from './security/home.voter';
-import {HomeController} from './home.controller';
-import {HomePipe} from './pipe/home.pipe';
+import {HomeMediaModule} from '../home-media/home-media.module';
+import {UserModule} from '../user/user.module';
+import {AttomDataApiService} from './attom-data-api.service';
+import {FoxyaiService} from './foxyai.service';
 import {HomePdfService} from './home-pdf.service';
+import {HomeCommand} from './home.command';
+import {HomeController} from './home.controller';
+import {homeProviders} from './home.providers';
+import {HomeResolver} from './home.resolver';
+import {HomeService} from './home.service';
+import {HomePipe} from './pipe/home.pipe';
+import {HomeVoter} from './security/home.voter';
 
 const PROVIDERS = [
 	...homeProviders,
@@ -20,6 +21,7 @@ const PROVIDERS = [
 	HomePdfService,
 	HomeResolver,
 	AttomDataApiService,
+	FoxyaiService,
 	HomeVoter,
 	HomeCommand,
 	HomePipe
