@@ -21,6 +21,7 @@ type User {
     profile_img: String
     password: String
     provider: String
+    phone_token: String
     socialId: String
     subscriptions: UserSubscription
     createdAt: Date

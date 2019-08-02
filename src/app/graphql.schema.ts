@@ -1021,6 +1021,7 @@ export class User {
     profile_img?: string;
     password?: string;
     provider?: string;
+    phone_token?: string;
     socialId?: string;
     subscriptions?: UserSubscription;
     createdAt?: Date;
