@@ -1,7 +1,7 @@
-import {Controller, HttpCode, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, HttpCode, Post, UseGuards} from '@nestjs/common';
 import {MessagePattern} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
-import {ApiBearerAuth, ApiResponse, ApiUseTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiImplicitBody, ApiResponse, ApiUseTags} from '@nestjs/swagger';
 import voucherCodes from 'voucher-code-generator';
 import {config} from '../../config';
 import {User} from '../_helpers/decorators';
@@ -14,6 +14,7 @@ import {UserEntity} from './entity';
 import {UserCommand} from './user.command';
 import {USER_CMD_PASSWORD_NEW, USER_CMD_PASSWORD_RESET, USER_CMD_REGISTER, USER_CMD_REGISTER_VERIFY} from './user.constants';
 import {UserService} from './user.service';
+import {SubscriptionDto} from './dto/subscription.dto';
 
 @Controller('user')
 @ApiUseTags('user')
@@ -27,11 +28,19 @@ export class UserController {
 
 	}
 
-	@Post('unsubscribe/email')
-	@HttpCode(204)
-	@ApiResponse({ status: 204, description: 'NO CONTENT' })
-	public async unsubscribeEmail(@User() user: UserEntity): Promise<void> {
-		await this.service.subscription.patch(user.id.toString(), {email: false});
+	@Post('subscription')
+	@ApiBearerAuth()
+	@UseGuards(AuthGuard('jwt'))
+	@HttpCode(201)
+	@ApiImplicitBody({required: true, type: SubscriptionDto, name: 'SubscriptionDto'})
+	@ApiResponse({status: 201, description: 'ACCEPTED'})
+	public async subscription(@Body() data: SubscriptionDto, @User() user: UserEntity): Promise<void> {
+		try {
+			const subscription = await this.service.subscription.findOne({where: {user: {eq: user.id.toString()}}});
+			await this.service.subscription.patch(subscription.id, data);
+		} catch (err) {
+			await this.service.subscription.create({user: user.id.toString(), ...data});
+		}
 	}
 
 	@Post('import')
@@ -41,7 +50,7 @@ export class UserController {
 		return this.userCmd.create(20);
 	}
 
-	@MessagePattern({ cmd: USER_CMD_REGISTER })
+	@MessagePattern({cmd: USER_CMD_REGISTER})
 	public async onUserRegister(user: UserEntity): Promise<void> {
 		try {
 			this.logger.debug(`[onUserRegister] Send registration SMS for user ${user.email}`);
@@ -62,7 +71,7 @@ export class UserController {
 		}
 	}
 
-	@MessagePattern({ cmd: USER_CMD_REGISTER_VERIFY })
+	@MessagePattern({cmd: USER_CMD_REGISTER_VERIFY})
 	public async onUserRegisterVerify(user: UserEntity): Promise<void> {
 		try {
 			this.logger.debug(`[onUserRegisterVerify] Send welcome email for user ${user.email}`);
@@ -77,8 +86,8 @@ export class UserController {
 		}
 	}
 
-	@MessagePattern({ cmd: USER_CMD_PASSWORD_RESET })
-	public async onUserPasswordRest({ email }: {email: string}): Promise<void> {
+	@MessagePattern({cmd: USER_CMD_PASSWORD_RESET})
+	public async onUserPasswordRest({email}: { email: string }): Promise<void> {
 		try {
 			const user = await this.service.findOne({where: {email}});
 			this.logger.debug(`[onUserRegister] Send password reset instruction email for user ${user.email}`);
@@ -94,7 +103,7 @@ export class UserController {
 		}
 	}
 
-	@MessagePattern({ cmd: USER_CMD_PASSWORD_NEW })
+	@MessagePattern({cmd: USER_CMD_PASSWORD_NEW})
 	public async onUserPasswordNew(user: UserEntity): Promise<void> {
 		try {
 			this.logger.debug(`[onUserRegister] Send password new email for user ${user.email}`);

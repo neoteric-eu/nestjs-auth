@@ -1,14 +1,19 @@
 import {ApiModelProperty} from '@nestjs/swagger';
-import {IsBoolean, IsOptional} from 'class-validator';
+import {IsBoolean, IsOptional, IsString} from 'class-validator';
 import {ExtendedEntity} from '../../_helpers';
-import {Column, Entity, PrimaryColumn} from 'typeorm';
+import {Column, Entity, ObjectIdColumn} from 'typeorm';
 
 @Entity()
 export class UserSubscriptionEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
-	@PrimaryColumn()
-	public id: string; // user id
+	@ObjectIdColumn()
+	public id: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@Column()
+	public user: string;
 
 	@ApiModelProperty()
 	@IsBoolean()
@@ -21,4 +26,10 @@ export class UserSubscriptionEntity extends ExtendedEntity {
 	@IsOptional()
 	@Column()
 	public push = false;
+
+	@ApiModelProperty()
+	@IsBoolean()
+	@IsOptional()
+	@Column()
+	public sms = false;
 }

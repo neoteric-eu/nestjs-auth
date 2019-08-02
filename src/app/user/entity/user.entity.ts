@@ -64,6 +64,11 @@ export class UserEntity extends ExtendedEntity {
 	@Column()
 	public socialId: string;
 
+	@ApiModelProperty()
+	@IsOptional()
+	@Column()
+	public phone_token: string;
+
 	@Column()
 	public activationCode: string;
 

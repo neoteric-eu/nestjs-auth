@@ -22,8 +22,15 @@ type User {
     password: String
     provider: String
     socialId: String
+    subscriptions: UserSubscription
     createdAt: Date
     updatedAt: Date
+}
+
+type UserSubscription {
+    email: Boolean
+    push: Boolean
+    sms: Boolean
 }
 
 input UpdateUserInput {
@@ -32,6 +39,7 @@ input UpdateUserInput {
     email: String
     phone_num: String
     profile_img: String
+    phone_token: String
     password: String
 }
 
