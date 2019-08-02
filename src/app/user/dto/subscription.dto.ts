@@ -3,17 +3,23 @@ import {IsBoolean, IsOptional} from 'class-validator';
 
 export class SubscriptionDto {
 
-	@ApiModelProperty()
+	@ApiModelProperty({
+		required: false
+	})
 	@IsOptional()
 	@IsBoolean()
 	public email?: boolean;
 
-	@ApiModelProperty()
+	@ApiModelProperty({
+		required: false
+	})
 	@IsOptional()
 	@IsBoolean()
 	public push?: boolean;
 
-	@ApiModelProperty()
+	@ApiModelProperty({
+		required: false
+	})
 	@IsOptional()
 	@IsBoolean()
 	public sms?: boolean;
