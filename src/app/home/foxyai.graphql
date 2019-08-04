@@ -1,0 +1,20 @@
+type Query {
+    getScore(scoreInput: ScoreInput): ScoreOutput
+}
+
+input ScoreInput {
+    urls: [String]
+}
+
+type ScoreOutput {
+    bathrooms: ScoreCondition
+    exterior: ScoreCondition
+    interior: ScoreCondition
+    kitchen: ScoreCondition
+    overall: ScoreCondition
+}
+
+type ScoreCondition {
+    avg_condition: Float
+    count: Int
+}

@@ -1,9 +1,10 @@
 import {Body, Controller, HttpCode, HttpStatus, Post, UseGuards} from '@nestjs/common';
 import {Client, ClientProxy, Transport} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
-import {ApiImplicitBody, ApiResponse, ApiUseTags} from '@nestjs/swagger';
+import {ApiImplicitBody, ApiModelProperty, ApiResponse, ApiUseTags} from '@nestjs/swagger';
+import {IsString} from 'class-validator';
 import {config} from '../../config';
-import {RestException} from '../_helpers';
+import {RestException, sms} from '../_helpers';
 import {DeepPartial} from '../_helpers/database';
 import {Profile} from '../_helpers/decorators';
 import {AppLogger} from '../app.logger';
@@ -23,6 +24,12 @@ import {PasswordResetDto} from './dto/password-reset.dto';
 import {PasswordTokenDto} from './dto/password-token.dto';
 import {VerifyTokenDto} from './dto/verify-token.dto';
 import {VerifyResendDto} from './dto/verify-resend.dto';
+
+export class TestDto {
+	@ApiModelProperty()
+	@IsString()
+	readonly phone_num: string;
+}
 
 @ApiUseTags('auth')
 @Controller('auth')

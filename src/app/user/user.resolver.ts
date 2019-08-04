@@ -1,4 +1,4 @@
-import {Args, Mutation, Query, Resolver, Subscription} from '@nestjs/graphql';
+import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub} from 'graphql-subscriptions';
 import {UserService} from './user.service';
 import {DeleteUserDto, UpdateUserDto} from './dto';
@@ -6,6 +6,7 @@ import {UseGuards} from '@nestjs/common';
 import {GraphqlGuard} from '../_helpers/graphql';
 import {UserEntity} from './entity';
 import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
+import {UserSubscriptionEntity} from './entity/user-subscription.entity';
 
 @Resolver('User')
 @UseGuards(GraphqlGuard)
@@ -46,5 +47,10 @@ export class UserResolver {
 		return {
 			subscribe: () => this.pubSub.asyncIterator('userDeleted')
 		};
+	}
+
+	@ResolveProperty('subscriptions')
+	getHome(@Parent() user: UserEntity): Promise<UserSubscriptionEntity> {
+		return this.userService.subscription.findOne({where: {user: {eq: user.id.toString()}}});
 	}
 }

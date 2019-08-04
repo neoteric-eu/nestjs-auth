@@ -66,9 +66,9 @@ export class UserService extends CrudService<UserEntity> {
 			entity.createdAt = DateTime.utc();
 		}
 		entity.updatedAt = DateTime.utc();
-		return entity.save();
-		// await this.subscription.create({id: user.id, email: true});
-		// return user;
+		const user = await entity.save();
+		await this.subscription.create({user: user.id, email: true});
+		return user;
 	}
 
 	public async updatePassword(data: DeepPartial<UserEntity>): Promise<UserEntity> {

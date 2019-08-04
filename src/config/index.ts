@@ -51,6 +51,10 @@ interface Config {
 			apiUrl: string;
 			apiKey: string;
 		};
+		foxyai: {
+			apiUrl: string;
+			apiKey: string;
+		};
 	};
 	googleApi: {
 		apiUrl: string;
@@ -146,6 +150,10 @@ export const config: Config = {
 		attomData: {
 			apiKey: process.env.APP_HOME_API_ATTOM_DATA_API_KEY,
 			apiUrl: 'https://search.onboard-apis.com/propertyapi/v1.0.0'
+		},
+		foxyai: {
+			apiKey: process.env.APP_HOME_API_FOXYAI_API_KEY,
+			apiUrl: 'http://api.foxyai.com'
 		}
 	},
 	googleApi: {

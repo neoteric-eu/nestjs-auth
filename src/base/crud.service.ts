@@ -21,7 +21,6 @@ export class CrudService<T extends ExtendedEntity> {
 		if (options.where) {
 			options.where = typeormFilterMapper(options);
 		}
-		console.dir(options.where);
 		const entities = await this.repository.find(options);
 		await this.securityService.denyAccessUnlessGranted(RestVoterActionEnum.READ_ALL, entities);
 		return entities;
