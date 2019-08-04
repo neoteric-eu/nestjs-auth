@@ -7,7 +7,7 @@ import {User as CurrentUser} from '../_helpers/graphql/user.decorator';
 import {AppLogger} from '../app.logger';
 import {ContractService} from '../contract/contract.service';
 import {ContractEntity} from '../contract/entity';
-import {GetAVMDetailInput, Home, ModelHomeFilterInput} from '../graphql.schema';
+import {GetAVMDetailInput, Home, ModelHomeFilterInput, ScoreInput, ScoreOutput} from '../graphql.schema';
 import {HomeFavoriteService} from '../home-favorite/home-favorite.service';
 import {HomeMediaEntity} from '../home-media/entity';
 import {HomeMediaService} from '../home-media/home-media.service';
@@ -16,6 +16,7 @@ import {UserService} from '../user/user.service';
 import {AttomDataApiService} from './attom-data-api.service';
 import {CreateHomeDto, DeleteHomeDto, UpdateHomeDto} from './dto';
 import {HomeEntity} from './entity';
+import {FoxyaiService} from './foxyai.service';
 import {HOME_CMD_DELETE} from './home.constants';
 import {HomeService} from './home.service';
 
@@ -32,7 +33,8 @@ export class HomeResolver {
 							private readonly userService: UserService,
 							private readonly homeMediaService: HomeMediaService,
 							private readonly homeFavoriteService: HomeFavoriteService,
-							private readonly contractService: ContractService
+							private readonly contractService: ContractService,
+							private readonly foxyaiService: FoxyaiService
 	) {
 	}
 
@@ -60,6 +62,11 @@ export class HomeResolver {
 			property: property,
 			schools: schoolsDetails
 		};
+	}
+
+	@Query('getScore')
+	async getFoxiScore(@Args('scoreInput') input: ScoreInput): Promise<ScoreOutput> {
+		return await this.foxyaiService.propertyConditionScore(input.urls);
 	}
 
 	@Query('listHomes')

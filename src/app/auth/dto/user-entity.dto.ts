@@ -16,10 +16,8 @@ export class UserEntityDto {
 	})
 	public password: string;
 
-	@ApiModelProperty({
-		required: false
-	})
-	public phone_num?: string;
+	@ApiModelProperty()
+	public phone_num: string;
 
 	@ApiModelProperty({
 		required: false
