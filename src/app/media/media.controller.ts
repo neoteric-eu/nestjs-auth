@@ -1,13 +1,15 @@
 import {Controller, FileInterceptor, Inject, Post, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
 import {MessagePattern} from '@nestjs/microservices';
 import {AuthGuard} from '@nestjs/passport';
-import {ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiUseTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiResponse, ApiUseTags} from '@nestjs/swagger';
 import S3 from 'aws-sdk/clients/s3';
 import {config} from '../../config';
 import {AppLogger} from '../app.logger';
 import {HomeMediaEntity} from '../home-media/entity';
 import {MEDIA_CMD_DELETE} from './media.constants';
 import {AWS_CON_TOKEN} from '../database/database.constants';
+import {JwtDto} from '../auth/dto/jwt.dto';
+import {MediaUploadDto} from './dto/media-upload.dto';
 
 @ApiUseTags('media')
 @ApiBearerAuth()
@@ -23,6 +25,7 @@ export class MediaController {
 	@UseInterceptors(FileInterceptor('media'))
 	@ApiConsumes('multipart/form-data')
 	@ApiImplicitFile({ name: 'media', required: true, description: 'Any media file' })
+	@ApiResponse({ status: 200, description: 'OK', type: MediaUploadDto })
 	public uploadFile(@UploadedFile() file) {
 		return file;
 	}
