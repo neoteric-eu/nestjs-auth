@@ -45,18 +45,14 @@ export class UserConversationResolver {
 	@Mutation('createConversation')
 	@UseGuards(GraphqlGuard)
 	async createConversation(@CurrentUser() user: User, @Args('conversationInput') conversationInput: CreateConversationInput) {
-		const createdConversation = await this.conversationService.create({
-			...conversationInput, authorId: user.id.toString()
-		});
 
-		const createdAuthorConversation = await this.userConversationService
-			.create({userId: user.id.toString(), conversationId: createdConversation.id.toString()});
-		await this.userConversationService
-			.create({userId: conversationInput.recipientId.toString(), conversationId: createdConversation.id.toString()});
+		const [conversation, created] = await this.userConversationService.createConversationIfMissing(user, conversationInput);
 
-		await this.pubSub.publish('newUserConversation', {newUserConversation: createdAuthorConversation});
+		if (created) {
+			await this.pubSub.publish('newUserConversation', {newUserConversation: conversation});
+		}
 
-		return createdAuthorConversation;
+		return conversation;
 	}
 
 	@Mutation('deleteConversation')
