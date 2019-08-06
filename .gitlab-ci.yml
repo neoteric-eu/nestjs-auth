@@ -19,6 +19,7 @@ build-dev:
     - 8gb
     - docker
   script:
+    - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN
     - docker build -t threeleaf-backend:develop .
     - docker tag threeleaf-backend:develop registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:develop
     - docker tag threeleaf-backend:develop registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:${CI_COMMIT_SHORT_SHA}
@@ -28,6 +29,11 @@ build-dev:
     - $DOCKER_LOGIN
     - docker tag threeleaf-backend:develop 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
     - docker push 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
+  after_script:
+    - docker rmi threeleaf-backend:develop
+    - docker rmi registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:develop
+    - docker rmi registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:${CI_COMMIT_SHORT_SHA}
+    - docker rmi 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
   only:
     - develop
 
