@@ -14,7 +14,7 @@ export class AttomDataApiService {
 
 	public async getAVMDetail({address1, address2}) {
 		try {
-			return await this.httpService.get(`${config.homeApi.attomData.apiUrl}/avm/detail`, {
+			return await this.httpService.get(`${config.homeApi.attomData.apiUrl}/attomavm/detail`, {
 				params: {
 					address1,
 					address2

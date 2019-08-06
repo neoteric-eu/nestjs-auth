@@ -66,6 +66,8 @@ export class MessageResolver {
 			conversationId
 		});
 
+		await this.userConversationService.restoreConversations(conversationId);
+
 		await this.pubSub.publish('newMessage', {newMessage: createdMessage});
 
 		this.client.send({cmd: MESSAGE_CMD_NEW}, createdMessage).subscribe(() => {
