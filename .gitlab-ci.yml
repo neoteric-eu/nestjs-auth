@@ -1,6 +1,9 @@
 services:
   - docker:dind
 
+variables:
+  DOCKER_TLS_CERTDIR: ""
+
 stages:
   - build
   - deploy
@@ -16,7 +19,6 @@ build-dev:
     - 8gb
     - docker
   script:
-    - export DOCKER_TLS_CERTDIR=""
     - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN
     - docker build -t threeleaf-backend:develop .
     - docker tag threeleaf-backend:develop registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:develop
