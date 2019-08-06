@@ -30,7 +30,7 @@ export class UserConversationService extends CrudService<UserConversationEntity>
 					eq: input.recipientId
 				},
 				conversationId: {
-					in: allConversations.map(con => con.id)
+					in: allConversations.map(con => con.conversationId)
 				}
 			}
 		});
@@ -53,6 +53,18 @@ export class UserConversationService extends CrudService<UserConversationEntity>
 		}
 
 		return [userConversation, false];
+	}
+
+	public async restoreConversations(conversationId: string): Promise<void> {
+		await this.updateAll({
+			conversationId: {
+				eq: conversationId
+			}
+		}, {
+			$set: {
+				isDeleted: false
+			}
+		});
 	}
 
 	private async createConversation(user: UserEntity, input: CreateConversationInput): Promise<UserConversationEntity> {

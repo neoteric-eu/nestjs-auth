@@ -524,15 +524,21 @@ export abstract class IMutation {
 
     abstract deleteContract(id: string): boolean | Promise<boolean>;
 
-    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
-
-    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
-
     abstract createHome(createHomeInput?: CreateHomeInput): Home | Promise<Home>;
 
     abstract deleteHome(deleteHomeInput?: DeleteHomeInput): Home | Promise<Home>;
 
     abstract updateHome(updateHomeInput?: UpdateHomeInput): Home | Promise<Home>;
+
+    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract createHomeMedia(createHomeMediaInput?: CreateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
+
+    abstract updateHomeMedia(updateHomeMediaInput?: UpdateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
+
+    abstract deleteHomeMedia(deleteHomeMediaInput?: DeleteHomeMediaInput): HomeMedia | Promise<HomeMedia>;
 
     abstract createConversation(conversationInput?: CreateConversationInput): UserConversation | Promise<UserConversation>;
 
@@ -551,12 +557,6 @@ export abstract class IMutation {
     abstract updateUser(updateUserInput?: UpdateUserInput): User | Promise<User>;
 
     abstract deleteUser(deleteUserInput?: DeleteUserInput): User | Promise<User>;
-
-    abstract createHomeMedia(createHomeMediaInput?: CreateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
-
-    abstract updateHomeMedia(updateHomeMediaInput?: UpdateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
-
-    abstract deleteHomeMedia(deleteHomeMediaInput?: DeleteHomeMediaInput): HomeMedia | Promise<HomeMedia>;
 }
 
 export class Property {
@@ -756,10 +756,6 @@ export abstract class IQuery {
 
     abstract getContract(id: string): Contract | Promise<Contract>;
 
-    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
-
-    abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
-
     abstract getScore(scoreInput?: ScoreInput): ScoreOutput | Promise<ScoreOutput>;
 
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
@@ -770,13 +766,17 @@ export abstract class IQuery {
 
     abstract getAVMDetail(getAVMDetailInput?: GetAVMDetailInput): AVM | Promise<AVM>;
 
+    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
+
+    abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract getHomeMedia(homeId: string): HomeMedia[] | Promise<HomeMedia[]>;
+
     abstract allConversations(): UserConversation[] | Promise<UserConversation[]>;
 
     abstract allMessages(filter?: AllMessagesFilterInput, after?: number, limit?: number): Message[] | Promise<Message[]>;
 
     abstract me(): User | Promise<User>;
-
-    abstract getHomeMedia(homeId: string): HomeMedia[] | Promise<HomeMedia[]>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
@@ -977,13 +977,19 @@ export abstract class ISubscription {
 
     abstract deletedContract(): Contract | Promise<Contract>;
 
-    abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
-
     abstract homeCreated(): Home | Promise<Home>;
 
     abstract homeUpdated(): Home | Promise<Home>;
 
     abstract homeDeleted(): Home | Promise<Home>;
+
+    abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract homeMediaCreated(): HomeMedia | Promise<HomeMedia>;
+
+    abstract homeMediaUpdated(): HomeMedia | Promise<HomeMedia>;
+
+    abstract homeMediaDeleted(): HomeMedia | Promise<HomeMedia>;
 
     abstract newMessage(): Message | Promise<Message>;
 
@@ -1004,12 +1010,6 @@ export abstract class ISubscription {
     abstract userCreated(): User | Promise<User>;
 
     abstract userDeleted(): User | Promise<User>;
-
-    abstract homeMediaCreated(): HomeMedia | Promise<HomeMedia>;
-
-    abstract homeMediaUpdated(): HomeMedia | Promise<HomeMedia>;
-
-    abstract homeMediaDeleted(): HomeMedia | Promise<HomeMedia>;
 }
 
 export class User {
