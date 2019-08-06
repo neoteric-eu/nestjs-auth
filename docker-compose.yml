@@ -1,11 +1,6 @@
-version: "2"
+version: "3.0"
 services:
-  postgresql:
-    container_name: postgres
-    image: postgres:9-alpine
+  mongo:
+    image: mongo
     ports:
-      - "127.0.0.1:5432:5432"
-    environment:
-      - POSTGRES_USER=some_user
-      - POSTGRES_PASSWORD=some_passwd
-      - POSTGRES_DB=some_db
+      - "127.0.0.1:27017:27017"

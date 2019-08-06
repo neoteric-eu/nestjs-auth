@@ -1,12 +1,14 @@
-import * as cors from 'cors';
-import * as helmet from 'helmet';
+import {INestApplication, INestApplicationContext, INestMicroservice} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
-import {INestApplication, INestMicroservice} from '@nestjs/common';
-import {config} from '../config';
-import {AppModule} from './app.module';
-import {AppLogger} from './app.logger';
 import {useContainer} from 'class-validator';
+import cors from 'cors';
+import helmet from 'helmet';
+import query from 'qs-middleware';
+import {config} from '../config';
+import {AppLogger} from './app.logger';
+import {AppModule} from './app.module';
+import {HttpExceptionFilter, TwigExceptionFilter} from './_helpers/filters';
 
 export class AppDispatcher {
 	private app: INestApplication;
@@ -15,7 +17,7 @@ export class AppDispatcher {
 
 	async dispatch(): Promise<void> {
 		await this.createServer();
-		this.createMicroServices();
+		this.createMicroservices();
 		await this.startMicroservices();
 		return this.startServer();
 	}
@@ -24,12 +26,19 @@ export class AppDispatcher {
 		await this.app.close();
 	}
 
+	public getContext(): Promise<INestApplicationContext> {
+		return NestFactory.createApplicationContext(AppModule);
+	}
+
 	private async createServer(): Promise<void> {
 		this.app = await NestFactory.create(AppModule, {
 			logger: new AppLogger('Nest')
 		});
-		useContainer(this.app, {fallbackOnErrors: true});
+		useContainer(this.app.select(AppModule), {fallbackOnErrors: true});
 		this.app.use(cors());
+		this.app.use(query());
+		this.app.useGlobalFilters(new HttpExceptionFilter());
+		this.app.useGlobalFilters(new TwigExceptionFilter());
 		if (config.isProduction) {
 			this.app.use(helmet());
 		}
@@ -41,11 +50,11 @@ export class AppDispatcher {
 			.build();
 
 		const document = SwaggerModule.createDocument(this.app, options);
+		document.paths['/graphql'] = {get: { tags: ['graphql']}, post: { tags: ['graphql']}};
 		SwaggerModule.setup('/swagger', this.app, document);
-		this.logger.log(`Swagger is exposed at ${config.host}:${config.port}/swagger`);
 	}
 
-	private createMicroServices(): void {
+	private createMicroservices(): void {
 		this.microservice = this.app.connectMicroservice(config.microservice);
 	}
 
@@ -55,6 +64,8 @@ export class AppDispatcher {
 
 	private async startServer(): Promise<void> {
 		await this.app.listen(config.port, config.host);
-		this.logger.log(`Server is listening ${config.host}:${config.port}`);
+		this.logger.log(`Swagger is exposed at http://${config.host}:${config.port}/swagger`);
+		this.logger.log(`Graphql is exposed at http://${config.host}:${config.port}/graphql`);
+		this.logger.log(`Server is listening http://${config.host}:${config.port}`);
 	}
 }

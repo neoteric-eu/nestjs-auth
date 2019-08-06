@@ -1,23 +1,32 @@
-import {BeforeInsert, Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import {IsArray, IsEmail, IsString, MinLength, Validate} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
+import {IsEmail, IsOptional, IsString, IsUrl, MinLength, Validate, ValidateIf} from 'class-validator';
+import {DateTime} from 'luxon';
 import {ExtendedEntity, passwordHash} from '../../_helpers';
 import {IsUserAlreadyExist} from '../user.validator';
+import {config} from '../../../config';
+import {Column, Entity, ObjectIdColumn} from 'typeorm';
 
 @Entity()
 export class UserEntity extends ExtendedEntity {
 
 	@ApiModelProperty()
-	@PrimaryGeneratedColumn()
+	@ObjectIdColumn()
 	public id: string;
 
 	@ApiModelProperty()
 	@IsString()
 	@Column()
-	public name: string;
+	public first_name: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@Column()
+	public last_name: string;
 
 	@ApiModelProperty()
 	@IsEmail()
+	@IsOptional()
+	@ValidateIf(o => !o.id)
 	@Validate(IsUserAlreadyExist, {
 		message: 'User already exists'
 	})
@@ -25,16 +34,47 @@ export class UserEntity extends ExtendedEntity {
 	public email: string;
 
 	@ApiModelProperty()
+	@IsString()
 	@Column()
-	@MinLength(7)
+	public phone_num: string;
+
+	@ApiModelProperty()
+	@IsOptional()
+	@IsUrl()
+	@Column()
+	public profile_img: string;
+
+	@ApiModelProperty()
+	@MinLength(config.passwordMinLength)
+	@IsOptional()
+	@Column()
 	public password: string;
 
 	@ApiModelProperty()
-	@IsArray()
-	@Column({type: 'text', array: true})
-	public roles: string[];
+	@Column()
+	public is_verified = false;
 
-	@BeforeInsert()
+	@ApiModelProperty()
+	@IsOptional()
+	@Column()
+	public provider: string;
+
+	@ApiModelProperty()
+	@IsOptional()
+	@Column()
+	public socialId: string;
+
+	@ApiModelProperty()
+	@IsOptional()
+	@Column()
+	public phone_token: string;
+
+	@Column()
+	public activationCode: string;
+
+	@Column()
+	public onlineAt: DateTime;
+
 	hashPassword() {
 		this.password = passwordHash(this.password);
 	}

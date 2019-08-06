@@ -9,7 +9,6 @@
         "curly": true,
         "eofline": true,
         "forin": true,
-        "import-blacklist": [true, "rxjs"],
         "import-spacing": true,
         "indent": [
             true,
@@ -60,7 +59,7 @@
         "no-string-throw": true,
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": true,
-        "trailing-comma": false,
+        "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
         "no-unused-expression": true,
         "no-use-before-declare": true,
         "no-var-keyword": true,

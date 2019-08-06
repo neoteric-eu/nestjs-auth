@@ -1,0 +1,84 @@
+scalar Date
+
+type Query {
+    allConversations: [UserConversation]
+    allMessages(filter: AllMessagesFilterInput, after: Int, limit: Int): [Message]
+}
+
+type Mutation {
+    createConversation(conversationInput: CreateConversationInput): UserConversation
+    deleteConversation(conversationId: ID!): Boolean
+    createMessage(conversationId: ID!, content: String, type: String): Message
+    deleteMessage(messageId: ID!, forEveryone: Boolean): Boolean
+    markAsRead(messageId: ID!): Boolean
+    startTyping(conversationId: ID!): Boolean
+    stopTyping(conversationId: ID!): Boolean
+}
+
+type Subscription {
+    newMessage: Message
+    newUserConversation: UserConversation
+    messageUpdated: Message
+    messageDeleted: Message
+    userConversationUpdated: UserConversation
+    userConversationDeleted: UserConversation
+    startTyping: UserConversation
+    stopTyping: UserConversation
+
+}
+
+type Conversation {
+    id: ID!
+    home: Home
+    author: User
+    type: String
+    messages: [Message]
+    createdAt: Date
+    updatedAt: Date
+}
+
+input CreateConversationInput {
+    homeId: ID!,
+    type: String!,
+    recipientId: String!
+}
+
+type UserConversation {
+    conversation: Conversation
+    user: User
+    message: Message
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Message {
+    id: ID!
+    author: User
+    content: String!
+    conversationId: ID!
+    type: String
+    isSent: Boolean
+    isRead: Boolean
+    createdAt: Date
+    updatedAt: Date
+}
+
+input ModelDateFilterInput {
+    ne: Date
+    eq: Date
+    le: Date
+    lt: Date
+    ge: Date
+    gt: Date
+    between: [Date]
+}
+
+input AllMessagesFilterInput {
+    conversationId: ModelIDFilterInput
+    content: ModelStringFilterInput
+    type: ModelStringFilterInput
+    isSent: ModelBooleanFilterInput
+    isRead: ModelBooleanFilterInput
+    createdAt: ModelDateFilterInput
+    updatedAt: ModelDateFilterInput
+}

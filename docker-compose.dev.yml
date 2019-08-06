@@ -1,0 +1,12 @@
+version: "3.0"
+services:
+  threeleaf-backend:
+    image: 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
+    ports:
+      - "80:80"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: threeleaf
+        awslogs-region: us-east-2
+        awslogs-stream-prefix: threeleaf

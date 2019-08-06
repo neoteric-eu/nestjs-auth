@@ -1,0 +1,12 @@
+version: "3.0"
+services:
+  threeleaf-stag:
+    image: 391232177924.dkr.ecr.us-east-2.amazonaws.com/threeleaf-stag:master
+    ports:
+      - "80:80"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: threeleaf
+        awslogs-region: us-east-2
+        awslogs-stream-prefix: threeleaf

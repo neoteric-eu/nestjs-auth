@@ -1,0 +1,29 @@
+type Query {
+    getHomeFavorites: [HomeFavorite]
+    getHomeFavorite(id: ID!): HomeFavorite
+}
+
+type Mutation {
+    createHomeFavorite(createHomeFavoriteInput: CreateHomeFavoriteInput): HomeFavorite
+    deleteHomeFavorite(deleteHomeFavoriteInput: DeleteHomeFavoriteInput): HomeFavorite
+}
+
+type Subscription {
+    homeFavoriteCreated: HomeFavorite
+}
+
+type HomeFavorite {
+    id: ID!
+    homeFavoriteUserId: String
+    homeFavoriteHomeId: String
+    home: Home
+}
+
+input CreateHomeFavoriteInput {
+    homeFavoriteUserId: String
+    homeFavoriteHomeId: String
+}
+
+input DeleteHomeFavoriteInput {
+    id: ID!
+}

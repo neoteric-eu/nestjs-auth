@@ -8,14 +8,21 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es6",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "target": "es2018",
+    "allowJs": true,
     "baseUrl": "src",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "typeRoots": [
       "node_modules/@types"
-    ],
-    "lib": [
-      "es2016",
-      "dom"
     ]
-  }
+  },
+  "include": [
+    "src/**/*"
+  ]
 }

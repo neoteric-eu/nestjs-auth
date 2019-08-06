@@ -1,18 +1,16 @@
-import {LoggerService} from '@nestjs/common';
-import * as winston from 'winston';
-import {DateTime} from 'luxon';
-import {config} from '../config';
-import {LoggerInstance} from 'winston';
-import {Logger, QueryRunner} from 'typeorm';
+import { LoggerService } from '@nestjs/common';
+import { DateTime } from 'luxon';
+import { LoggerInstance, transports, Logger as WsLogger } from 'winston';
+import { config } from '../config';
 
-export class AppLogger implements LoggerService  {
+export class AppLogger implements LoggerService {
 	private logger: LoggerInstance;
 
 	constructor(label?: string) {
-		this.logger = new winston.Logger({
+		this.logger = new WsLogger({
 			level: config.logger.level,
 			transports: [
-				new winston.transports.Console({
+				new transports.Console({
 					label,
 					timestamp: () => DateTime.local().toString(),
 					formatter: options => `${options.timestamp()} [${options.level.toUpperCase()}] ${options.label} - ${options.message}`
@@ -44,35 +42,4 @@ export class AppLogger implements LoggerService  {
 	silly(message: string) {
 		this.logger.silly(message);
 	}
-}
-
-export class AppQueryLogger extends AppLogger implements Logger {
-	constructor() {
-		super('TypeOrm');
-	}
-
-	logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner): any {
-		super.log(query);
-	}
-
-	logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner): any {
-		super.log(query);
-	}
-
-	logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner): any {
-		super.log(query);
-	}
-
-	logSchemaBuild(message: string, queryRunner?: QueryRunner): any {
-		super.log(message);
-	}
-
-	logMigration(message: string, queryRunner?: QueryRunner): any {
-		super.log(message);
-	}
-
-	log(level: any, message?: any, queryRunner?: QueryRunner): any {
-		super.log(message);
-	}
-
 }
