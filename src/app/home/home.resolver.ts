@@ -169,7 +169,7 @@ export class HomeResolver {
 
 	@ResolveProperty('media')
 	async getMedia(@Parent() home: HomeEntity): Promise<HomeMediaEntity[]> {
-		return this.homeMediaService.findAll({where: {homeId: {eq: home.id.toString()}}});
+		return this.homeMediaService.findAll({where: {homeId: {eq: home.id.toString()}}, order: {order: 'ASC'}});
 	}
 
 	@ResolveProperty('favorite')

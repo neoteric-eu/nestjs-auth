@@ -1,4 +1,4 @@
-import {UseGuards} from '@nestjs/common';
+import {HttpException, HttpStatus, UseGuards} from '@nestjs/common';
 import {Args, Mutation, Parent, Query, ResolveProperty, Resolver, Subscription} from '@nestjs/graphql';
 import {PubSub, withFilter} from 'graphql-subscriptions';
 import {GraphqlGuard, User as CurrentUser} from '../../_helpers/graphql';
@@ -45,18 +45,14 @@ export class UserConversationResolver {
 	@Mutation('createConversation')
 	@UseGuards(GraphqlGuard)
 	async createConversation(@CurrentUser() user: User, @Args('conversationInput') conversationInput: CreateConversationInput) {
-		const createdConversation = await this.conversationService.create({
-			...conversationInput, authorId: user.id.toString()
-		});
 
-		const createdAuthorConversation = await this.userConversationService
-			.create({userId: user.id.toString(), conversationId: createdConversation.id.toString()});
-		await this.userConversationService
-			.create({userId: conversationInput.recipientId.toString(), conversationId: createdConversation.id.toString()});
+		const [conversation, created] = await this.userConversationService.createConversationIfMissing(user, conversationInput);
 
-		await this.pubSub.publish('newUserConversation', {newUserConversation: createdAuthorConversation});
+		if (created) {
+			await this.pubSub.publish('newUserConversation', {newUserConversation: conversation});
+		}
 
-		return createdAuthorConversation;
+		return conversation;
 	}
 
 	@Mutation('deleteConversation')
@@ -65,11 +61,24 @@ export class UserConversationResolver {
 		@CurrentUser() user: User,
 		@Args('conversationId') conversationId: string
 	): Promise<boolean> {
-		const allConversations = await this.userConversationService.findAll({where: {conversationId: {eq: conversationId}}});
-		for (const userConversation of allConversations) {
-			await this.userConversationService.softDelete(userConversation);
-			await this.pubSub.publish('userConversationDeleted', {conversationDeleted: userConversation});
+		const userConversation = await this.userConversationService.findOne({
+			where: {
+				userId: {
+					eq: user.id.toString()
+				},
+				conversationId: {
+					eq: conversationId
+				}
+			}
+		});
+		if (!userConversation) {
+			throw new HttpException({
+				error: 'Database',
+				message: 'Item not found'
+			}, HttpStatus.NOT_FOUND);
 		}
+		await this.userConversationService.softDelete(userConversation);
+		await this.pubSub.publish('userConversationDeleted', {conversationDeleted: userConversation});
 		return true;
 	}
 

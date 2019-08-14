@@ -1,6 +1,9 @@
 services:
   - docker:dind
 
+variables:
+  DOCKER_TLS_CERTDIR: ""
+
 stages:
   - build
   - deploy
@@ -19,11 +22,18 @@ build-dev:
     - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN
     - docker build -t threeleaf-backend:develop .
     - docker tag threeleaf-backend:develop registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:develop
+    - docker tag threeleaf-backend:develop registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:${CI_COMMIT_SHORT_SHA}
     - docker push registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:develop
+    - docker push registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:${CI_COMMIT_SHORT_SHA}
     - export DOCKER_LOGIN=$(docker run -e AWS_ACCESS_KEY_ID=$AWS_KEY -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET -e AWS_DEFAULT_REGION=$AWS_REGION garland/aws-cli-docker:latest aws ecr get-login --no-include-email --region eu-west-1)
     - $DOCKER_LOGIN
     - docker tag threeleaf-backend:develop 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
     - docker push 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
+  after_script:
+    - docker rmi threeleaf-backend:develop
+    - docker rmi registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:develop
+    - docker rmi registry.gitlab.com/neotericeu/three-leaf/threeleaf-backend:${CI_COMMIT_SHORT_SHA}
+    - docker rmi 180122916419.dkr.ecr.eu-west-1.amazonaws.com/threeleaf:develop
   only:
     - develop
 
