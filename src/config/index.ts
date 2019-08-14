@@ -60,6 +60,18 @@ interface Config {
 		apiUrl: string;
 		apiKey: string;
 	};
+	firebase: {
+		type: string;
+		project_id: string;
+		private_key_id: string;
+		private_key: string;
+		client_email: string;
+		client_id: string;
+		auth_uri: string;
+		token_uri: string;
+		auth_provider_x509_cert_url: string;
+		client_x509_cert_url: string;
+	};
 	aws: {
 		api_key: string;
 		secret_key: string;
@@ -160,6 +172,7 @@ export const config: Config = {
 		apiKey: process.env.APP_GOOGLE_API_SECRET,
 		apiUrl: 'https://maps.googleapis.com/maps/api/geocode/json'
 	},
+	firebase: JSON.parse(process.env.APP_FIREBASE_SECRET),
 	aws: {
 		api_key: process.env.APP_AWS_API_KEY,
 		secret_key: process.env.APP_AWS_SECRET_KEY,
