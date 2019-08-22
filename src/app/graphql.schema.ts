@@ -136,7 +136,27 @@ export class CreateHomeInput {
     lot_depth?: number;
     lot_width?: string;
     parcel_number?: string;
-    tax_history?: string;
+	tax_history?: string;
+	//Tony added
+	year_built?: number;
+	neighborhood?: string;
+	school_district?: string;
+	coolingtype?: string;
+	heatingtype?: string;	
+	basement?: string; //string? or number for sqft?
+	flooring?: string; //manually entered?
+	appliances?: string; //manually entered?
+	fireplace?: string; //?string or bool?
+	stories?: number;
+	garage?: number; //number or string
+	carpart?: string; //this and above covered in parking?
+	tax_assessed?: number;
+	annual_tax?: number;
+	avm_confidence?: number;
+	avm_value?: number;
+	avm_high?: number;
+	avm_low?: number;
+	avm_deviation?: number;
 }
 
 export class CreateHomeMediaInput {
@@ -257,7 +277,27 @@ export class ModelHomeFilterInput {
     lot_depth?: ModelFloatFilterInput;
     lot_width?: ModelStringFilterInput;
     parcel_number?: ModelStringFilterInput;
-    tax_history?: ModelStringFilterInput;
+	tax_history?: ModelStringFilterInput;
+	//Tony added
+	year_built?: ModelIntFilterInput;
+	neighborhood?: ModelStringFilterInput;
+	school_district?: ModelStringFilterInput;
+	coolingtype?: ModelStringFilterInput;
+	heatingtype?: ModelStringFilterInput;	
+	basement?: ModelStringFilterInput; //string? or number for sqft?
+	flooring?: ModelStringFilterInput; //manually entered?
+	appliances?: ModelStringFilterInput; //manually entered?
+	fireplace?: ModelStringFilterInput; //?string or bool?
+	stories?: ModelIntFilterInput;
+	garage?: ModelIntFilterInput; //number or string
+	carpart?: ModelStringFilterInput; //this and above covered in parking?
+	tax_assessed?: ModelFloatFilterInput;
+	annual_tax?: ModelFloatFilterInput;
+	avm_confidence?: ModelFloatFilterInput;
+	avm_value?: ModelFloatFilterInput;
+	avm_high?: ModelFloatFilterInput;
+	avm_low?: ModelFloatFilterInput;
+	avm_deviation?: ModelFloatFilterInput;
 }
 
 export class ModelIDFilterInput {
@@ -351,7 +391,27 @@ export class UpdateHomeInput {
     lot_depth?: number;
     lot_width?: string;
     parcel_number?: string;
-    tax_history?: string;
+	tax_history?: string;
+	//Tony added
+	year_built?: number;
+	neighborhood?: string;
+	school_district?: string;
+	coolingtype?: string;
+	heatingtype?: string;	
+	basement?: string; //string? or number for sqft?
+	flooring?: string; //manually entered?
+	appliances?: string; //manually entered?
+	fireplace?: string; //?string or bool?
+	stories?: number;
+	garage?: number; //number or string
+	carpart?: string; //this and above covered in parking?
+	tax_assessed?: number;
+	annual_tax?: number;
+	avm_confidence?: number;
+	avm_value?: number;
+	avm_high?: number;
+	avm_low?: number;
+	avm_deviation?: number;
 }
 
 export class UpdateHomeMediaInput {
@@ -481,7 +541,28 @@ export class Home {
     lot_depth?: number;
     lot_width?: string;
     parcel_number?: string;
-    tax_history?: string;
+	tax_history?: string;
+	//Tony added
+	year_built?: number;
+	neighborhood?: string;
+	school_district?: string;
+	coolingtype?: string;
+	heatingtype?: string;	
+	basement?: string; //string? or number for sqft?
+	flooring?: string; //manually entered?
+	appliances?: string; //manually entered?
+	fireplace?: string; //?string or bool?
+	stories?: number;
+	garage?: number; //number or string
+	carpart?: string; //this and above covered in parking?
+	tax_assessed?: number;
+	annual_tax?: number;
+	avm_confidence?: number;
+	avm_value?: number;
+	avm_high?: number;
+	avm_low?: number;
+	avm_deviation?: number;
+	//stop
     createdAt?: Date;
     updatedAt?: Date;
 }

@@ -450,6 +450,27 @@ type Home {
     lot_width: String
     parcel_number: String
     tax_history: String
+
+	year_built: Int
+	neighborhood: String
+	school_district: String
+	coolingtype: String
+	heatingtype: String	
+	basement: String
+	flooring: String
+	appliances: String
+	fireplace: String
+	stories: Int
+	garage: Int
+	carpart: String
+	tax_assessed: Float
+	annual_tax: Float
+	avm_confidence: Float
+	avm_value: Float
+	avm_high: Float
+	avm_low: Float
+	avm_deviation: Float
+
     createdAt: Date
     updatedAt: Date
 }
@@ -512,6 +533,26 @@ input CreateHomeInput {
     lot_width: String
     parcel_number: String
     tax_history: String
+
+	year_built: Int
+	neighborhood: String
+	school_district: String
+	coolingtype: String
+	heatingtype: String	
+	basement: String
+	flooring: String
+	appliances: String
+	fireplace: String
+	stories: Int
+	garage: Int
+	carpart: String
+	tax_assessed: Float
+	annual_tax: Float
+	avm_confidence: Float
+	avm_value: Float
+	avm_high: Float
+	avm_low: Float
+	avm_deviation: Float
 }
 
 input UpdateHomeInput {
@@ -573,6 +614,26 @@ input UpdateHomeInput {
     lot_width: String
     parcel_number: String
     tax_history: String
+
+	year_built: Int
+	neighborhood: String
+	school_district: String
+	coolingtype: String
+	heatingtype: String	
+	basement: String
+	flooring: String
+	appliances: String
+	fireplace: String
+	stories: Int
+	garage: Int
+	carpart: String
+	tax_assessed: Float
+	annual_tax: Float
+	avm_confidence: Float
+	avm_value: Float
+	avm_high: Float
+	avm_low: Float
+	avm_deviation: Float
 }
 
 input DeleteHomeInput {
@@ -685,6 +746,26 @@ input ModelHomeFilterInput {
     lot_width: ModelStringFilterInput
     parcel_number: ModelStringFilterInput
     tax_history: ModelStringFilterInput
+
+	year_built: ModelIntFilterInput
+	neighborhood: ModelStringFilterInput
+	school_district: ModelStringFilterInput
+	coolingtype: ModelStringFilterInput
+	heatingtype: ModelStringFilterInput	
+	basement: ModelStringFilterInput
+	flooring: ModelStringFilterInput
+	appliances: ModelStringFilterInput
+	fireplace: ModelStringFilterInput
+	stories: ModelIntFilterInput
+	garage: ModelIntFilterInput
+	carpart: ModelStringFilterInput
+	tax_assessed: ModelFloatFilterInput
+	annual_tax: ModelFloatFilterInput
+	avm_confidence: ModelFloatFilterInput
+	avm_value: ModelFloatFilterInput
+	avm_high: ModelFloatFilterInput
+	avm_low: ModelFloatFilterInput
+	avm_deviation: ModelFloatFilterInput
 }
 
 input GetAVMDetailInput {

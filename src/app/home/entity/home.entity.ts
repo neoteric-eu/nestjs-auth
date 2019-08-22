@@ -341,4 +341,140 @@ export class HomeEntity extends ExtendedEntity {
 	@IsOptional()
 	@Column()
 	public tax_history?: string;
+
+	//Tony added
+
+	// year_built?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public year_built?: number;
+
+	// neighborhood?: string;
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public neighborhood?: string;
+
+	// school_district?: string;
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public school_district?: string;
+
+	// coolingtype?: string;
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public coolingtype?: string;
+
+	// heatingtype?: string;
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public heatingtype?: string;
+
+	// basement?: string; //string? or number for sqft?
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public basement?: string;
+
+	// flooring?: string; //manually entered?
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public flooring?: string;
+
+	// appliances?: string; //manually entered?
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public appliances?: string;
+
+	// fireplace?: string; //?string or bool?
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public fireplace?: string;
+
+	// stories?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public stories?: number;
+	
+	// garage?: number; //number or string
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public garage?: number;
+	
+	// carpart?: string; //this and above covered in parking?
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public carpart?: string;
+
+	// tax_assessed?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public tax_assessed?: number;
+	
+	// annual_tax?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public annual_tax?: number;
+	
+	// avm_confidence?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_confidence?: number;
+	
+	// avm_value?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_value?: number;
+	
+	// avm_high?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_high?: number;
+	
+	// avm_low?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_low?: number;
+	
+	// avm_deviation?: number;
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_deviation?: number;
+	
 }
