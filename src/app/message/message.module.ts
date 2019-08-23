@@ -15,6 +15,7 @@ import {SubscriptionsService} from './services/subscriptions.service';
 import {UserConversationService} from './services/user-conversation.service';
 import {MessageVoter} from './security/message.voter';
 import {MessageController} from './message.controller';
+import {UserConversationVoter} from './security/user-conversation.voter';
 
 
 @Module({
@@ -33,7 +34,8 @@ import {MessageController} from './message.controller';
 		UserConversationResolver,
 		ConversationResolver,
 		SubscriptionsService,
-		MessageVoter
+		MessageVoter,
+		UserConversationVoter
 	],
 	imports: [HttpModule, DatabaseModule, UserModule, HomeModule],
 	exports: [MessageService, ConversationService, UserConversationService, SubscriptionsService]

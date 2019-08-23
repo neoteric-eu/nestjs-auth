@@ -68,6 +68,10 @@ task_definition:
           name: APP_API2PDF_SECRET
         - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_database_secret_url
           name: APP_DATABASE_SECRET_URL
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_home_api_foxyai_api_key
+          name: APP_HOME_API_FOXYAI_API_KEY
+        - value_from: arn:aws:ssm:us-east-2:180122916419:parameter/dev/threeleaf/app_firebase_secret
+          name: APP_FIREBASE_SECRET
 run_params:
   network_configuration:
     awsvpc_configuration:

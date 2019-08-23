@@ -341,4 +341,121 @@ export class HomeEntity extends ExtendedEntity {
 	@IsOptional()
 	@Column()
 	public tax_history?: string;
+
+	//Tony added
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public year_built?: number;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public neighborhood?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public school_district?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public coolingtype?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public heatingtype?: string;
+
+	@ApiModelProperty()
+	@IsBoolean()
+	@IsOptional()
+	@Column()
+	public basement?: boolean;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public flooring?: string;
+
+	@ApiModelProperty()
+	@IsString()
+	@IsOptional()
+	@Column()
+	public appliances?: string;
+
+	@ApiModelProperty()
+	@IsBoolean()
+	@IsOptional()
+	@Column()
+	public fireplace?: boolean;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public stories?: number;
+	
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public garage?: number;
+	
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public carport?: number;
+
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public tax_assessed?: number;
+	
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public annual_tax?: number;
+	
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_confidence?: number;
+	
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_value?: number;
+	
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_high?: number;
+	
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_low?: number;
+	
+	@ApiModelProperty()
+	@IsNumber()
+	@IsOptional()
+	@Column()
+	public avm_deviation?: number;
+	
 }

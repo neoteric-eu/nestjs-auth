@@ -137,6 +137,25 @@ export class CreateHomeInput {
     lot_width?: string;
     parcel_number?: string;
     tax_history?: string;
+    year_built?: number;
+    neighborhood?: string;
+    school_district?: string;
+    coolingtype?: string;
+    heatingtype?: string;
+    basement?: boolean;
+    flooring?: string;
+    appliances?: string;
+    fireplace?: boolean;
+    stories?: number;
+    garage?: number;
+    carport?: string;
+    tax_assessed?: number;
+    annual_tax?: number;
+    avm_confidence?: number;
+    avm_value?: number;
+    avm_high?: number;
+    avm_low?: number;
+    avm_deviation?: number;
 }
 
 export class CreateHomeMediaInput {
@@ -258,6 +277,25 @@ export class ModelHomeFilterInput {
     lot_width?: ModelStringFilterInput;
     parcel_number?: ModelStringFilterInput;
     tax_history?: ModelStringFilterInput;
+    year_built?: ModelIntFilterInput;
+    neighborhood?: ModelStringFilterInput;
+    school_district?: ModelStringFilterInput;
+    coolingtype?: ModelStringFilterInput;
+    heatingtype?: ModelStringFilterInput;
+    basement?: ModelBooleanFilterInput;
+    flooring?: ModelStringFilterInput;
+    appliances?: ModelStringFilterInput;
+    fireplace?: ModelBooleanFilterInput;
+    stories?: ModelIntFilterInput;
+    garage?: ModelIntFilterInput;
+    carport?: ModelStringFilterInput;
+    tax_assessed?: ModelFloatFilterInput;
+    annual_tax?: ModelFloatFilterInput;
+    avm_confidence?: ModelFloatFilterInput;
+    avm_value?: ModelFloatFilterInput;
+    avm_high?: ModelFloatFilterInput;
+    avm_low?: ModelFloatFilterInput;
+    avm_deviation?: ModelFloatFilterInput;
 }
 
 export class ModelIDFilterInput {
@@ -352,6 +390,25 @@ export class UpdateHomeInput {
     lot_width?: string;
     parcel_number?: string;
     tax_history?: string;
+    year_built?: number;
+    neighborhood?: string;
+    school_district?: string;
+    coolingtype?: string;
+    heatingtype?: string;
+    basement?: boolean;
+    flooring?: string;
+    appliances?: string;
+    fireplace?: boolean;
+    stories?: number;
+    garage?: number;
+    carport?: string;
+    tax_assessed?: number;
+    annual_tax?: number;
+    avm_confidence?: number;
+    avm_value?: number;
+    avm_high?: number;
+    avm_low?: number;
+    avm_deviation?: number;
 }
 
 export class UpdateHomeMediaInput {
@@ -482,6 +539,25 @@ export class Home {
     lot_width?: string;
     parcel_number?: string;
     tax_history?: string;
+    year_built?: number;
+    neighborhood?: string;
+    school_district?: string;
+    coolingtype?: string;
+    heatingtype?: string;
+    basement?: boolean;
+    flooring?: string;
+    appliances?: string;
+    fireplace?: boolean;
+    stories?: number;
+    garage?: number;
+    carport?: number;
+    tax_assessed?: number;
+    annual_tax?: number;
+    avm_confidence?: number;
+    avm_value?: number;
+    avm_high?: number;
+    avm_low?: number;
+    avm_deviation?: number;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -524,15 +600,15 @@ export abstract class IMutation {
 
     abstract deleteContract(id: string): boolean | Promise<boolean>;
 
-    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
-
-    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
-
     abstract createHome(createHomeInput?: CreateHomeInput): Home | Promise<Home>;
 
     abstract deleteHome(deleteHomeInput?: DeleteHomeInput): Home | Promise<Home>;
 
     abstract updateHome(updateHomeInput?: UpdateHomeInput): Home | Promise<Home>;
+
+    abstract createHomeFavorite(createHomeFavoriteInput?: CreateHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
+
+    abstract deleteHomeFavorite(deleteHomeFavoriteInput?: DeleteHomeFavoriteInput): HomeFavorite | Promise<HomeFavorite>;
 
     abstract createHomeMedia(createHomeMediaInput?: CreateHomeMediaInput): HomeMedia | Promise<HomeMedia>;
 
@@ -756,10 +832,6 @@ export abstract class IQuery {
 
     abstract getContract(id: string): Contract | Promise<Contract>;
 
-    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
-
-    abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
-
     abstract getScore(scoreInput?: ScoreInput): ScoreOutput | Promise<ScoreOutput>;
 
     abstract listHomes(filter?: ModelHomeFilterInput, limit?: number): Home[] | Promise<Home[]>;
@@ -769,6 +841,10 @@ export abstract class IQuery {
     abstract getHome(id: string): Home | Promise<Home>;
 
     abstract getAVMDetail(getAVMDetailInput?: GetAVMDetailInput): AVM | Promise<AVM>;
+
+    abstract getHomeFavorites(): HomeFavorite[] | Promise<HomeFavorite[]>;
+
+    abstract getHomeFavorite(id: string): HomeFavorite | Promise<HomeFavorite>;
 
     abstract getHomeMedia(homeId: string): HomeMedia[] | Promise<HomeMedia[]>;
 
@@ -977,13 +1053,13 @@ export abstract class ISubscription {
 
     abstract deletedContract(): Contract | Promise<Contract>;
 
-    abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
-
     abstract homeCreated(): Home | Promise<Home>;
 
     abstract homeUpdated(): Home | Promise<Home>;
 
     abstract homeDeleted(): Home | Promise<Home>;
+
+    abstract homeFavoriteCreated(): HomeFavorite | Promise<HomeFavorite>;
 
     abstract homeMediaCreated(): HomeMedia | Promise<HomeMedia>;
 
