@@ -456,13 +456,13 @@ type Home {
 	school_district: String
 	coolingtype: String
 	heatingtype: String	
-	basement: String
+	basement: Boolean
 	flooring: String
 	appliances: String
-	fireplace: String
+	fireplace: Boolean
 	stories: Int
 	garage: Int
-	carpart: String
+	carport: Int
 	tax_assessed: Float
 	annual_tax: Float
 	avm_confidence: Float
@@ -539,13 +539,13 @@ input CreateHomeInput {
 	school_district: String
 	coolingtype: String
 	heatingtype: String	
-	basement: String
+	basement: Boolean
 	flooring: String
 	appliances: String
-	fireplace: String
+	fireplace: Boolean
 	stories: Int
 	garage: Int
-	carpart: String
+	carport: String
 	tax_assessed: Float
 	annual_tax: Float
 	avm_confidence: Float
@@ -620,13 +620,13 @@ input UpdateHomeInput {
 	school_district: String
 	coolingtype: String
 	heatingtype: String	
-	basement: String
+	basement: Boolean
 	flooring: String
 	appliances: String
-	fireplace: String
+	fireplace: Boolean
 	stories: Int
 	garage: Int
-	carpart: String
+	carport: String
 	tax_assessed: Float
 	annual_tax: Float
 	avm_confidence: Float
@@ -752,13 +752,13 @@ input ModelHomeFilterInput {
 	school_district: ModelStringFilterInput
 	coolingtype: ModelStringFilterInput
 	heatingtype: ModelStringFilterInput	
-	basement: ModelStringFilterInput
+	basement: ModelBooleanFilterInput
 	flooring: ModelStringFilterInput
 	appliances: ModelStringFilterInput
-	fireplace: ModelStringFilterInput
+	fireplace: ModelBooleanFilterInput
 	stories: ModelIntFilterInput
 	garage: ModelIntFilterInput
-	carpart: ModelStringFilterInput
+	carport: ModelStringFilterInput
 	tax_assessed: ModelFloatFilterInput
 	annual_tax: ModelFloatFilterInput
 	avm_confidence: ModelFloatFilterInput
