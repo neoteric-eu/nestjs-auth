@@ -545,7 +545,7 @@ input CreateHomeInput {
 	fireplace: Boolean
 	stories: Int
 	garage: Int
-	carport: String
+	carport: Int
 	tax_assessed: Float
 	annual_tax: Float
 	avm_confidence: Float
@@ -626,7 +626,7 @@ input UpdateHomeInput {
 	fireplace: Boolean
 	stories: Int
 	garage: Int
-	carport: String
+	carport: Int
 	tax_assessed: Float
 	annual_tax: Float
 	avm_confidence: Float
@@ -758,7 +758,7 @@ input ModelHomeFilterInput {
 	fireplace: ModelBooleanFilterInput
 	stories: ModelIntFilterInput
 	garage: ModelIntFilterInput
-	carport: ModelStringFilterInput
+	carport: ModelIntFilterInput
 	tax_assessed: ModelFloatFilterInput
 	annual_tax: ModelFloatFilterInput
 	avm_confidence: ModelFloatFilterInput

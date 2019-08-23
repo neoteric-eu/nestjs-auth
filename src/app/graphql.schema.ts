@@ -148,7 +148,7 @@ export class CreateHomeInput {
     fireplace?: boolean;
     stories?: number;
     garage?: number;
-    carport?: string;
+    carport?: number;
     tax_assessed?: number;
     annual_tax?: number;
     avm_confidence?: number;
@@ -288,7 +288,7 @@ export class ModelHomeFilterInput {
     fireplace?: ModelBooleanFilterInput;
     stories?: ModelIntFilterInput;
     garage?: ModelIntFilterInput;
-    carport?: ModelStringFilterInput;
+    carport?: ModelIntFilterInput;
     tax_assessed?: ModelFloatFilterInput;
     annual_tax?: ModelFloatFilterInput;
     avm_confidence?: ModelFloatFilterInput;
@@ -401,7 +401,7 @@ export class UpdateHomeInput {
     fireplace?: boolean;
     stories?: number;
     garage?: number;
-    carport?: string;
+    carport?: number;
     tax_assessed?: number;
     annual_tax?: number;
     avm_confidence?: number;
