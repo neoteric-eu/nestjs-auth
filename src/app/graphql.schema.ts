@@ -137,6 +137,25 @@ export class CreateHomeInput {
     lot_width?: string;
     parcel_number?: string;
     tax_history?: string;
+    year_built?: number;
+    neighborhood?: string;
+    school_district?: string;
+    coolingtype?: string;
+    heatingtype?: string;
+    basement?: boolean;
+    flooring?: string;
+    appliances?: string;
+    fireplace?: boolean;
+    stories?: number;
+    garage?: number;
+    carport?: number;
+    tax_assessed?: number;
+    annual_tax?: number;
+    avm_confidence?: number;
+    avm_value?: number;
+    avm_high?: number;
+    avm_low?: number;
+    avm_deviation?: number;
 }
 
 export class CreateHomeMediaInput {
@@ -258,6 +277,25 @@ export class ModelHomeFilterInput {
     lot_width?: ModelStringFilterInput;
     parcel_number?: ModelStringFilterInput;
     tax_history?: ModelStringFilterInput;
+    year_built?: ModelIntFilterInput;
+    neighborhood?: ModelStringFilterInput;
+    school_district?: ModelStringFilterInput;
+    coolingtype?: ModelStringFilterInput;
+    heatingtype?: ModelStringFilterInput;
+    basement?: ModelBooleanFilterInput;
+    flooring?: ModelStringFilterInput;
+    appliances?: ModelStringFilterInput;
+    fireplace?: ModelBooleanFilterInput;
+    stories?: ModelIntFilterInput;
+    garage?: ModelIntFilterInput;
+    carport?: ModelIntFilterInput;
+    tax_assessed?: ModelFloatFilterInput;
+    annual_tax?: ModelFloatFilterInput;
+    avm_confidence?: ModelFloatFilterInput;
+    avm_value?: ModelFloatFilterInput;
+    avm_high?: ModelFloatFilterInput;
+    avm_low?: ModelFloatFilterInput;
+    avm_deviation?: ModelFloatFilterInput;
 }
 
 export class ModelIDFilterInput {
@@ -352,6 +390,25 @@ export class UpdateHomeInput {
     lot_width?: string;
     parcel_number?: string;
     tax_history?: string;
+    year_built?: number;
+    neighborhood?: string;
+    school_district?: string;
+    coolingtype?: string;
+    heatingtype?: string;
+    basement?: boolean;
+    flooring?: string;
+    appliances?: string;
+    fireplace?: boolean;
+    stories?: number;
+    garage?: number;
+    carport?: number;
+    tax_assessed?: number;
+    annual_tax?: number;
+    avm_confidence?: number;
+    avm_value?: number;
+    avm_high?: number;
+    avm_low?: number;
+    avm_deviation?: number;
 }
 
 export class UpdateHomeMediaInput {
@@ -482,6 +539,25 @@ export class Home {
     lot_width?: string;
     parcel_number?: string;
     tax_history?: string;
+    year_built?: number;
+    neighborhood?: string;
+    school_district?: string;
+    coolingtype?: string;
+    heatingtype?: string;
+    basement?: boolean;
+    flooring?: string;
+    appliances?: string;
+    fireplace?: boolean;
+    stories?: number;
+    garage?: number;
+    carport?: number;
+    tax_assessed?: number;
+    annual_tax?: number;
+    avm_confidence?: number;
+    avm_value?: number;
+    avm_high?: number;
+    avm_low?: number;
+    avm_deviation?: number;
     createdAt?: Date;
     updatedAt?: Date;
 }
