@@ -342,7 +342,7 @@ export class HomeEntity extends ExtendedEntity {
 	@Column()
 	public tax_history?: string;
 
-	//Tony added FORCE REBUILD
+	// Tony added FORCE REBUILD
 
 	@ApiModelProperty()
 	@IsNumber()
@@ -403,13 +403,13 @@ export class HomeEntity extends ExtendedEntity {
 	@IsOptional()
 	@Column()
 	public stories?: number;
-	
+
 	@ApiModelProperty()
 	@IsNumber()
 	@IsOptional()
 	@Column()
 	public garage?: number;
-	
+
 	@ApiModelProperty()
 	@IsNumber()
 	@IsOptional()
@@ -421,41 +421,41 @@ export class HomeEntity extends ExtendedEntity {
 	@IsOptional()
 	@Column()
 	public tax_assessed?: number;
-	
+
 	@ApiModelProperty()
 	@IsNumber()
 	@IsOptional()
 	@Column()
 	public annual_tax?: number;
-	
+
 	@ApiModelProperty()
 	@IsNumber()
 	@IsOptional()
 	@Column()
 	public avm_confidence?: number;
-	
+
 	@ApiModelProperty()
 	@IsNumber()
 	@IsOptional()
 	@Column()
 	public avm_value?: number;
-	
+
 	@ApiModelProperty()
 	@IsNumber()
 	@IsOptional()
 	@Column()
 	public avm_high?: number;
-	
+
 	@ApiModelProperty()
 	@IsNumber()
 	@IsOptional()
 	@Column()
 	public avm_low?: number;
-	
+
 	@ApiModelProperty()
 	@IsNumber()
 	@IsOptional()
 	@Column()
 	public avm_deviation?: number;
-	
+
 }
